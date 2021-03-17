@@ -1,0 +1,546 @@
+Color Base: #4FEDD8
+Color Hecho: #00FF00
+Color Revisar: #FFEE00
+//////////////////////////////////////////////////////
+//     LISTADO DE FUNCIONALIDADES APP <-> SYMFONY   //
+//////////////////////////////////////////////////////
+
+0 - Descripción: Función de login.
+    Ruta: /api/login
+    Func. Inter: loginAction()
+    Entradas:
+        [user] - usuario (mail / teléfono)
+        [password] - string
+    
+    Salidas:
+        [apiKey] -> ApiKey
+
+
+1 - Descripción: Función de cierre sesión.
+    Ruta: /api/logout
+    Func. Inter: logoutAction()
+    Entradas:
+        [apiKey] -> ApiKey
+    Salidas:
+        -
+
+
+2 - Descripción: Verificar API Token
+    Ruta: /api/verifyApiKey
+    Func. Inter: verifyApiKeyAction()
+    Entradas:
+        [user] - usuario (mail / teléfono)
+        [apiKey] -> ApiKey
+    Salidas:
+        -
+
+
+3 - Descripción: Actualización de la Geoposición del dispositivo
+    Ruta: /api/updateDevice
+    Func. Inter: updateDeviceAction()
+    Entradas:
+        [apiKey] -> ApiKey
+        [latitude] - String con la latitud
+        [longitude] - String con la longitud
+    Salidas:
+        -
+
+-- Pequeña funcion para pruebas, no se usará en la versión definitiva de la app
+3.2 - Descripción: Actualización de la Geoposición del dispositivo
+    Ruta: /api/getGeopositionHistoryLog()
+    Func. Inter: getGeopositionHistoryLogAction()
+    Entradas:
+        [apiKey] -> ApiKey
+    Salidas:
+        -
+-- Fin funcion pruebas
+
+
+4 - Descripción: Obtener listado de estados y estado seleccionado
+    Ruta: /api/getOperatorStatusList
+    Func. Inter: getOperatorStatusListAction()
+    Entradas:
+        [apiKey] -> ApiKey
+    Salidas:
+        [list] -> [ {"code": 1, "description": 'Libre', "color": "#97fb9b"} , ... ];
+        [selected] -> 1 
+
+
+5 - Descripción: Actualizar el estado del Operador 
+    Ruta: 
+    Func. Inter: updateOperatorStatus()
+    Entradas:
+        [apiKey] -> ApiKey
+        [code] -> código seleccionado
+    Salidas:
+        [msg] -> string. Si viene con contenido, hay que mostrar una ventana emergente con ese texto y un "ok" para cerrarla.
+
+6 - Descripción: Recordar password usuario
+    Ruta: /api/forgotPassword
+    Func. Inter: forgotPassword()
+    Entradas:
+        [user] - usuario (mail / teléfono)
+    Salidas:
+        [msg] -> Mensaje a mostrar en la App 
+
+
+7 - Descripción: Devuelve un número para iniciar acción de llamada
+    Ruta: /api/getNumberCallCentral
+    Func. Inter: getNumberCallCentralAction()
+    Entradas:
+        [apiKey] -> ApiKey
+    Salidas:
+        [phone] -> Número de teléfono
+
+
+8 - Descripción: Devuelve un número para iniciar acción de llamada (igual que 7)
+                Devolverá el teléfono del servicio activo en caso de haberlo, sino 
+                No devolverá nada y habra que mostrar el mensaje enviado.
+    Ruta: /api/getNumberCallClient
+    Func. Inter: getNumberCallClient()
+    Entradas:
+        [apiKey] -> ApiKey
+    Salidas:
+        [phone] -> Número de teléfono
+        [msg] -> Mensaje a mostrar en la App 
+
+
+9.1 - Descripción: Obtiene el listado de motivos del rechazo.
+    Ruta: /api/getRefuseInterventionList
+    Func. Inter: getRefuseInterventionList()
+    Entradas:
+        [apiKey] -> ApiKey
+    Salidas:
+
+
+9 - Descripción: Realiza la acción de cancelar el servicio. Podrá tener o no 
+                el motivo del rechazo
+    Ruta: /api/refuseIntervention
+    Func. Inter: refuseIntervention()
+    Entradas:
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+        [cancellation_type_id] -> id de la cancelación (opcional, si no lo usamos, no especificamos el campo)
+        [latitude] -> latitude
+        [longitude] -> longitude
+    Salidas:
+        [msg] -> Mensaje a mostrar en la App 
+
+
+10 - Descripción: Obtener listado de intervenciones. Filtraría por meses. 
+    Ruta: /api/getInterventionList
+    Func. Inter: getInterventionList()
+    Entradas:
+        [apiKey] -> ApiKey
+        [init_date] -> Formato 'Y-m'. Ej "2020-08"
+        [end_date] -> Formato 'Y-m'. Ej "2020-08"
+        [phase_type] -> Será un string, y pondŕa automaticamente los estados que se podrían filtar en phases, 
+                -> "servicios_iniciados"
+                -> "servicios_aceptados"
+                -> "pendientes_cierre"
+        [phases] -> Podemos ponerle un array para filtrar por fases, en el desarrollo de la app 
+                    deberíamos usar el campo "phase_type" para prevenir posibles cámbios en el flujo. 
+            todas ->  [] // lo mismo que --> ["servicio_iniciado", "vh_localizado", "servicio_fallido", "inicio_albaran_no_ris", "inicio_albaran_ris", "firma_albaran", "vh_no_cargado", "vh_cargado", "entrega_destino", "firma_albaran_revision", "servicio_finalizado", "pte_iniciar", "en_transito_recogida", "en_transito_entrega"]
+            Servicios Iniciados ->  ["servicio_iniciado", "vh_localizado", "servicio_fallido", "inicio_albaran_no_ris", "inicio_albaran_ris", "firma_albaran", "vh_no_cargado", "vh_cargado", "entrega_destino", "firma_albaran_revision", "en_transito_recogida", "en_transito_entrega"]
+            Servicios Aceptados ->  ["pte_iniciar"]
+            Pendientes de cierre ->  ["servicio_finalizado"]
+        [search] -> String con un código de búsqueda
+    Salidas:
+
+
+11 - Descripción: Aceptar una intervención por parte del operario.
+    Ruta: /api/acceptIntervention
+    Func. Inter: acceptIntervention()
+    Entradas: 
+        [apiKey] -> ApiKey
+        [intervention_id] -> Id de la intervencion
+        [latitude] -> latitude
+        [longitude] -> longitude
+    Salidas:
+
+
+12 - Descripción: Iniciar una intervención
+        En caso de no poder iniciarse tendríamos
+        que devolver el servicio que está en activo
+        Para que así pueda ir 
+    Ruta: /api/startIntervention
+    Func. Inter: startIntervention()
+    Entradas: 
+        [apiKey] -> ApiKey
+        [intervention_id] -> Id de la intervencion
+        [latitude] -> latitude
+        [longitude] -> longitude
+    Salidas:
+        // Caso exito
+        --> mensaje de exito y respuesta satisfactoria
+        "message": "Iniciado con éxito",
+        "data": {
+            "msg": "Iniciado con éxito",
+            "intervention_id": 24
+        },
+        // Caso de error
+        "errors": {
+            "msg": "Es necesario finalizar el servicio en curso para poder iniciar un nuevo servicio",
+            "intervention_id": <id de la intervención>
+        },  
+
+
+13 - Descripción: Esta función se llamará cuando se seleccione
+        Una intervención del listado. Tendrá un campo que 
+        identifique que pantalla tiene que renderizar y luego
+        los campos que le llegarán imaginamos que serán diferentes
+        según el estado, aunque podemos mandar siempre todo...
+        -   En el caso de la fase "vh_localizado" mandamos un array con 
+            los posibles casos ris "possibleRiskCauses".
+    Ruta: 
+    Func. Inter: getInterventionDetails()
+    Entradas:
+        intervention_id
+    Salidas:
+        phase: ['servicio_iniciado', 'vh_localizado', 'inicio_albaran_no_ris', 'firma_albaran', 'vh_cargado', 'entrega_destino', 'firma_albaran_revision', 'inicio_albaran_ris', 'servicio_finalizado', 'en_transito_recogida', 'en_transito_entrega']
+        
+
+14.1 - Descripción: Obtiene el listado de motivos de servicio fallido
+    Ruta: /api/getFailServiceNotificationList
+    Func. Inter: getFailServiceNotificationAction()
+    Entradas:
+        [apiKey] -> ApiKey
+    Salidas:
+        "data": [
+            {
+                "intervention_failure_type_id": "1",
+                "description": "Se  acude y no hay nadie"
+            },
+            {
+                "intervention_failure_type_id": "2",
+                "description": "Ya lo han arrancado"
+            },
+
+
+14 - Descripción: Notificación del error a central 
+    Ruta: /api/failServiceNotification
+    Func. Inter: failServiceNotification()
+    Entradas:
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+        [intervention_failure_type_id] -> id del tipo de fallo.
+        [latitude] -> latitude
+        [longitude] -> longitude
+        [description] -> string con la descripcion
+    Salidas:
+        [msg] -> Mensaje a mostrar en la App
+
+
+15 - Descripción: El gruísta encuenta al cliente y el vh
+    Ruta: /api/foundClientAndVehicle
+    Func. Inter: foundClientAndVehicle()
+    Entradas:
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+    Salidas:
+        -
+
+
+16 - Descripción: Selección del tipo de servicio que es
+    Ruta: /api/startDeliveryNote
+    Func. Inter: startDeliveryNote()
+    Entradas:
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+        [latitude] -> latitude
+        [longitude] -> longitude
+        [is_ris] -> booleano
+        [repair_description] -> descripción de la reparacion ris u observaciones
+        [riscause_id] -> vacio o null en caso de ser no RIS.
+    Salidas:
+        -
+
+
+
+17 - Descripción: Firma del albarán no RIS en la recogida del vh
+
+    Ruta: /api/pickupVhNoRis
+    Func. Inter: pickupVhNoRIS()
+    Entradas: (estos campos seguro)
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+        [latitude] -> latitude
+        [longitude] -> longitude
+
+        [signerName] -> String 255 - Nombre y apellidos firmante 
+        [signerPhone] -> String 15 - teléfono firmante
+        [signerEmail] -> String 100 - Email firmante  
+        [km] -> float - km 
+        [fuel] -> int - Gasolina, valores permitidos:  (0,1,2,3,4)
+        [photos] -> array()
+                    [{
+                        [image] -> String 255 - Imagen en base 64
+                        [description] -> String 255 - descripción
+                        [descriptionExtra] -> String 255 - Descripción extra (lugar del golpe)
+                    },{},..]
+        [equipmentAndObjects] -> string 255 - Equipamiento y objetos  
+        [dirtyVh] -> boolean - Vehículo sucio
+        [scratchesOnVh] -> boolean - Arañazos  
+        [signerAcknowledgesScratches] -> boolean - el conductor reconoce daños 
+        [signerIsCompanion] -> boolean - Acompaña el asegurado 
+        [destinationType] -> String - Tipo de entrega, valores permitidos "taller","domicilio" o "base".
+        [deliveryName] -> String 255 - Nombre entrega
+        [deliveryAddress] -> String 255 - Dirección entrega
+        [deliveryProvince] -> String 100 - Provincia entrega
+        [deliveryTown] -> String 100 - Localidad entrega
+        [deliveryZipcode] -> String 10 - CP entrega
+        [deliveryPhone] -> String 15 - Teléfono entrega 
+        [deliveryLatitude] -> String 20 - Latitud entrega  
+        [deliveryLongitude] -> String 20 - longitud entrega  
+        [signerDni] -> String 20 - Dni firmante  
+        [clientSignature] -> tring (text) - Firma del cliente en base 64
+
+    Salidas:
+
+18 - Descripción: Recuperar el listado de posibles incidencias al recoger un vh
+    Ruta: /api/getListPickupFailVhNoRIS
+    Func. Inter: getListPickupFailVhNoRIS()
+    Entradas:
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+    Salidas:
+
+
+19 - Descripción: Fallo en la carga del vh. Notificación del fallo
+    Ruta: /api/pickupFailVhNoRIS
+    Func. Inter: pickupFailVhNoRIS()
+    Entradas:
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+        [incidence_type_id] -> id del tipo de incidencia
+        [latitude] -> latitude
+        [longitude] -> longitude
+        [description] -> string con la descripcion
+    Salidas:
+
+
+19.2 - Descripción: Carga del Vh en la grua
+    Ruta: /api/loadVhNoRIS
+    Func. Inter: loadVhNoRIS()
+    Entradas:
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+        [latitude] -> latitude
+        [longitude] -> longitude
+    Salidas:
+
+20 - Descripción: Entrega exitosa del VH Ris
+                // TODO - Aqui habrá que poner bastantes campos - por dterminar
+    Ruta: /api/deliveryVhNoRIS
+    Func. Inter: deliveryVhNoRIS()
+    Entradas: (estos campos seguro)
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+        [latitude] -> latitude
+        [longitude] -> longitude
+        [deliveryName] -> String 255 - Nombre entrega 
+        [deliveryAddress] -> String 255 - Dirección entrega
+        [deliveryPhone] -> String 15 - Teléfono entrega
+        [deliveryProvince] -> String 100 - Provincia entrega
+        [deliveryTown] -> String 100 - Localidad entrega
+        [deliveryZipcode] -> String 10 - CP entrega
+        [deliveryLatitude] -> String 20 - Latitud entrega  
+        [deliveryLongitude] -> String 20 - Longitud entrega
+        [receiverIsLocated] -> Bool - Receptor localizado 
+        [receiverName] -> String 255 - Nombre apellidos receptor 
+        [receiverEmail] -> String 100 - Email receptor
+
+    Salidas:
+
+
+21 - Descripción: Finalizada la revisión del albarán [mandamos los nuevos campos]
+    Ruta: /api/revisionDeliveryNote
+    Func. Inter: revisionDeliveryNote()
+    Entradas:
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+        [latitude] -> latitude
+        [longitude] -> longitude
+        
+        [editDeliveryNote] -> boolean - indica si vamos a editar los datos del 
+            albarán, si viene a "no", el resto de campos no los guardamos en la BD
+
+        [kmCheck] -> float - km revisión
+        [fuelCheck] -> int (0,1,2,3,4) - Gasolina revisión
+        [equipmentAndObjectsCheck] -> String - Equipamiento y objetos revisión
+        [dirtyVhCheck] -> boolean - Vh Sucio (revisión)
+        [scratchesOnVhCheck] -> boolean - Vh con arañazos (revisión)
+        [receiverDni] -> String 20 - Dni del receptor
+        [receiverSignature] -> string (text) - Firma receptor 
+
+        [photos] -> array()
+                    [{
+                        [image] -> String 255 - Imagen en base 64
+                        [description] -> String 255 - descripción
+                        [descriptionExtra] -> String 255 - Descripción extra (lugar del golpe)
+                    },{},..]
+    Salidas:
+
+
+22 - Descripción: Finalización del servicio
+    Ruta:  /api/finishService
+    Func. Inter: finishService()
+    Entradas:
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+        [latitude] -> latitude
+        [longitude] -> longitude
+    Salidas:
+
+23 - Descripción: Cierre del albarán (con firma) del proceso RIS
+    Ruta: /api/finishDeliveryNoteRIS
+    Func. Inter: finishDeliveryNoteRIS()
+    Entradas:
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+        [latitude] -> latitude
+        [longitude] -> longitude
+
+        [signerName] -> String 255 - Nombre y apellidos firmante 
+        [signerPhone] -> String 15 - teléfono firmante
+        [signerEmail] -> String 100 - Email firmante  
+        [km] -> float - km 
+        [fuel] -> int - Gasolina, valores permitidos:  (0,1,2,3,4)
+        [photos] -> array()
+                    [{
+                        [image] -> String 255 - Imagen en base 64
+                        [description] -> String 255 - descripción
+                        [descriptionExtra] -> String 255 - Descripción extra (lugar del golpe)
+                    },{},..]
+        [equipmentAndObjects] -> string 255 - Equipamiento y objetos  
+        [dirtyVh] -> boolean - Vehículo sucio
+        [scratchesOnVh] -> boolean - Arañazos  
+        [signerAcknowledgesScratches] -> boolean - el conductor reconoce daños 
+        [signerIsCompanion] -> boolean - Acompaña el asegurado 
+        [signerDni] -> String 20 - Dni firmante  
+        [clientSignature] -> tring (text) - Firma del cliente en base 64
+
+    Salidas:
+
+
+24 - Descripción: Obtiene el número de tlf para llamar a la central en el cierre
+    Ruta: /api/revisionCallCentral
+    Func. Inter: revisionCallCentral()
+    Entradas:
+        [apiKey] -> ApiKey
+    Salidas:
+        [phone] -> Número de teléfono
+
+
+25 - Descripción: Cierre final del servicio (pasaría al histórico)
+    Ruta: /api/closeService
+    Func. Inter: closeService()
+    Entradas:
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+        [latitude] -> latitude
+        [longitude] -> longitude
+        [tickets] -> array()
+                    [{
+                        [image] -> String 255 - Imagen en base 64
+                        [description] -> String 255 - descripción
+                        [total] -> float - importe del ticket
+                    },{},..]
+    Salidas:
+
+
+26 - Descripción: Obtener el histórico de los servicios. Sé que será prácticamente igual 
+                que el número 10, pero vamos a separarlo por si acaso.
+    Ruta: /api/getInterventionHistoryList
+    Func. Inter: getInterventionHistoryList()
+    Entradas: 
+        [apiKey] -> ApiKey
+        [init_date] -> Formato 'Y-m'. Ej "2020-08"
+        [end_date] -> Formato 'Y-m'. Ej "2020-08"
+        [phase_type] -> Será un string, y pondŕa automaticamente los estados de la intervención 
+                -> "servicios_cerrados"
+                -> "servicios_rechazados"
+        [search] -> String con un código de búsqueda
+    Salidas:
+
+27 - Descripción: Obtiene el listado de motivos de servicio fallido
+    Ruta: /api/getIncidenceList
+    Func. Inter: getIncidenceListAction()
+    Entradas:
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+    Salidas:
+
+
+28 - Descripción: Marca a un transporte como fallido por incidencia
+    Ruta: /api/setInterventionFails
+    Func. Inter: setInterventionFailsAction()
+    Entradas:
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+        [incidence_type_id] -> id del tipo de incidencia, lo sacamos del [getIncidenceList]
+        [description] -> descripción
+        [latitude] -> latitude
+        [longitude] -> longitude
+    Salidas:
+
+
+29 - Descripción: obtiene la información del perfil para mostrarla
+    Ruta: /api/getProfileInfo
+    Func. Inter: getProfileInfoAction()
+    Entradas:
+        [apiKey] -> ApiKey
+    Salidas:
+
+
+30 - Descripción: Va a la fase anterior. La idea es que cuando se quiera
+                ir a una fase anterior, se llame a esta función, deshara 
+                el estado, y posteriormente llamas a la función de 
+                "obtener detalles" y renderizas la pantalla que toque.
+    Ruta: /api/goBackPhase
+    Func. Inter: goBackPhaseAction()
+    Entradas:
+        [apiKey] -> ApiKey
+        [intervention_id] -> id de la intervencion
+        [latitude] -> latitude
+        [longitude] -> longitude
+    Salidas:
+
+
+
+3 - Descripción: Actualización de la Geoposición del dispositivo
+    Ruta: /api/craneReady
+    Func. Inter: craneReadyAction()
+    Entradas:
+        [apiKey] -> ApiKey
+        [latitude] - String con la latitud
+        [longitude] - String con la longitud
+    Salidas:
+        -
+
+<--- VOY POR AQUI! XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+////////////////////////////////////////////////////////
+//          Sincronizaciones pendientes
+////////////////////////////////////////////////////////
+
+9 - InterventionService:refuseIntervention -> Rechazo de un servicio, notificar a Asitur
+11 - InterventionService:acceptIntervention -> Aceptación de un servicio, notificar a Asitur
+12 - InterventionService:startIntervention -> Inicio de un servicio, notificar a Asitur
+
+
+
+-----------------------------------------------
+
+
+////////////////////////////////////////////////////////
+//          Pruebas Api Asitur
+////////////////////////////////////////////////////////
+Código colaborador ejemplo: AAWVUOAD
+Cógigo cif colaborador Ejemplo: A83178749
+
+WSCodigoColaborador
+Codigo de colaborador en base al CIF
+
+

@@ -1,0 +1,229 @@
+{% extends 'includes/backend_sidebar.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+{{parent()}}
+
+    <link rel="stylesheet" href="{{ asset('css/backend/style-backend_general.css') }}">
+
+{% endblock %}
+
+{% block content %}
+
+    <!--Page Title-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="page-title">
+        <h1 class="page-header text-overflow">{{"backend.translations.header"|trans}}</h1>
+    </div>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--End page title-->
+
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+        
+        <!--Collapsed Panel by default-->
+        <!--===================================================-->
+        <div class="panel">
+
+            <!--Panel heading-->
+            <div id="translations_steps_heading" class="panel-heading" data-target="#translations_steps-panel-collapse-default" data-toggle="collapse">
+                <div class="panel-control">
+                    <button class="btn btn-default" ><i class="fa fa-chevron-down"></i></button>
+                </div>
+                <h3 class="panel-title">{{'backend.translations.label.steps'|trans}}</h3>
+            </div>
+
+            <!--Panel body-->
+            <div id="translations_steps-panel-collapse-default" class="collapse">
+                <div class="panel-body">
+                    <p>1) {{'backend.translations.guide.update'|trans}}:</p>
+                    <p>&emsp;► <b><i>php bin/console functTranslationsUpdateDB</i></b></p>
+                    <p>2) {{'backend.translations.guide.complete'|trans}}</p>
+                    <p>3) {{'backend.translations.guide.fix'|trans}}:</p>
+                    <p>&emsp;► <b><i>php bin/console fixTranslations</i></b></p>
+                    <p>4) {{'backend.translations.guide.export'|trans}}:</p>
+                    <p>&emsp;► <b><i>php bin/console functTranslationsExport</i></b></p>
+                    <p>5) {{'backend.translations.delete_cache'|trans}}:</p>
+                </div>
+            </div>
+        </div>
+        <!--===================================================-->
+        <!--End Collapsed Panel by default-->
+
+        <div>
+            <p><b><a class="text-danger animated infinite flash" style="animation-duration: 5s;">{{'general.important'|trans}}</a></b> <span>{{'backend.translations.warning'|trans}}: <b><i>php bin/console functTranslationsExport</i></b></span></p>
+        </div>
+
+        <div style="display: block;
+                    margin-bottom: 10px;
+                    margin-right: 24px;
+                    margin-top: 20px;
+                    float: right;">
+            <label class="control-label">{{"general.search"|trans}}:</label>
+            <input id="search-input" class='search-input' type="text" placeholder="{{"general.search"|trans}}..." spellcheck="false">
+        </div>
+
+        <!-- Tabla Traducciones -->
+        <!--===================================================-->
+        <div class="panel">
+            <div class="panel-body">
+                <table id="table_translations" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{{"dataTable.translations.label"|trans}}</th>
+                            <th>es</th>
+                            <th>en</th>
+                            <th>fr</th>
+                            <th>it</th>
+                            <th>pt</th>
+                            <th>{{"dataTable.translations.need_check"|trans}}</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <!--===================================================-->
+    
+
+    </div>
+    <!--===================================================-->
+    <!--End page content-->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+
+<script>
+    $(document).ready(function(){
+        $("#translations_li").addClass("active-link");
+
+        var time = null;
+        createTable();
+
+        $('#search-input').keyup(function() {
+            clearInterval(time);
+            time = setTimeout(function() {
+                reloadDataTable();
+            }, 1500);
+        });
+
+    });
+
+    function createTable() {
+
+        $('#table_translations').DataTable({
+            order: [0, 'ASC'],
+            searching: false,
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100,
+                    "{{('dataTable.general.lengthMenu.all')|trans}}"
+                ]
+            ],
+            responsive: false,
+            autoWidth: false,
+            scrollX: true,
+            processing: false,
+            serverSide: true,
+            pagingType: "full_numbers",
+            language: {
+                "sProcessing": "{{ 'dataTable.general.language.sProcessing' | trans }}",
+                "sLengthMenu": "{{ ('dataTable.general.language.sLengthMenu') | trans}}",
+                "sZeroRecords": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                "sEmptyTable": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                "sInfo": "{{ ('dataTable.general.language.sInfo') | trans }}",
+                "sInfoEmpty": "{{ ('dataTable.general.language.sInfoEmpty') | trans }}",
+                "sInfoFiltered": "{{ ('dataTable.general.language.sInfoFiltered') | trans }}",
+                "sInfoPostFix": "",
+                "sSearch": "{{ ('dataTable.general.language.sSearch') | trans }}:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "{{ ('dataTable.general.language.sLoadingRecords') | trans }}",
+                "oPaginate": {
+                    "sFirst": "{{ ('dataTable.general.language.oPaginate.sFirst') | trans }}",
+                    "sLast": "{{ ('dataTable.general.language.oPaginate.sLast') | trans }}",
+                    "sNext": "{{ ('dataTable.general.language.oPaginate.sNext') | trans }}",
+                    "sPrevious": "{{ ('dataTable.general.language.oPaginate.sPrevious') | trans }}",
+                },
+                "oAria": {
+                    "sSortAscending": ": {{ ('dataTable.general.language.oAria.sSortAscending') | trans }}",
+                    "sSortDescending": ": {{ ('dataTable.general.language.oAria.sSortDescending') | trans }}"
+                },
+            },
+            ajax: {
+                url: "{{ path('translations_table') }}",
+                method: 'POST',
+                data: {
+                    'form_filters': $('#table_translations').serialize(),
+                    'search_filter': $('#search-input').val(),
+                }
+            },
+            initComplete: function() {},
+            drawCallback: function() {
+                $.fn.editable.defaults.mode = 'inline';
+
+                $('.edit_es, .edit_en, .edit_fr, .edit_it, .edit_pt').editable({
+                    type: $(this).data('type'),
+                    pk: $(this).data('pk'),
+                    name: $(this).data('name'),
+                    url: $(this).data('url'),
+                });
+
+                $('.edit_need_check').editable({
+                    type: $(this).data('type'),
+                    source: [
+                        {value: 1, text: '1'},
+                        {value: 0, text: '0'}
+                    ]
+                });
+            },
+            columns: [
+                {data: 'source'},
+                {data: {}, render: function(data, row) {
+                        html = '<a href="#" class="editable editable-click edit_es" data-type="textarea" data-pk="'+ data['id'] +'" data-name="es" data-url="{{path('edit_translation')}}">'+ data['es'] +'</a>';
+                        return html;
+                    }
+                },
+                {data: {}, render: function(data, row) {
+                        html = '<a href="#" class="editable editable-click edit_en" data-type="textarea" data-pk="'+ data['id'] +'" data-name="en" data-url="{{path('edit_translation')}}">'+ data['en'] +'</a>';
+                        return html;
+                    }
+                },
+                {data: {}, render: function(data, row) {
+                        html = '<a href="#" class="editable editable-click edit_fr" data-type="textarea" data-pk="'+ data['id'] +'" data-name="fr" data-url="{{path('edit_translation')}}">'+ data['fr'] +'</a>';
+                        return html;
+                    }
+                },
+                {data: {}, render: function(data, row) {
+                        html = '<a href="#" class="editable editable-click edit_it" data-type="textarea" data-pk="'+ data['id'] +'" data-name="it" data-url="{{path('edit_translation')}}">'+ data['it'] +'</a>';
+                        return html;
+                    }
+                },
+                {data: {}, render: function(data, row) {
+                        html = '<a href="#" class="editable editable-click edit_pt" data-type="textarea" data-pk="'+ data['id'] +'" data-name="pt" data-url="{{path('edit_translation')}}">'+ data['pt'] +'</a>';
+                        return html;
+                    }
+                },
+                {data: {}, render: function(data, row) {
+                        html = '<a href="#" class="editable editable-click edit_need_check" data-type="select" data-pk="'+ data['id'] +'" data-name="check" data-url="{{path('edit_translation')}}">'+ data['need_check'] +'</a>';
+                        return html;
+                    }
+                }
+            ]
+        });
+    }
+
+    {# Función encargada de recargar el ajax del datatable #}
+    let reloadDataTable = function() {
+        $("#table_translations").DataTable().destroy();
+        createTable();
+    }
+    {# ################################################### #}
+
+</script>
+
+
+{% endblock %}

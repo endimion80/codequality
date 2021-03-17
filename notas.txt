@@ -1,0 +1,435 @@
+#Update DB
+php bin/console doctrine:schema:update --force
+
+#Check DB
+php bin/console doctrine:schema:update --dump-sql
+
+#Creates a new console command class
+php bin/console make:command      
+
+#Creates a new controller class
+php bin/console make:controller
+
+#Creates a new Doctrine entity class
+php bin/console make:entity
+
+
+
+#listado del comando "make"
+
+make:auth                           
+make:command                        
+make:controller                     
+make:crud                           
+make:docker:database                
+make:entity                         
+make:fixtures                       
+make:form                           
+make:functional-test                
+make:message                        
+make:messenger-middleware           
+make:migration                      
+make:registration-form              
+make:reset-password                 
+make:serializer:encoder             
+make:serializer:normalizer          
+make:subscriber                     
+make:twig-extension                 
+make:unit-test                      
+make:user                           
+make:validator                      
+make:voter                   
+
+
+#Usuarios
+
+Backend
+Rutas: 
+http://localhost/rira_web/public/backend/login
+
+backend@gmail.com / 1234
+
+Front
+http://localhost/rira_web/public/login
+
+collaborator@gmail.com / 1234
+
+
+Testing:
+http://localhost/rira_web/public/test_excel_import
+
+
+-----------------------------------------
+// PHP UNIT TEST
+
+
+Instalación:
+composer require --dev symfony/phpunit-bridge
+composer require --dev symfony/browser-kit symfony/css-selector
+
+!Importante, la información para la conexión
+con la BD lo hace con el fichero .env, no con 
+el .env.local
+
+
+// Ejecutar todos los test  unitarios
+php bin/phpunit
+
+
+// Ejecutar un fichero en concreto
+php bin/phpunit tests/Utils/ExampleTest
+php bin/phpunit tests/Utils/ExamplePageTest
+
+-----------------------------------------
+####################################################
+Dudas a comentar:
+
+· Sucursales:
+    - Atributos de Sucursal (base de datos)
+
+· Grúas:
+    - ¿Qué son las zonas de servicio de grúas?
+    - Tipo de gestión ¿?
+    - Aclarar estructura de los horarios
+    - En servicios asociados, ¿"disponible" (en zeplin) es lo mismo que "adicional" (en bd)?
+
+· Intervenciones
+    - En que estado se inicializan tras la llegada del servicio por la API
+
+· Modificación Masiva
+
+
+
+/**
+* @Route("/user/home", name="user_home") 
+
+    /**
+    * @Route({
+    *     "en": "/home_user",
+    *     "es": "/inicio_usuario"
+    * }, name="user_home")
+    */
+
+
+####################################################
+
+Cambios en BD:
+
+· Eliminado el campo "type" VARCHAR(5) de crane_service
+· Creada la tabla CraneManagementType (crane_management_type)
+· Añadido el campo management_type a la tabla crane (Será una FK de crane_management_type)
+
+
+--> No está hecho aún pero habría que quitar "open_from", "open_to" y "working_days" de la tabla crane
+
+
+####################################################
+
+API ASITUR
+http://asicpd1ws01d.asitur.lan/RIRA/
+
+
+####################################################
+
+
+ -- Pasos para subir a Test de RIRA --
+
+####### EN LA RAMA DEVELOP ###################################################################################################
+
+· Comprobamos la base de datos:
+	>	php bin/console doctrine:schema:validate
+
+· Si NO está sincronizada:
+	>	php bin/console doctrine:schema:update --force
+
+-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+· Actualizamos la tabla de parámetros
+	>	php bin/console fixParameters
+
+-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+· Actualizamos traducciones en BD:
+	>	php bin/console functTranslationsUpdateDB
+
+· Traducimos (con Google) y formateamos:
+	>	php bin/console fixTranslations
+
+· Exportamos a los ficheros YAML:
+	>	php bin/console functTranslationsExport
+
+· [COMMIT DE LOS CAMBIOS EN LOS FICHEROS DE TRADUCCIONES]
+
+· [PUSH]
+
+
+########### CONEXIÓN AL SERVIDOR DE TEST Y SUBIDA ############################################################################
+
+· Subimos al servidor de test (Terminal local):
+
+	- Accedemos al directorio del proyecto:
+		>	cd /var/www/rira_web/		(o donde esté el proyecto)	
+
+	- Hacemos push al servidor de test:
+		>	git push riraTest develop
+
+------------------------------------------------------------------------------------------------------------------------------
+
+· Nos conectamos al servidor de test:
+	- Credenciales:
+		>	ssh root@51.210.250.175  ---  4b@}fXX,a#
+
+	- Accedemos al directorio del proyecto:
+		>	cd /var/www/html/
+
+-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+	- Comprobamos la base de datos:
+		>	php bin/console doctrine:schema:validate
+
+	- Si NO está sincronizada:
+		>	php bin/console doctrine:schema:update --force
+
+-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+	- Actualizamos la tabla de traducciones en BD:
+		>	php bin/console functTranslationsUpdateDB
+
+-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+	- Actualizamos la tabla de parámetros
+		>	php bin/console fixParameters
+	
+------------------------------------------------------------------------------------------------------------------------------
+Nota: Los ficheros YAML de traducciones deberían estar actualizados en el servidor de test si se han realizado los pasos anteriores. Por lo tanto, solo se debería actualizar la base de datos con el comando UpdateDB (la línea anterior a esta nota).
+
+---------------------------------------------------------------------------------
+
+
+------SUBIDA --------
+
+Previo
+0 º Aplicar YAML al servidor
+kubectl apply -f deployment_test.yaml --namespace=test
+
+
+Proceso subida
+
+0º Sincronizar el codigo a develop y subirlo a github (Opcional)
+
+1º Creamos la imagen que contenga el código
+
+docker build . -f "Dockerfile_test" -t riraasitur/riraweb:test
+
+2º Subimos la imagen a docker hub que ya contiene el código
+
+docker push riraasitur/riraweb:test
+
+3º Borrar todos los pods que instancien el deploy, para que automaticamente, se inicien de nuevo
+
+kubectl get pod --namespace=test -o wide
+kubectl delete pods <id_pod> --namespace=test
+
+kubectl delete pods rirav2-6b49fb6585-g9brg --namespace=test
+
+Ejecutar la shell de un pod 
+
+kubectl get pod --namespace=test -o wide
+
+kubectl exec --stdin --tty shell-demo -- /bin/bash
+
+kubectl exec --stdin --tty rirav2-6b49fb6585-jnc8c --namespace=test -- /bin/bash
+
+exec --stdin --tty --namespace=test -- /bin/bash pod
+
+kubectl get pods --namespace=test --no-headers=true | awk '/rirav2/{print $1}'| xargs  kubectl exec --stdin --tty --namespace=test -- /bin/bash pod
+
+
+-----------------------------------------------------------
+	Base de datos
+-----------------------------------------------------------
+Desde local (es importante saber que tienen la ip de la oficina en lista blanca)
+
+IP: mysql-kosaas.mysql.database.azure.com   
+User: kosaas_admin
+Password: lZ&3a0j7tx
+
+!Importante marcar el check de SSL
+
+Desde dentro del pod: 
+User: kosaas_admin
+Password: lZ&3a0j7tx
+IP: 10.15.8.119
+
+
+---------
+local
+DATABASE_URL=mysql://root:root@mysql:3306/riradata?serverVersion=5.7
+
+
+DATABASE_URL=mysql://kosaas_admin:lZ&3a0j7tx@10.15.8.119:3306/riradata?serverVersion=5.7
+
+#Servidores de Kosaas
+#DATABASE_URL=mysql://root:xg5cxVA43sSBF@51.210.250.175:3306/rira_test?serverVersion=5.7
+
+
+
+php symfony configure:database "mysql://kosaas_admin:lZ&3a0j7tx@10.15.8.119:3306/riradata?serverVersion=5.7"
+
+
+
+------------------
+
+
+
+MAE_TIPOS_VEHICULO_RIRA (y sus valores): Entidad que contiene los distintos tipos de vehículo que manejaremos en RIRA de
+ cara a mostrar un diseño de albarán u otro.
+
+o  
+MAE_TIPOS_VEHICULO_INTERVENCION (y sus valores): Entidad relacional que contiene la relación de Tipo de Vehículo del asegurado
+ con el Tipo de Vehículo RIRA que le corresponde
+
+o  
+SECCIONES_VEHICULO (y sus valores): Entidad en RIRA que contiene las secciones disponibles en un vehículo.
+
+o  
+PARTES_VEHICULO (y sus valores): Entidad en RIRA que contiene las distintas partes que contienen los vehículos.
+
+o  
+PARTES_SECCIONES_VEHICULOS (y sus valores): Entidad relacional en RIRA que contiene las distintas partes por sección y tipo
+ vehículo, así como a qué tipo de Documento va asociado a la hora de registrar las fotos de los desperfectos.
+
+
+
+makeCURL($url, 
+$arrayPost = null, 
+$parseJsonResult = true, 
+$useAsiturCredentials = true){
+
+
+
+[destinationType] -> String - Tipo de entrega, valores permitidos "taller","domicilio" o "base".
+
+
+
+VALORES MAE_TIPOS_DESTINO	
+00000001	Base
+00000002	Destino
+00000003	Domicilio
+
+
+ID PK
+
+cancelation_type  code HECHO
+intervention_status code_asitur HECHO 
+vh_type code HECHO 
+	    
+VALORES MAE_MOTIVOS_ANULACION_INTER FALTA Creo que esta la quitamos
+		string 8
+
+
+getCode()
+
+setCodeAsitur()
+
+operator_status code_asitur 
+attachment_type code_asitur
+
+model code
+crane_type code
+brand code
+crane_status code
+vh_model code
+availability_status code
+sinister_type code
+sinister_type_extension code
+crane_service_type code
+vh_brand code
+failure_type code
+failure_cause_type code
+riscause code
+province code
+country code
+public_holiday code
+insurance_entity code
+crane_management_type code
+intervention_failure_type code
+
+
+
+ALTER TABLE failure_type ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE vh_model ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE crane_type ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE brand ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE riscause ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE operator_status ADD code_asitur VARCHAR(8) DEFAULT NULL;
+ALTER TABLE crane_service_type ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE failure_cause_type ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE public_holiday ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE country ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE vh_brand ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE model ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE crane_management_type ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE sinister_type_extension ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE sinister_type ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE insurance_entity ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE availability_status ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE crane_status ADD code VARCHAR(8) DEFAULT NULL;
+ALTER TABLE attachment_type ADD code_asitur VARCHAR(8) DEFAULT NULL;
+ALTER TABLE province ADD code VARCHAR(8) DEFAULT NULL;
+
+UPDATE operator_status SET code_asitur = LPAD( id, 8, '0') WHERE code_asitur IS NULL;
+UPDATE attachment_type SET code_asitur = LPAD( id, 8, '0') WHERE code_asitur IS NULL;
+UPDATE model SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE crane_type SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE brand SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE crane_status SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE vh_model SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE availability_status SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE sinister_type SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE sinister_type_extension SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE crane_service_type SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE vh_brand SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE failure_type SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE failure_cause_type SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE riscause SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE province SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE country SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE public_holiday SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE insurance_entity SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE crane_management_type SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+UPDATE intervention_failure_type SET code = LPAD( id, 8, '0') WHERE code IS NULL;
+
+
+REVISAR: 
+
+$confirmation_1 = $this->syncService->updateCraneManagementTypeStatus($crane);
+$confirmation_2 = $this->syncService->updateCraneStatus($crane);
+$confirmation_3 = $this->syncService->updateCraneAvailabilityStatus($crane);
+
+$("#creationDate-datetimepicker").datepicker().datep
+
+
+var nowDate = new Date();
+            var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+            var tomorrow = today
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            $('#creationDate-datetimepicker').datepicker({format: "dd/mm/yyyy",
+                                                          autoclose: true,
+                                                          language: 'es',
+                                                          weekStart: 1,
+                                                          todayHighlight: true,
+                                                          //startDate: today,
+                                                          endDate:tomorrow
+                                                         });
+            $("#creationDate-datetimepicker").datepicker().datepicker("setDate", today);
+
+
+
+RIS
+dashboard_tab_ris
+dashboardTabRisAction
+
+Rechazados
+dashboard_tab_refuse
+dashboardTabRefuseAction

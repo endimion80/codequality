@@ -1,0 +1,12 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Titulo</title>
+    </head>
+    <body>
+        HOLA MUNDO :)     <br>
+        antonio.romero@kosaas.com
+        http://localhost/rira_web/public/
+        25f3f809f81db925f3f809f81df2
+    </body>
+</html>

@@ -1,0 +1,35 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: rira
+  labels:
+    app: rira
+spec:
+  selector:
+    matchLabels:
+      app: rira
+      tier: frontend
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: rira
+        tier: frontend
+    spec:
+      containers:
+      - image: riraasitur/riraweb:test
+        imagePullPolicy: Always
+        name: rira
+        ports:
+        - containerPort: 80
+          name: rira-http
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+          - 10.15.16.4
+          - 8.8.8.8
+          - 8.8.4.4
+        searches:
+          - custom.dns.local

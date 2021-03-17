@@ -1,0 +1,134 @@
+.nav-tabs .nav-link {
+    height: 60px;
+    font-size: 24px;
+    color: var(--main-lightgrey);
+    background-color: white !important;
+}
+
+.nav-tabs .nav-item .nav-link:hover {
+    color: var(--main-blue);
+}
+
+.nav-tabs .nav-item .nav-link.active {
+    color: var(--main-blue);
+    cursor: default;
+}
+
+.tab-active-hr {
+    border-top: 5px solid var(--main-blue);
+    margin-top: 0;
+}
+
+.nav-tabs.nav-justified > li > a {
+    border: none !important;
+}
+
+#page-title {
+    padding: 10px 25px 0px 25px;
+}
+
+button {
+    font-size: 14px !important;
+}
+
+.go_back_link {
+    margin-right: 20px;
+    color: var(--main-blue);
+    cursor: pointer;
+}
+
+.go_back_link:hover {
+    color: var(--main-blue);
+    font-weight: bold;
+}
+
+.go_back_link i {
+    margin-right: 20px;
+    color: var(--main-blue);
+    vertical-align: middle;
+}
+
+.labelBlue{
+    font-size: 18px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: var(--main-blue);
+    margin-bottom: 20px;
+}
+
+.labelGrey{
+    /*font-size: 18px;*/
+    font-size: 13px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color:  var(--main-grey);
+}
+
+.labelGrey_16{
+    font-size: 16px;
+    /*font-weight: 600;*/
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color:  var(--main-grey);
+}
+
+.custom_collapse_panel_heading {
+    color: var(--main-blue);
+    cursor: pointer;
+    border: none;
+    box-shadow: none;
+}
+
+.custom_collapse_panel_heading:hover {
+    background-color: var(--main-blue-light);
+}
+
+.custom_collapse_panel_heading:after {
+    border-bottom: none !important;
+}
+ 
+.labelCheckbox{
+    color:  var(--main-grey);
+    position: relative;
+    top: -11px;
+    margin-left: 10px;
+    font-size: 17px;
+}
+
+.labelInput{
+    color:  var(--main-grey);
+    position: relative;
+    margin-left: 10px;
+    font-size: 17px;
+}
+
+.alignRight{
+    text-align: right;
+}
+ 
+.swal2-html-container {
+    font-size: 14px;
+}
+
+.swal2-actions {
+    flex-direction: row-reverse;
+}
+
+.profile_img_camera {
+    background: transparent !important;
+}
+
+.btnMore{
+    cursor: pointer;
+    border: 1px solid #d2d2d2;
+    width: 80%;
+    margin-left: 10%; 
+}

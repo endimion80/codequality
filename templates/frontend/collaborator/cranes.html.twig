@@ -1,0 +1,987 @@
+{% extends 'includes/sidebar.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+{{parent()}}
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-data_management.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-asitur_datatable.css') }}">
+
+{% endblock %}
+
+{% block content %}
+
+    <!--Modal add crane-->
+    <div class="modal fade" id="add_crane" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="display: flex; flex-direction: column; align-items: center;">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" tabindex="-1" style="font-size: 21px !important;">×</button>
+                    <h4 id="myModalLabel">{{ ("modal.title.new_crane")|trans }}</h4>
+                </div>
+                <div class="modal-body" style="padding: 15px 25px;">
+                    <form id="modal_add_crane_form" autocomplete="off">
+                        <div class="row">
+                            {# Matrícula #}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"data_management.input.label.plate"|trans}}</label>
+                                    <input id="plate_input" type="text" name="c_plate" class="form-control cranes_modal_inputs" maxlength="15" spellcheck="false">
+                                </div>
+                            </div>
+                            {# Identificador #}
+                            <div class="col-sm-6">
+                                <label class="control-label">{{"data_management.input.label.reference"|trans}}</label>
+                                <input id="reference_input" type="text" name="c_reference" class="form-control cranes_modal_inputs" maxlength="50" spellcheck="false">
+                            </div>
+                        </div>
+                        <div class="row">
+                            {# Sucursal #}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"modal.input.crane.branchOffice"|trans}}</label>
+                                    <select id="branchOffice-chosen-select" name="c_branchOffice" class="cranes_modal_inputs modalSelect" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                        {% for branchOffice in branchOfficesList %}
+                                            <option value="{{ branchOffice.id}}"> {{ branchOffice.name }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {# Rótulo #}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"modal.input.crane.label"|trans}}</label>
+                                    <select id="label-chosen-select" name="c_label" class="cranes_modal_inputs modalSelect" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                        {% for label in labels %}
+                                            <option value="{{ label.id}}"> {{ label.description }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {# Marca #}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"data_management.input.label.brand"|trans}}</label>
+                                    <select id="brand-chosen-select" name="c_brand" class="cranes_modal_inputs modalSelect" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                        {% for brand in brands %}
+                                            <option value="{{ brand.id}}"> {{ brand.description }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {# Modelo #}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"modal.input.crane.model"|trans}}</label>
+                                    <select disabled id="model-chosen-select" name="c_model" class="cranes_modal_inputs modalSelect" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {# Tipo grúa #}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"modal.input.crane.type"|trans}}</label>
+                                    <select id="type-chosen-select" name="c_type" class="cranes_modal_inputs modalSelect" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                        {% for craneType in craneTypes %}
+                                            <option value="{{ craneType.id}}"> {{ craneType.description }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {# Tipo asignación #}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"data_management.input.label.management_type"|trans}}</label>
+                                    <select id="managementType-chosen-select" name="c_managementType" class="cranes_modal_inputs modalSelect" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                        {% for craneManagementType in craneManagementTypes %}
+                                            <option value="{{ craneManagementType.id}}"> {{ craneManagementType.description }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {# Estado #}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"data_management.input.label.status"|trans}}</label>
+                                    <select id="status-chosen-select" name="c_status" class="cranes_modal_inputs modalSelect" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                        {% for craneStatus in craneStatusList %}
+                                            <option value="{{ craneStatus.id}}"> {{ craneStatus.description }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {# Disponibilidad #}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"modal.input.crane.availabilityStatus"|trans}}</label>
+                                    <select id="availabilityStatus-chosen-select" name="c_availabilityStatus" class="cranes_modal_inputs modalSelect" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                        {% for craneAvailabilityStatus in craneAvailabilityStatusList %}
+                                            <option value="{{ craneAvailabilityStatus.id}}"> {{ craneAvailabilityStatus.description }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {# Fecha de alta #}
+                            <!--
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"modal.input.crane.creationDate"|trans}}</label>
+                                    <input  id="creationDate-datetimepicker" type="text" name="c_creationDate" class="form-control cranes_modal_inputs" placeholder="dd/mm/yyyy" maxlength="10" spellcheck="false"/>
+                                </div>
+                            </div>
+                            -->
+                            {#? Posible Fecha de baja #}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {# Posible input de Fecha de baja #}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="addCrane_submit" class="btn btn-primary">{{ ("general.accept")|trans }}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!--End modal add crane-->
+
+    <!--Page Title-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="page-title">
+        <ul class="nav nav-tabs nav-justified">
+            <li class="nav-item col-md-4">
+                <a class="nav-link" href="{{ path('branch_offices') }}">{{"data_management.tab.branch_offices"|trans}}</a>
+            </li>
+            <li class="nav-item col-md-4">
+                <a class="nav-link active">{{"data_management.tab.cranes"|trans}}</a>
+                <hr class="tab-active-hr">
+            </li>
+            <li class="nav-item col-md-4">
+                <a class="nav-link" href="{{ path('operators') }}">{{"data_management.tab.operators"|trans}}</a>
+            </li>
+        </ul>
+    </div>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--End page title-->
+
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+
+        {# Bloque de botones de la parte superior de la tabla #}
+        <div class="filters_and_buttons" style="padding: 0; display: flex; justify-content: space-between; margin-bottom: 25px;">
+            <div id="top_left_div" style="padding: 0;">
+                {# Nueva grúa #}
+                <button type="button" class="btn top_left-buttons new-button" data-toggle='modal' data-target='#add_crane'> <img src="{{asset("media/datatables/icon-add.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.new')|trans}}</button>
+                {# Editar #}
+                <form id="edit_form" action="{{ path('detail_crane') }}" method="POST" style="display: none;">
+                    <input id="craneId_input" type="hidden" name="craneId" value="">
+                    <input type="hidden" name="mode" value="edit_allowed">
+                </form>
+                <button type="button" class="btn top_left-buttons edit-button" disabled> <img src="{{asset("media/datatables/lapiz-icono.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.edit')|trans}}</button>
+                {# Eliminar #}
+                <button type="button" class="btn top_left-buttons remove-button" disabled> <img src="{{asset("media/datatables/basura-icono.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.remove')|trans}}</button>
+                {# Asignación #}
+                <div class="btn-group">
+                    <button type="button" class="btn top_left-buttons digital_asign-button dropdown-toggle" style="border: 1px solid transparent; box-shadow: none;"  data-toggle="dropdown" disabled> <img src="{{asset("media/datatables/power.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.digital_asign')|trans}}</button>
+                    <ul class="dropdown-menu">
+                        <li><a class="management_type_option" style="font-size: 14px; cursor: pointer;" data-id="1">{{"crane.management_type.manual"|trans}}</a></li>
+                        <li><a class="management_type_option" style="font-size: 14px; cursor: pointer;" data-id="2">{{"crane.management_type.automatic"|trans}}</a></li>
+                    </ul>
+                </div>
+                {# Exportar #}
+                <button type="button" class="btn top_left-buttons export-button"> <img src="{{asset("media/datatables/export.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.export')|trans}}</button>
+            </div>
+            <div id="top_right_div" style="padding: 0; border-left: 2px #dbdbdb solid;">
+                {# Filtrar #}
+                <button id="filter-button" type="button" class="btn filtering-buttons" data-target="#filter_panel" data-toggle="collapse"> <img src="{{asset("media/datatables/filter.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.filter')|trans}}</button>
+                {# Buscar #}
+                <button id="search-button" type="button" class="btn filtering-buttons" data-target="#search_panel" data-toggle="collapse"> <img src="{{asset("media/datatables/search.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.search')|trans}}</button>
+            </div>
+        </div>
+        {# ################################################## #}
+        
+        {# Bloque de filtros en datatable #}
+        <div class="panel" style="box-shadow: none; -webkit-box-shadow: none; margin-bottom: 0;">
+            <div id="filter_panel" class="filter_panel collapse">
+                <div class="panel-body">
+                    <div class="panel-custom-heading">
+                        <div class="panel-control">
+                            <img id="delete_filters_value" class="delete_filters_value" src="{{asset("media/datatables/equis.png")}}" width="32px" height="32px">
+                        </div>
+                        <h3 class="panel-title" style="font-style: italic;">{{"general.filter"|trans}}</h3>
+                    </div>
+                    <form id="form_filters" autocomplete="off">
+                        <div class="row" style="margin: 0;">
+                            <div class="input_filter_div col-sm-6 col-md-4 col-lg-2">
+                                <label for="reference-input" class="filter_labels">{{"data_management.input.label.reference"|trans}}</label>
+                                <input id="reference-input" name="reference" type="text" class="form-control filter_inputs" placeholder="{{"data_management.input.placeholder.reference"|trans}}" spellcheck="false">
+                            </div>
+                            <div class="input_filter_div col-sm-6 col-md-4 col-lg-2">
+                                <label for="plate-input" class="filter_labels">{{"data_management.input.label.plate"|trans}}</label>
+                                <input id="plate-input" name="plate" type="text" class="form-control filter_inputs" placeholder="{{"data_management.input.placeholder.plate"|trans}}" spellcheck="false">
+                            </div>
+                            <div class="input_filter_div col-sm-6 col-md-4 col-lg-2">
+                                <label for="brand-input" class="filter_labels">{{"data_management.input.label.brand"|trans}}</label>
+                                <select id="brand-input" name="brand" class="form-control filter_inputs select_inputs chosen-select">
+                                    <option value=""> ---- </option>
+                                    {% for brand in brands %}
+                                        <option value="{{ brand.id}}"> {{ brand.description }} </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="input_filter_div col-sm-6 col-md-4 col-lg-2">
+                                <label for="crane_type-input" class="filter_labels">{{"data_management.input.label.crane_type"|trans}}</label>
+                                <select id="crane_type-input" name="crane_type" class="form-control filter_inputs select_inputs chosen-select">
+                                    <option value=""> ---- </option>
+                                    {% for craneType in craneTypes %}
+                                        <option value="{{ craneType.id}}"> {{ craneType.description }} </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="input_filter_div col-sm-6 col-md-4 col-lg-2">
+                                <label for="services-input" class="filter_labels">{{"data_management.input.label.services"|trans}}</label>
+                                <input id="services-input" name="services" type="text" class="form-control filter_inputs" placeholder="{{"data_management.input.placeholder.services"|trans}}" spellcheck="false">
+                            </div>
+                            <div class="input_filter_div col-sm-6 col-md-4 col-lg-2">
+                                <label for="zones-input" class="filter_labels">{{"data_management.input.label.zones"|trans}}</label>
+                                <input id="zones-input" name="zones" type="text" class="form-control filter_inputs" placeholder="{{"data_management.input.placeholder.zones"|trans}}" spellcheck="false">
+                            </div>
+                        </div>
+                        <div class="row" style="margin: 0;">
+                            <div class="input_filter_div col-sm-6 col-md-4 col-lg-2">
+                                <label for="management_type-input" class="filter_labels">{{"data_management.input.label.management_type"|trans}}</label>
+                                <select id="management_type-input" name="management_type" class="form-control filter_inputs select_inputs chosen-select">
+                                    <option value=""> ---- </option>
+                                    {% for craneManagementType in craneManagementTypes %}
+                                        <option value="{{ craneManagementType.id}}"> {{ craneManagementType.description }} </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="input_filter_div col-sm-6 col-md-4 col-lg-2">
+                                <label for="status-input" class="filter_labels">{{"data_management.input.label.status"|trans}}</label>
+                                <select id="status-input" name="status" class="form-control filter_inputs select_inputs chosen-select">
+                                    <option value=""> ---- </option>
+                                    {% for craneStatus in craneStatusList %}
+                                        <option value="{{ craneStatus.id}}"> {{ craneStatus.description }} </option>
+                                    {% endfor %}
+                                    <option value="4"> Averiada o retirada </option>
+                                </select>                            
+                            </div>
+
+                            <div class="input_filter_div col-sm-6 col-md-4 col-lg-2">
+                                <label for="label-input" class="filter_labels">{{"data_management.input.label.label"|trans}}</label>
+                                <select id="label-input" name="label" class="form-control filter_inputs select_inputs chosen-select">
+                                    <option value=""> ---- </option>
+                                    {% for label in labels %}
+                                        <option value="{{ label.id}}"> {{ label.description }} </option>
+                                    {% endfor %}
+                                </select>                     
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {# ############################## #}
+
+        {# Bloque de búsqueda en datatable #}
+        <div class="panel" style="box-shadow: none; -webkit-box-shadow: none; margin-bottom: 0;">
+            <div id="search_panel" class="search_panel collapse">
+                <div class="panel-body">
+                    <div class="input-group">
+                        <input id="search-input" class='search-input' type="text" class="form-control" placeholder="{{"general.search"|trans}}..." spellcheck="false" autocomplete="false">
+                        <span id="delete_search_value" class="delete_search_value input-group-addon"><img src="{{asset("media/datatables/equis.png")}}" width="32px" height="32px"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {# ############################### #}
+
+        <hr id="datatable_hr" class="datatable_hr">
+
+        <table id="table_cranes" class="table">
+            <thead>
+                <tr>
+                    <th><input type='checkbox' class='checkboxFullList imgCheckbox'/></th>
+                    <th>{{"dataTable.cranes.reference"|trans}}</th>
+                    <th>{{"dataTable.cranes.plate"|trans}}</th>
+                    <th>{{"dataTable.cranes.brand"|trans}}</th>
+                    <th>{{"dataTable.cranes.crane_type"|trans}}</th>
+                    <th>{{"dataTable.cranes.services"|trans}}</th>
+                    <th>{{"dataTable.cranes.zones"|trans}}</th>
+                    <th>{{"dataTable.cranes.management_type"|trans}}</th>
+                    <th>{{"dataTable.dashboard.status"|trans|upper}}</th>
+                    <th>{{"dataTable.cranes.label"|trans}}</th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+
+    </div>
+    <!--===================================================-->
+    <!--End page content-->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var arrayChecked = [];
+
+        $(document).ready(function(){
+            var time = null;
+
+            {#* Para que el apartado correspondiente en la barra lateral esté activo #}
+            $("#data_management_li").addClass("active");
+            {#* #################################################################### #}
+
+            {#* Inputs y Selects del modal #}
+            $(".modalSelect").chosen({ width:'100%' });
+
+            var nowDate = new Date();
+            var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+            var tomorrow = today
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            /*
+            $('#creationDate-datetimepicker').datepicker({format: "dd/mm/yyyy",
+                                                          autoclose: true,
+                                                          language: 'es',
+                                                          weekStart: 1,
+                                                          todayHighlight: true,
+                                                          //startDate: today,
+                                                          endDate:tomorrow
+                                                         });
+            $("#creationDate-datetimepicker").datepicker().datepicker("setDate", today);
+            */
+
+            $('#brand-chosen-select').on('change', function(){
+                if($(this).val() == "") {
+                    $("#model-chosen-select").empty();
+                    $("#model-chosen-select").append('<option value=""> ---- </option>');
+                    $("#model-chosen-select").attr('disabled', 'disabled');
+                    $("#model-chosen-select").trigger("chosen:updated");
+                } else {
+                    $.getJSON("{{ path('model_chosen_list') }}",{
+                        brand: $(this).val()
+                    }, function(json){
+                        $("#model-chosen-select").empty();
+                        $("#model-chosen-select").append('<option value=""> ---- </option>');
+                        $.each(json, function (idx, obj) {
+                            $("#model-chosen-select").append('<option value="' + obj.id + '">' + obj.description + '</option>');
+                        });
+                        $("#model-chosen-select").removeAttr('disabled');
+                        $("#model-chosen-select").trigger("chosen:updated");
+                    });
+                }
+            });                                             
+            {#* ########################## #}
+            
+            {#* Borra el contenido de los inputs en el datatable #}
+            $("#delete_filters_value").click(function() {
+                $(".filter_inputs").val('');
+                $(".select_inputs").trigger("chosen:updated");
+                reloadDataTable();
+            });  
+
+            $("#delete_search_value").click(function() {
+                $("#search-input").val('');
+                reloadDataTable();
+            });
+            {#* ################################################ #}
+
+            {#* Activa los botones de búsqueda y filtro #}
+            $("#filter-button").unbind('click');
+            $("#filter-button").click(function() {
+                if($(this).hasClass("active") && $("#filter_panel").hasClass("in")) {
+                    $(this).removeClass("active");
+                    $("#datatable_hr").css({"display": ""});
+                } else if(!$("#filter_panel").hasClass("collapsing")) {
+                    $(this).addClass("active");
+                    $("#search-input").val('');
+                    $("#search-button").removeClass("active");
+                    $("#search_panel").removeClass("in");
+                    $("#filter_panel").css({"display": ""});
+                    $("#datatable_hr").css({"display": "none"});
+                    $("#search_panel").css({"display": "none"});
+                    clearInterval(time);
+                    time = setTimeout(function() {
+                        $("#search_panel").removeClass("in");
+                    }, 250);
+                }
+            });
+
+            $("#search-button").unbind('click');
+            $("#search-button").click(function() {
+                if($(this).hasClass("active") && $("#search_panel").hasClass("in")) {
+                    $(this).removeClass("active");
+                    $("#datatable_hr").css({"display": ""});
+                } else if(!$("#search_panel").hasClass("collapsing")) {
+                    $(this).addClass("active");
+                    $(".filter_inputs").val('');
+                    $("#filter-button").removeClass("active");
+                    $("#search_panel").css({"display": ""});
+                    $("#datatable_hr").css({"display": "none"});
+                    $("#filter_panel").css({"display": "none"});
+                    clearInterval(time);
+                    time = setTimeout(function() {
+                        $("#filter_panel").removeClass("in");
+                    }, 250);
+                }
+            });
+            {#* ####################################### #}
+
+            createTable();
+
+            let auxObjId;
+
+            {#* Inicialización de chosens del bloque de filtros #}
+            $("#brand-input").chosen();
+            $("#label-input").chosen({disable_search: true});
+            $("#status-input").chosen({disable_search: true});
+            $("#management_type-input").chosen({disable_search: true});
+            $("#crane_type-input").chosen({disable_search: false});
+            {#* ############################################### #}
+
+            $('#search-input').keyup(function() {
+                clearInterval(time);
+                time = setTimeout(function() {
+                    reloadDataTable();
+                }, 1500);
+            });
+
+            $('.filter_inputs').keyup(function() {
+
+                clearInterval(time);
+                time = setTimeout(function() {
+                    reloadDataTable();
+                }, 1500);
+            });
+
+            $('.select_inputs').on('change', function(){
+                reloadDataTable();
+            });
+
+            {#* Funcionalidad al enviar el formulario del botón NUEVO #}
+            $('#addCrane_submit').click(function(){
+
+                $("#modal_add_crane_form").submit(function( event ) {
+                    event.preventDefault();
+                });
+
+                if( $.trim($("#plate_input").val())                 == ""     ||
+                    $.trim($("#reference_input").val())             == ""     ||
+                    $("#branchOffice-chosen-select").val()          == ""     ||
+                    $("#label-chosen-select").val()                 == ""     ||
+                    $("#brand-chosen-select").val()                 == ""     ||
+                    $("#model-chosen-select").val()                 == ""     ||
+                    $("#type-chosen-select").val()                  == ""     ||
+                    $("#managementType-chosen-select").val()        == ""     ||
+                    $("#status-chosen-select").val()                == ""     ||
+                    $("#availabilityStatus-chosen-select").val()    == ""     
+                    //||$.trim($("#creationDate-datetimepicker").val()) == ""     
+                ) {  
+                    swal.fire({
+                        title: '{{"general.form.allfields.mandatory"|trans}}',
+                        html: '',
+                        icon: 'error',
+                        showConfirmButton: true
+                    });
+                } else {
+                    $.ajax({
+                        url:'{{ path("create_new_crane") }}',
+                        data: {
+                            'inputs': $('#modal_add_crane_form').serializeArray()
+                        },
+                        type:"POST",
+                        success: function(data){
+                            if(data['status']) {
+                                swal.fire({
+                                    title: "{{'general.modal.success'|trans}}",
+                                    html: "",
+                                    icon: 'success',
+                                    showConfirmButton: true
+                                });
+                                reloadDataTable();
+                                $('#add_crane').modal('hide');
+                                $(".cranes_modal_inputs").val('');
+                                $(".modalSelect").trigger("chosen:updated");
+                            } else {
+                                swal.fire({
+                                    title: data.message,
+                                    html: '',
+                                    icon: 'error',
+                                    showConfirmButton: true
+                                });
+                            }
+                        },
+                        error:function(err){
+                            swal.fire({
+                                title: err["responseJSON"]["message"],
+                                html: '',
+                                icon: 'error',
+                                showConfirmButton: true
+                            });
+                        }
+                    });
+                }
+            });
+            {#* ############################################# #}
+
+            {#* Funcionalidad al hacer clic en el botón EDITAR #}
+            $(".edit-button").click(function() {
+                $("#craneId_input").val(arrayChecked[0]);
+                $("#edit_form").submit();
+            });
+            {#* ############################################## #}
+
+            {#* Funcionalidad al hacer clic en el botón ELIMINAR #}
+            $(".remove-button").click(function() {
+                swal.fire({
+                    title: '',
+                    html: '{{"modal.crane.remove"|trans}}',
+                    icon: 'warning',
+                    showConfirmButton: true,
+                    confirmButtonText: "{{'modal.general.remove.confirm'|trans}}",
+                    confirmButtonColor: "red",
+                    focusConfirm: false,
+                    allowEnterKey: false,
+                    showCancelButton: true,
+                    cancelButtonText: "{{'general.cancel'|trans}}"
+                }).then((result) => {
+                    if(result.isConfirmed) {
+                        $.ajax({
+                            url:'{{ path('cranes_delete') }}',
+                            data: {
+                                'arrayChecked': arrayChecked
+                            },
+                            type:"POST",
+                            success: function(data){
+                                if (data.status){
+                                    swal.fire({
+                                        title: '{{ ("modal.general.operation.success")|trans }}',
+                                        html: "",
+                                        icon: 'success',
+                                        showConfirmButton: true
+                                    });
+                                } else {
+                                    swal.fire({
+                                        title: data.message,
+                                        html: '',
+                                        icon: 'error',
+                                        showConfirmButton: true
+                                    });
+                                }
+                            },
+                            error: function(err){
+                                swal.fire({
+                                    title: '{{ ("modal.general.operation.error")|trans }}',
+                                    html: '',
+                                    icon: 'error',
+                                    showConfirmButton: true
+                                });
+                            }
+                        });
+                        reloadDataTable();
+                    }
+                });
+            });
+            {#* ################################################ #}
+
+            {#* Funcionalidad al hacer clic en el botón ASIGNACIÓN #}
+            $(".management_type_option").click(function() {
+                swal.fire({
+                    title: '',
+                    html: '{{"modal.crane.change_management_type"|trans}}',
+                    icon: 'warning',
+                    showConfirmButton: true,
+                    confirmButtonText: "{{'general.accept'|trans}}",
+                    showCancelButton: true,
+                    cancelButtonText: "{{'general.cancel'|trans}}"
+                }).then((result) => {
+                    if(result.isConfirmed) {
+                        $.ajax({
+                            url:'{{ path('cranes_modify_management_type') }}',
+                            data: {
+                                'arrayChecked': arrayChecked,
+                                'typeId': $(this).data('id')
+                            },
+                            type:"POST",
+                            success: function(data){
+                                if (data.status){
+                                    swal.fire({
+                                        title: '{{ ("modal.general.operation.success")|trans }}',
+                                        html: "",
+                                        icon: 'success',
+                                        showConfirmButton: true
+                                    });
+                                } else {
+                                    swal.fire({
+                                        title: data.message,
+                                        html: '',
+                                        icon: 'error',
+                                        showConfirmButton: true
+                                    });
+                                }
+                            },
+                            error: function(err){
+                                swal.fire({
+                                    title: '{{ ("modal.general.operation.error")|trans }}',
+                                    html: '',
+                                    icon: 'error',
+                                    showConfirmButton: true
+                                });
+                            }
+                        });
+                        reloadDataTable();
+                    }
+                });
+            });
+          
+            {#* Funcionalidad al hacer clic en el botón EXPORTAR #}
+            $(".export-button").click(function() {
+
+                $.ajax({
+                        url:'{{ path('cranes_export_excel') }}',
+                        data: {
+                            'form_filters': $('#form_filters').serializeArray(),
+                            'search_filter': $('#search-input').val(),
+                        },
+                        type:"POST",
+                        success: function(data){
+                            if (data.status){
+                                swal.fire({
+                                    title: '{{ ("general.export.success")|trans }}',
+                                    html: "",
+                                    icon: 'success',
+                                    showConfirmButton: true
+                                });
+                                
+                                var fileName = data.data.fileName;
+                                var filePath = data.data.filePath;
+                                
+                                var formTmp = document.createElement('form');
+                                $(formTmp).attr('action',"{{ path('download_file') }}");
+                                $(formTmp).attr('name','formTmp');
+                                $(formTmp).attr('target','_blank');
+                                $(formTmp).attr('enctype','multipart/form-data');
+                                $(formTmp).attr('method','post');
+                                $(formTmp).append("<input type='hidden' name='fileName' value='" + fileName + "'/>");
+                                $(formTmp).append("<input type='hidden' name='filePath' value='" + filePath + "'/>");
+                                document.body.appendChild(formTmp);
+                                document.formTmp.submit();
+                                document.body.removeChild(formTmp);
+                            } else {
+                                swal.fire({
+                                    title: '{{ ("general.export.error")|trans }}',
+                                    html: '',
+                                    icon: 'error',
+                                    showConfirmButton: true
+                                });
+                            }
+                        },
+                        error:function(err){
+                            swal.fire({
+                                title: '{{ ("general.export.error")|trans }}',
+                                html: '',
+                                icon: 'error',
+                                showConfirmButton: true
+                            });
+                        }
+                });
+            });
+            {#* ################################################ #}
+
+        });
+
+        {# Creación Datatable #}
+        function createTable() {
+            tableClients = $('#table_cranes').DataTable({
+                dom: "<'row'<'col-sm-12't>><'row'<'col-sm-5'l><'col-sm-7'p>>",
+                order: [1, 'ASC'],
+                searching: true,
+                rowReorder: true,
+                columnDefs: [
+                    { orderable: true, className: 'reorder', targets: [1,2,3,4,5,7,8,9] },
+                    { orderable: false, targets: [0,6,10] }
+                ],
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "{{('dataTable.general.lengthMenu.all')|trans}}"]
+                ],
+                responsive: false,
+                autoWidth: false,
+                scrollX: true,
+                processing: false,
+                serverSide: true,
+                pagingType: "full_numbers",
+                language: {
+                    "sProcessing": "{{ ('dataTable.general.language.sProcessing ') | trans }}",
+                    "sLengthMenu": "{{ ('dataTable.asitur.language.sLengthMenu') | trans}}: _MENU_",
+                    "sZeroRecords": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                    "sEmptyTable": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                    "sInfo": "{{ ('dataTable.general.language.sInfo') | trans }}",
+                    "sInfoEmpty": "{{ ('dataTable.general.language.sInfoEmpty') | trans }}",
+                    "sInfoFiltered": "{{ ('dataTable.general.language.sInfoFiltered') | trans }}",
+                    "sInfoPostFix": "",
+                    "sSearch": "{{ ('dataTable.general.language.sSearch') | trans }}:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "{{ ('dataTable.general.language.sLoadingRecords') | trans }}",
+                    "oPaginate": {
+                        "sFirst": "<<",
+                        "sLast": ">>",
+                        "sNext": ">",
+                        "sPrevious": "<",
+                    },
+                    "oAria": {
+                        "sSortAscending": ": {{ ('dataTable.general.language.oAria.sSortAscending') | trans }}",
+                        "sSortDescending": ": {{ ('dataTable.general.language.oAria.sSortDescending') | trans }}"
+                    },
+                },
+                ajax: {
+                    url: "{{ path('cranes_table') }}",
+                    method: 'POST',
+                    data: {
+                        
+                    }
+                },
+                initComplete: function() {
+                    // Enable THEAD scroll bars
+                    $('.dataTables_scrollHead').css('overflow', 'auto');
+
+                    // Sync THEAD scrolling with TBODY
+                    $('.dataTables_scrollHead').on('scroll', function () {
+                        $('.dataTables_scrollBody').scrollLeft($(this).scrollLeft());
+                    });          
+                },
+                drawCallback: function() {
+
+                    // check checked
+                    $('.checkboxCranes').each(function(){
+                        var crane_id = $(this).data('crane');
+                        var index = arrayChecked.indexOf(crane_id);
+                        if (index > -1) {
+                            $(this).prop('checked', true);
+                        }
+                    });
+
+                    // recarga visual
+                    reloadCheckbox();
+
+                    // Acción de actualización
+                    $('.checkboxCranes').change(function(){
+                        var crane_id = $(this).data('crane');
+                        if ($(this).is(":checked")){
+                            if(!arrayChecked.includes(crane_id)) {
+                                arrayChecked.push(crane_id);
+                            }
+                            $(this).closest("tr").addClass("rowSelected");
+                        }
+                        else{
+                            var index = arrayChecked.indexOf(crane_id);
+                            if (index > -1) {
+                                arrayChecked.splice(index, 1);
+                            }
+                            $(this).closest("tr").removeClass("rowSelected");
+                        }
+
+                        {#* Se comprueba que haya checkboxes activos para activar o desactivar botones de modificación #}
+                        if(arrayChecked.length) {
+                            if(arrayChecked.length > 1) {
+                                $(".edit-button").prop('disabled', true);
+                            } else {
+                                $(".edit-button").prop('disabled', false);
+                            }
+
+                            $(".remove-button").prop('disabled', false);
+                            $(".digital_asign-button").prop('disabled', false);
+                        } else {
+                            $(".edit-button").prop('disabled', true);
+                            $(".remove-button").prop('disabled', true);
+                            $(".digital_asign-button").prop('disabled', true);
+                        }
+
+                    });// change
+
+                    var switch_elems = Array.prototype.slice.call(document.querySelectorAll('.check_status'));
+                    
+                    switch_elems.forEach(function(html){
+                        new Switchery(html, {disabled: true, 
+                                             disabledOpacity: 1,
+                                             color: "var(--main-blue)",
+                                             secondaryColor: '#cdd3db'
+                                            });
+                    });
+
+                    $('.btnMore').click(function(){
+                        let text = $(this).data('text');
+                        swal.fire({
+                            title: '',
+                            html: text,
+                            icon: 'info',
+                            showConfirmButton: true
+                        }); 
+                    });
+                },
+                columns: [
+                    {data: {}, render: function(data, row) {
+                        var html = "<input type='checkbox' class='checkboxCranes imgCheckbox' data-crane='"+data.id+"'/>";
+                        return html;
+                        }
+                    },
+                    {data: 'reference'},
+                    {data: 'plate'},
+                    {data: 'brand'},
+                    {data: 'crane_type'},
+                    {data: {}, render: function(data, row) {
+
+                            if( data['services'] != null ) {
+                                let text = data['services'];
+                                let result = text.replaceAll(",", "<br>");
+                                return result;
+                            } else {
+                                return "";
+                            }
+                        }
+                    },
+                    {data: {}, render: function(data, row) {
+                            if( data['zones'] != null ) {
+                                let maxCharacter = 25;
+                                let text = data['zones'];
+
+                                if (text.length > maxCharacter){
+                                    let format_text =  text.substr(0,maxCharacter) + '...';
+                                    let formatResult = format_text.replaceAll(",", "<br>");
+                                    let formatFullResult = text.replaceAll(",", "<br>");
+                                    let html = formatResult + "<div class='btnMore' data-text=\""+formatFullResult+"\">Ver más</div>"                                
+                                    return html ;
+
+                                }
+                                else{
+                                    let formatResult = text.replaceAll(",", "<br>");
+                                    return formatResult;
+                                }
+                            } else {
+                                return "";
+                            }
+                        }
+                    },
+                    {data: 'management_type'},
+                    {data: {}, render: function(data, row) {
+                            //let status_id = data['status_id'];
+                            return "<b>" + data['status'] + "</b>";
+                            /*
+                            if( data['status'] == 1 ) {
+                                let html= '<div title="{{"data_management.crane_status.select.option.active"|trans}}" style="display: flex; align-items: center;">';
+                                html += '<input class="check_status switchery" type="checkbox" checked> </div>';
+
+                                return html + "asdf";
+                            } else if( data['status'] == 2 || data['status'] == 3 ) {
+                                let html= '<div title="REPLACE_TITLE" style="display: flex; align-items: center;">';
+                                html += '<input class="check_status" type="checkbox"> </div>';
+                                
+                                if (data['status'] == 2) {
+                                    html = html.replace("REPLACE_TITLE", "{{'data_management.crane_status.select.option.damaged'|trans}}"); 
+                                } else {
+                                    html = html.replace("REPLACE_TITLE", "{{'data_management.crane_status.select.option.retired'|trans}}");
+                                }
+                                
+                                return html + "asdf";
+                            } else {
+                                return "" + "asdf";
+                            }
+                            */
+                        }
+                    },
+                    {data: 'label'},
+                    {data: {}, render: function(data, row) {
+
+                            html = '<form action="{{ path("detail_crane") }}" method="POST" target="_blank" style="margin: 0; display: flex; justify-content: center; align-items: center;">';
+                            html += '<input type="hidden" name="craneId" value="' + data["id"] + '">';
+                            html += '<input type="hidden" name="mode" value="read_only">';
+                            html += '<button class="btn detail-button" style="color: #a4b0c0; padding: 0; box-shadow: none;"><i class="fa fa-2x fa-chevron-right"></i></button>';
+                            html += '</form>'
+
+                            return html;
+                        }
+                    }
+                ]
+            });
+        }
+        {# #### Datatable #### #}
+
+        {# Función encargada de recargar el ajax del datatable #}
+        let reloadDataTable = function() {
+            var form_filters = new Object();
+            $('.filter_inputs').each(function() {
+                form_filters[$(this).attr('name')] = $(this).val();
+            });
+
+            var fullFilters = {
+                'form_filters': form_filters,
+                'search_filter': $('#search-input').val()
+            }
+
+            $("#table_cranes").DataTable().search(JSON.stringify(fullFilters)).draw();
+
+            {#* Descomentar para que los checkboxes se reinicien recargar el dataTable #}
+            arrayChecked = [];
+
+            {#* Desactivamos los botones de modificación en caso de estar arrayChecked vacío #}
+            if(!arrayChecked.length) {
+                $(".edit-button").prop('disabled', true);
+                $(".remove-button").prop('disabled', true);
+                $(".digital_asign-button").prop('disabled', true);
+            }
+        }
+        {# ################################################### #}
+    
+        function reloadCheckbox(){
+            $('.imgCheckbox').imgCheckbox({
+                uncheckPath: "{{ asset('media/uncheck_empty.png') }}",
+                checkPath: "{{ asset('media/check.png') }}"
+            });
+
+            $('.checkboxFullList').imgCheckbox({
+                uncheckPath: "{{ asset('media/uncheck_empty.png') }}",
+                checkPath: "{{ asset('media/check.png') }}"
+            });
+        }
+
+        $('.checkboxFullList').change(function(){
+            var active = false;
+            if ($(this).is(":checked")) {
+                active = true;
+            }
+            
+            $('.checkboxCranes').each(function(){
+                $(this).prop('checked', active);
+                $(this).trigger('update');
+                $(this).trigger('change');
+            });// change
+        });
+
+    </script>
+
+{% endblock %}

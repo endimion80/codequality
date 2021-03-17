@@ -1,0 +1,28 @@
+.policy_full_panel {
+    width: 50% !important;
+    margin-bottom: 40px !important;
+}
+
+.policy_title_panel {
+    padding: 20px 20px 10px 20px !important;
+}
+
+.policy_panel {
+    height: 550px;
+    overflow-y: auto;
+    padding: 0px 20px 0px 30px !important;
+    border-bottom: solid 20px transparent;
+    text-align: justify;
+}
+
+@media screen and (max-width: 576px){ 
+
+    .policy_full_panel {
+        width: 100% !important;
+    }
+
+    .policy_panel {
+        height: auto;
+    }
+
+}

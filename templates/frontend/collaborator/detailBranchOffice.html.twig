@@ -1,0 +1,623 @@
+{% extends 'includes/sidebar.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+{{parent()}}
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-data_management.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-asitur_datatable.css') }}">
+
+{% endblock %}
+
+{% block content %}
+
+    <!--Page Title-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="page-title">
+        <ul class="nav nav-tabs nav-justified">
+            <li class="nav-item col-md-4">
+                <a class="nav-link active">{{"data_management.tab.branch_offices"|trans}}</a>
+                <hr class="tab-active-hr">
+            </li>
+            <li class="nav-item col-md-4">
+                <a class="nav-link" href="{{ path('cranes') }}">{{"data_management.tab.cranes"|trans}}</a>
+            </li>
+            <li class="nav-item col-md-4">
+                <a class="nav-link" href="{{ path('operators') }}">{{"data_management.tab.operators"|trans}}</a>
+            </li>
+        </ul>
+    </div>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--End page title-->
+
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+
+        {# Bloque de botones de la parte superior de la tabla #}
+        <div class="filters_and_buttons" style="padding: 0; display: flex; justify-content: space-between; margin-bottom: 25px;">
+            <div id="top_left_div" style="padding: 0;">
+                <a class="go_back_link" href="{{ path('branch_offices') }}"><i class="fa fa-2x fa-chevron-left"></i>{{"general.go_back_to_list"|trans}}</a>
+                <button type="button" class="btn top_left-buttons export-button"> <img src="{{asset("media/datatables/export.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.export')|trans}}</button>
+            </div>
+        </div>
+        {# ################################################## #}
+        
+        <hr id="datatable_hr" class="datatable_hr" style="margin-bottom: 20px;">
+
+        <!--Panel Datos de sucursal-->
+        <div class="panel">
+            <!--Panel heading-->
+            <div id="branchOffice_data_heading" class="panel-heading custom_collapse_panel_heading" data-target="#branchOffice_data_body" data-toggle="collapse">
+                <div class="panel-control">
+                    <button class="btn btn-default" ><i class="fa fa-chevron-down"></i></button>
+                </div>
+                <h3 class="panel-title" style="font-weight: 600;">{{'detail_branch_office.branch_office_data'|trans}}</h3>
+            </div>
+            <!--Panel body-->
+            <div id="branchOffice_data_body" class="collapse in">
+                <div class="panel-body">
+                    <div class="row" style="margin: 0; font-size: 16px;">
+                        <div class="col-sm-6 col-md-4 col-lg-2" style="margin-bottom: 20px;">
+                            <label for="address-input" class="asitur_label regular_label">{{"detail_branch_office.input.label.address"|trans}}</label>
+                            <textarea name="address" id="address-input" class="form-control" readonly spellcheck="false" style="resize: vertical; font-size: 16px; cursor: text;">{{ branchOffice.address }}</textarea>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-2" style="margin-bottom: 20px;">
+                            <label for="phone-input" class="asitur_label regular_label">{{"detail_branch_office.input.label.phone"|trans}}</label>
+                            <textarea name="phone" id="phone-input" class="form-control"  readonly spellcheck="false" style="resize: vertical; font-size: 16px; cursor: text;">{% for phone in phones %}{{phone.number}},{% endfor %}</textarea>
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 20px;">
+                            <label for="sinister_email-input" class="asitur_label regular_label">{{"detail_branch_office.input.label.sinister_email"|trans}}</label>
+                            <input disabled id="sinister_email-input" name="sinister_email" type="text" value="{{ branchOffice.sinisterEmail }}" class="form-control asitur_input regular_input" style="width: auto; cursor: text;" spellcheck="false">
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-3" style="margin-bottom: 20px;">
+                            <label for="invoicing_email-input" class="asitur_label regular_label">{{"detail_branch_office.input.label.invoicing_email"|trans}}</label>
+                            <input disabled id="invoicing_email-input" name="invoicing_email" type="text" value="{{ branchOffice.invoicingEmail }}" class="form-control asitur_input regular_input" style="width: auto; cursor: text;" spellcheck="false">
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-2" style="margin-bottom: 20px;">
+                            <label for="contact_person-input" class="asitur_label regular_label">{{"detail_branch_office.input.label.contact_person"|trans}}</label>
+                            <textarea id="contact_person-input" name="contact_person" class="form-control"  readonly spellcheck="false" style="resize: vertical; font-size: 16px; cursor: text;">{% for contact in contacts %}{{contact.name}},{% endfor %}</textarea>
+                            {# <input disabled id="contact_person-input" name="contact_person" type="text" value="{{ branchOffice.contactPerson }}" class="form-control asitur_input regular_input" style="width: 180px; cursor: text;" spellcheck="false"> #}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Panel Grúas-->
+        <div class="panel">
+            <!--Panel heading-->
+            <div id="branchOffice_cranes_heading" class="panel-heading custom_collapse_panel_heading" data-target="#branchOffice_cranes_body" data-toggle="collapse">
+                <div class="panel-control">
+                    <button class="btn btn-default" ><i class="fa fa-chevron-down"></i></button>
+                </div>
+                <h3 class="panel-title" style="font-weight: 600;">{{'detail_branch_office.branch_office_cranes'|trans}} (<span id="cranes_count"> - </span>)</h3>
+            </div>
+            <!--Panel body-->
+            <div id="branchOffice_cranes_body" class="collapse in">
+                <div class="panel-body">
+                    <table id="table_cranes" class="table">
+                        <thead>
+                            <tr>
+                                <th style="display: none;"></th>
+                                <th>{{"dataTable.cranes.reference"|trans}}</th>
+                                <th>{{"dataTable.cranes.plate"|trans}}</th>
+                                <th>{{"dataTable.cranes.brand"|trans}}</th>
+                                <th>{{"dataTable.cranes.crane_type"|trans}}</th>
+                                <th>{{"dataTable.cranes.services"|trans}}</th>
+                                <th>{{"dataTable.cranes.zones"|trans}}</th>
+                                <th>{{"dataTable.cranes.management_type"|trans}}</th>
+                                <th>{{"dataTable.cranes.status"|trans}}</th>
+                                <th>{{"dataTable.cranes.label"|trans}}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--Panel Operarios-->
+        <div class="panel">
+            <!--Panel heading-->
+            <div id="branchOffice_operators_heading" class="panel-heading custom_collapse_panel_heading" data-target="#branchOffice_operators_body" data-toggle="collapse">
+                <div class="panel-control">
+                    <button class="btn btn-default" ><i class="fa fa-chevron-down"></i></button>
+                </div>
+                <h3 class="panel-title" style="font-weight: 600;">{{'detail_branch_office.branch_office_operators'|trans}} (<span id="operators_count"> - </span>)</h3>
+            </div>
+            <!--Panel body-->
+            <div id="branchOffice_operators_body" class="collapse in">
+                <div class="panel-body">
+                    <table id="table_operators" class="table">
+                        <thead>
+                            <tr>
+                                <th style="display: none;"></th>
+                                <th>{{"dataTable.operators.identifier"|trans}}</th>
+                                <th>{{"dataTable.operators.mobile_phone"|trans}}</th>
+                                <th>{{"dataTable.operators.availability_status"|trans}}</th>
+                                <th>{{"dataTable.operators.assigned_crane"|trans}}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--Panel Zonas en las que atiende-->
+        <div class="panel">
+            <!--Panel heading-->
+            <div id="branchOffice_zones_heading" class="panel-heading custom_collapse_panel_heading" data-target="#branchOffice_zones_body" data-toggle="collapse">
+                <div class="panel-control">
+                    <button class="btn btn-default" ><i class="fa fa-chevron-down"></i></button>
+                </div>
+                <h3 class="panel-title" style="font-weight: 600;">{{'detail_branch_office.branch_office_zones'|trans}}</h3>
+            </div>
+            <!--Panel body-->
+            <div id="branchOffice_zones_body" class="collapse in">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label" style="margin-bottom: 15px; color: #6b7c93;">{{"data_management.input.label.town"|trans}}</label>
+                            <br/>
+                            <b>{{ branchOffice.town.name }}</b>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label" style="margin-bottom: 15px; color: #6b7c93;">{{"data_management.input.label.province"|trans}}</label>
+                            <br/>
+                            <b>{{ branchOffice.province.name }}</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Panel Anexo de documentos-->
+        <div class="panel">
+            <!--Panel heading-->
+            <div id="branchOffice_documents_heading" class="panel-heading custom_collapse_panel_heading" data-target="#branchOffice_documents_body" data-toggle="collapse">
+                <div class="panel-control">
+                    <button class="btn btn-default" ><i class="fa fa-chevron-down"></i></button>
+                </div>
+                <h3 class="panel-title" style="font-weight: 600;">{{'detail.attachments'|trans}}</h3>
+            </div>
+            <!--Panel body-->
+            <div id="branchOffice_documents_body" class="collapse in">
+                <div id="attachments_panel_body" class="panel-body row" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
+                    
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <!--===================================================-->
+    <!--End page content-->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+        $(document).ready(function(){
+            var time = null;
+
+            {#* Para que el apartado correspondiente en la barra lateral esté activo #}
+            $("#data_management_li").addClass("active");
+            {#* #################################################################### #}
+
+            $("#phone-input").html( $("#phone-input").html().replace(",,", "") );
+            $("#phone-input").html( $("#phone-input").html().replace(/,$/, '') );
+            $("#phone-input").html( $("#phone-input").html().replaceAll(",", '&#10;') );
+
+            $("#contact_person-input").html( $("#contact_person-input").html().replace(",,", "") );
+            $("#contact_person-input").html( $("#contact_person-input").html().replace(/,$/, '') );
+            $("#contact_person-input").html( $("#contact_person-input").html().replaceAll(",", '&#10;') );
+
+            {#* Llamada a las DataTables #}
+            createTableCranes();
+            createTableOperators();
+            {#* ######################## #}
+
+            {#* Exportación de una sucursal #}
+            $(".export-button").click(function() {
+                $.ajax({
+                    url:'{{ path('detail_branch_office_export_excel') }}',
+                    data: {
+                        'form_filters': null,
+                        'search_filter': null,
+                        'branchOfficeId': {{ branchOffice.id }}
+                    },
+                    type:"POST",
+                    success: function(data){
+                        if (data.status){
+                            swal.fire({
+                                title: '{{ ("general.export.success")|trans }}',
+                                html: "",
+                                icon: 'success',
+                                showConfirmButton: true
+                            });
+
+                            var fileName = data.data.fileName;
+                            var filePath = data.data.filePath;
+                            
+                            var formTmp = document.createElement('form');
+                            $(formTmp).attr('action',"{{ path('download_file') }}");
+                            $(formTmp).attr('name','formTmp');
+                            $(formTmp).attr('target','_blank');
+                            $(formTmp).attr('enctype','multipart/form-data');
+                            $(formTmp).attr('method','post');
+                            $(formTmp).append("<input type='hidden' name='fileName' value='" + fileName + "'/>");
+                            $(formTmp).append("<input type='hidden' name='filePath' value='" + filePath + "'/>");
+                            document.body.appendChild(formTmp);
+                            document.formTmp.submit();
+                            document.body.removeChild(formTmp);
+                        } else {
+                            swal.fire({
+                                title: '{{ ("general.export.error")|trans }}',
+                                html: '',
+                                icon: 'error',
+                                showConfirmButton: true
+                            });
+                        }
+                    },
+                    error:function(err){
+                        swal.fire({
+                            title: '{{ ("general.export.error")|trans }}',
+                            html: '',
+                            icon: 'error',
+                            showConfirmButton: true
+                        });
+                    }
+                });
+            });
+            {#* ########################### #}
+
+            {#* Ajax que obtiene la lista de ficheros adjuntos de la sucursal #}
+            $.ajax({
+                url:'{{ path('branchOffice_attachments') }}',
+                data: {
+                    'branchOfficeId': {{ branchOffice.id }}
+                },
+                type:"POST",
+                success: function(data){
+                    if(data.length) {
+                        let html = fileExtension = "";
+                        let imageExtensions = ['png', 'jpg', 'jpeg', 'gif'];
+                        $.each(data, function (key, value) {
+                            fileExtension = value["file_name"].split('.').pop();
+                            if(value["file_name"].includes(".pdf")) {
+                                html += '<div class="attachment_icon attachment_icon_general" data-id="'+ value["id"] +'"> <img src="{{asset("media/file.png")}}">';
+                                html += '<div class="attachment_icon_text"> <span>'+ value["file_name"] +'</span> </div>';
+                            } else if( imageExtensions.includes(fileExtension) ) {
+                                html += '<div class="attachment_icon attachment_icon_img" data-id="'+ value["id"] +'"> <img src="data:image/'+ fileExtension +';base64, '+ value["file_data"] +'">';
+                                html += '<div class="attachment_icon_text"> <span>'+ value["file_name"] +'</span> </div>';
+                            } else {
+                                html += '<div class="attachment_icon attachment_icon_general" data-id="'+ value["id"] +'"> <img src="{{asset("media/file_general.png")}}">';
+                                html += '<div class="attachment_icon_text"> <span>'+ value["file_name"] +'</span> </div>';
+                            }
+
+                            html += ' </div>';
+                        }) 
+
+                        $("#attachments_panel_body").append(html);
+
+                        {#* Descarga de un fichero adjunto #}
+                        $(".attachment_icon").click(function() {
+                            var attachmentId = $(this).data("id");
+                            $.ajax({
+                                url:'{{ path('download_attachment') }}',
+                                data: {
+                                    'attachmentId': attachmentId
+                                },
+                                type:"POST",
+                                success: function(data){
+                                    if (data.status){
+                                        var fileName = data.data.fileName;
+                                        var filePath = data.data.filePath;
+                                        
+                                        var formTmp = document.createElement('form');
+                                        $(formTmp).attr('action',"{{ path('download_file') }}");
+                                        $(formTmp).attr('name','formTmp');
+                                        $(formTmp).attr('target','_blank');
+                                        $(formTmp).attr('enctype','multipart/form-data');
+                                        $(formTmp).attr('method','post');
+                                        $(formTmp).append("<input type='hidden' name='fileName' value='" + fileName + "'/>");
+                                        $(formTmp).append("<input type='hidden' name='filePath' value='" + filePath + "'/>");
+                                        document.body.appendChild(formTmp);
+                                        document.formTmp.submit();
+                                        document.body.removeChild(formTmp);
+                                    } else {
+                                        swal.fire({
+                                            title: '{{ ("general.download.error")|trans }}',
+                                            html: '',
+                                            icon: 'error',
+                                            showConfirmButton: true
+                                        });
+                                    }
+                                },
+                                error:function(err){
+                                    swal.fire({
+                                        title: '{{ ("general.download.error")|trans }}',
+                                        html: '',
+                                        icon: 'error',
+                                        showConfirmButton: true
+                                    });
+                                }
+                            });
+                        });
+                        {#* ############################## #}
+                    }
+                },
+                error:function(err){
+                    swal.fire({
+                        title: '{{ ("attachment.list.error")|trans }}',
+                        html: '',
+                        icon: 'error',
+                        showConfirmButton: true
+                    });
+                }
+            });
+            {#* ############################################################# #}
+
+        });
+
+        {# Creación Datatable Cranes #}
+        function createTableCranes() {
+            tableClients = $('#table_cranes').DataTable({
+                dom: "<'row'<'col-sm-12't>><'row'<'col-sm-5'l><'col-sm-7'p>>",
+                order: [1, 'ASC'],
+                searching: true,
+                rowReorder: true,
+                columnDefs: [
+                    { orderable: true, className: 'reorder', targets: [1,2,3,4,5,7,8,9] },
+                    { orderable: false, targets: [0,6,10] }
+                ],
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "{{('dataTable.general.lengthMenu.all')|trans}}"]
+                ],
+                responsive: false,
+                autoWidth: false,
+                scrollX: true,
+                processing: false,
+                serverSide: true,
+                pagingType: "full_numbers",
+                language: {
+                    "sProcessing": "{{ ('dataTable.general.language.sProcessing ') | trans }}",
+                    "sLengthMenu": "{{ ('dataTable.asitur.language.sLengthMenu') | trans}}: _MENU_",
+                    "sZeroRecords": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                    "sEmptyTable": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                    "sInfo": "{{ ('dataTable.general.language.sInfo') | trans }}",
+                    "sInfoEmpty": "{{ ('dataTable.general.language.sInfoEmpty') | trans }}",
+                    "sInfoFiltered": "{{ ('dataTable.general.language.sInfoFiltered') | trans }}",
+                    "sInfoPostFix": "",
+                    "sSearch": "{{ ('dataTable.general.language.sSearch') | trans }}:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "{{ ('dataTable.general.language.sLoadingRecords') | trans }}",
+                    "oPaginate": {
+                        "sFirst": "<<",
+                        "sLast": ">>",
+                        "sNext": ">",
+                        "sPrevious": "<",
+                    },
+                    "oAria": {
+                        "sSortAscending": ": {{ ('dataTable.general.language.oAria.sSortAscending') | trans }}",
+                        "sSortDescending": ": {{ ('dataTable.general.language.oAria.sSortDescending') | trans }}"
+                    },
+                },
+                ajax: {
+                    url: "{{ path('cranes_table') }}",
+                    method: 'POST',
+                    data: {
+                        'form_filters': null,
+                        'search_filter': null,
+                        'branchOfficeId': {{ branchOffice.id }}
+                    }
+                },
+                initComplete: function(data) {
+                    $("#cranes_count").html(data.json.recordsFiltered);
+                },
+                drawCallback: function() {
+
+                    var switch_elems = Array.prototype.slice.call(document.querySelectorAll('.check_status_crane'));
+                    
+                    switch_elems.forEach(function(html){
+                        new Switchery(html, {disabled: true, 
+                                             disabledOpacity: 1,
+                                             color: "var(--main-blue)",
+                                             secondaryColor: '#cdd3db'
+                                            });
+                    });
+                },
+                columns: [
+                    {data: {}, 'visible': false},
+                    {data: 'reference'},
+                    {data: 'plate'},
+                    {data: 'brand'},
+                    {data: 'crane_type'},
+                    {data: {}, render: function(data, row) {
+
+                            if( data['services'] != null ) {
+                                let text = data['services'];
+                                let result = text.replaceAll(",", "<br>");
+                                return result;
+                            } else {
+                                return "";
+                            }
+                        }
+                    },
+                    {data: {}, render: function(data, row) {
+
+                            if( data['zones'] != null ) {
+                                let text = data['zones'];
+                                let result = text.replaceAll(",", "<br>");
+                                return result;
+                            } else {
+                                return "";
+                            }
+                        }
+                    },
+                    {data: 'management_type'},
+                    {data: {}, render: function(data, row) {
+
+                            if( data['status'] == 1 ) {
+                                let html= '<div title="{{"data_management.crane_status.select.option.active"|trans}}" style="display: flex; align-items: center;">';
+                                html += '<input class="check_status_crane" type="checkbox" checked> </div>';
+
+                                return html;
+                            } else if( data['status'] == 2 || data['status'] == 3 ) {
+                                let html= '<div title="REPLACE_TITLE" style="display: flex; align-items: center;">';
+                                html += '<input class="check_status_crane" type="checkbox"> </div>';
+                                
+                                if (data['status'] == 2) {
+                                    html = html.replace("REPLACE_TITLE", "{{'data_management.crane_status.select.option.damaged'|trans}}") 
+                                } else {
+                                    html = html.replace("REPLACE_TITLE", "{{'data_management.crane_status.select.option.retired'|trans}}");
+                                }
+                                
+                                return html;
+                            } else {
+                                return "";
+                            }
+                        }
+                    },
+                    {data: 'label'},
+                    {data: {}, render: function(data, row) {
+
+                            html = '<form action="{{ path("detail_crane") }}" method="POST" target="_blank" style="margin: 0; display: flex; justify-content: center; align-items: center;">';
+                            html += '<input type="hidden" name="craneId" value="' + data["id"] + '">';
+                            html += '<input type="hidden" name="mode" value="read_only">';
+                            html += '<button class="btn detail-button" style="color: #a4b0c0; padding: 0; box-shadow: none;"><i class="fa fa-2x fa-chevron-right"></i></button>';
+                            html += '</form>'
+
+                            return html;
+                        }
+                    }
+                ]
+            });
+        }
+        {# #### Datatable Cranes #### #}
+
+        {# Creación Datatable Operators #}
+        function createTableOperators() {
+            tableClients = $('#table_operators').DataTable({
+                dom: "<'row'<'col-sm-12't>><'row'<'col-sm-5'l><'col-sm-7'p>>",
+                order: [1, 'ASC'],
+                searching: false,
+                rowReorder: true,
+                columnDefs: [
+                    { orderable: true, className: 'reorder', targets: [0,1,2,3,4] },
+                    { orderable: false, targets: 5 }
+                ],
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "{{('dataTable.general.lengthMenu.all')|trans}}"]
+                ],
+                responsive: false,
+                autoWidth: false,
+                scrollX: true,
+                processing: false,
+                serverSide: true,
+                pagingType: "full_numbers",
+                language: {
+                    "sProcessing": "{{ ('dataTable.general.language.sProcessing ') | trans }}",
+                    "sLengthMenu": "{{ ('dataTable.asitur.language.sLengthMenu') | trans}}: _MENU_",
+                    "sZeroRecords": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                    "sEmptyTable": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                    "sInfo": "{{ ('dataTable.general.language.sInfo') | trans }}",
+                    "sInfoEmpty": "{{ ('dataTable.general.language.sInfoEmpty') | trans }}",
+                    "sInfoFiltered": "{{ ('dataTable.general.language.sInfoFiltered') | trans }}",
+                    "sInfoPostFix": "",
+                    "sSearch": "{{ ('dataTable.general.language.sSearch') | trans }}:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "{{ ('dataTable.general.language.sLoadingRecords') | trans }}",
+                    "oPaginate": {
+                        "sFirst": "<<",
+                        "sLast": ">>",
+                        "sNext": ">",
+                        "sPrevious": "<",
+                    },
+                    "oAria": {
+                        "sSortAscending": ": {{ ('dataTable.general.language.oAria.sSortAscending') | trans }}",
+                        "sSortDescending": ": {{ ('dataTable.general.language.oAria.sSortDescending') | trans }}"
+                    },
+                },
+                ajax: {
+                    url: "{{ path('operators_table') }}",
+                    method: 'POST',
+                    data: {
+                        'form_filters': null,
+                        'search_filter': null,
+                        'branchOfficeId': {{ branchOffice.id }}
+                    }
+                },
+                initComplete: function(data) {
+                    $("#operators_count").html(data.json.recordsFiltered);
+                },
+                drawCallback: function() {
+
+                    var switch_elems = Array.prototype.slice.call(document.querySelectorAll('.check_status_operator'));
+                    
+                    switch_elems.forEach(function(html){
+                        new Switchery(html, {disabled: true, 
+                                             disabledOpacity: 1,
+                                             color: "var(--main-blue)",
+                                             secondaryColor: '#cdd3db'
+                                            });
+                    });
+
+                },
+                columns: [
+                    {data: {}, 'visible': false},
+                    {data: 'reference'},
+                    {data: 'mobile_phone'},
+                    {data: {}, render: function(data, row) {
+
+                            if( data['availability_status'] == 1 ) {
+                                let html= '<div title="{{"data_management.operator.availability_status.available"|trans}}" style="display: flex; align-items: center;">';
+                                html += '<input class="check_status_operator" type="checkbox" checked> </div>';
+
+                                return html;
+                            } else if( data['availability_status'] == 2 ) {
+                                let html= '<div title="{{"data_management.operator.availability_status.not_available"|trans}}" style="display: flex; align-items: center;">';
+                                html += '<input class="check_status_operator" type="checkbox"> </div>';
+                                
+                                return html;
+                            } else {
+                                return "";
+                            }
+                        }
+                    },
+                    {data: 'assigned_crane'},
+                    {data: {}, render: function(data, row) {
+
+                            html = '<form action="{{ path("detail_operator") }}" method="POST" target="_blank" style="margin: 0; display: flex; justify-content: center; align-items: center;">';
+                            html += '<input type="hidden" name="" value="">';
+                            html += '<button class="btn detail-button" style="color: #a4b0c0; padding: 0; box-shadow: none;"><i class="fa fa-2x fa-chevron-right"></i></button>';
+                            html += '</form>'
+
+                            return html;
+                        }
+                    }
+                ]
+            });
+        }
+        {# #### Datatable Operators #### #}
+
+        {# Función encargada de recargar el ajax del datatable #}
+        let reloadDataTables = function() {
+            $("#table_cranes").DataTable().destroy();
+            createTableCranes();
+            $("#table_operators").DataTable().destroy();
+            createTableOperators();
+        }
+        {# ################################################### #}
+    
+    </script>
+
+{% endblock %}

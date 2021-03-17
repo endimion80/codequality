@@ -1,0 +1,135 @@
+<div style="display: block;
+            margin-bottom: 10px;
+            margin-right: 24px;
+            margin-top: 20px;
+            float: right;">
+    <label class="control-label">{{"general.search"|trans}}:</label>
+    <input id="search-input-rates" class='input' type="text" placeholder="{{"general.search"|trans}}..." spellcheck="false">
+</div>
+
+<!-- Tabla Traducciones -->
+<!--===================================================-->
+<div class="panel">
+    <div class="panel-body">
+        <table id="table_rates" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>{{"dataTable.rates.service"|trans}}</th>
+                    <th>{{"dataTable.rates.activity"|trans}}</th>
+                    <th>{{"dataTable.rates.unit"|trans}}</th>
+                    <th>{{"dataTable.rates.night"|trans}}</th>
+                    <th>{{"dataTable.rates.holliday"|trans}}</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script>
+    
+    var time = null;
+    createTableRates();
+
+    $('#search-input-rates').keyup(function() {
+        clearInterval(time);
+        time = setTimeout(function() {
+            reloadDataTableRates();
+        }, 1500);
+    });
+
+    
+    function createTableRates() {
+        $('#table_rates').DataTable({
+            order: [0, 'ASC'],
+            searching: false,
+            lengthMenu: [
+                [5, 10, 25, 50, 100, -1],
+                [5, 10, 25, 50, 100,
+                    "{{('dataTable.general.lengthMenu.all')|trans}}"
+                ]
+            ],
+            responsive: false,
+            autoWidth: false,
+            scrollX: true,
+            processing: false,
+            serverSide: true,
+            pagingType: "full_numbers",
+            language: {
+                "sProcessing": "{{ 'dataTable.general.language.sProcessing' | trans }}",
+                "sLengthMenu": "{{ ('dataTable.general.language.sLengthMenu') | trans}}",
+                "sZeroRecords": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                "sEmptyTable": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                "sInfo": "{{ ('dataTable.general.language.sInfo') | trans }}",
+                "sInfoEmpty": "{{ ('dataTable.general.language.sInfoEmpty') | trans }}",
+                "sInfoFiltered": "{{ ('dataTable.general.language.sInfoFiltered') | trans }}",
+                "sInfoPostFix": "",
+                "sSearch": "{{ ('dataTable.general.language.sSearch') | trans }}:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "{{ ('dataTable.general.language.sLoadingRecords') | trans }}",
+                "oPaginate": {
+                    "sFirst": "{{ ('dataTable.general.language.oPaginate.sFirst') | trans }}",
+                    "sLast": "{{ ('dataTable.general.language.oPaginate.sLast') | trans }}",
+                    "sNext": "{{ ('dataTable.general.language.oPaginate.sNext') | trans }}",
+                    "sPrevious": "{{ ('dataTable.general.language.oPaginate.sPrevious') | trans }}",
+                },
+                "oAria": {
+                    "sSortAscending": ": {{ ('dataTable.general.language.oAria.sSortAscending') | trans }}",
+                    "sSortDescending": ": {{ ('dataTable.general.language.oAria.sSortDescending') | trans }}"
+                },
+            },
+            ajax: {
+                url: "{{ path('branch_offices_rates_data') }}",
+                method: 'POST',
+                data: {
+                    'form_filters': $('#table_rates').serialize(),
+                    'search_filter': $('#search-input-rates').val(),
+                    'branchOffice': '{{ branchOfficeId }}'
+                }
+            },
+            initComplete: function() {
+                let blockRows = $('#table_rates_wrapper .dataTables_info').parent()
+                if (blockRows.hasClass('col-sm-6')){
+                    blockRows.removeClass('col-sm-6');
+                    blockRows.addClass('col-sm-12');
+                }
+                if (blockRows.next().hasClass('col-sm-6')){
+                    blockRows.next().removeClass('col-sm-6');
+                    blockRows.next().addClass('col-sm-12');
+                }
+            },
+            drawCallback: function() {               
+            },
+            columns: [
+                {data: {}, render: function(data, row) {
+                        return data['service_name'];
+                    }
+                },
+                {data: {}, render: function(data, row) {
+                        return data['activity_name'];
+                    }
+                },
+                {data: {}, render: function(data, row) {
+                        return data['activity_unit'];
+                    }
+                },
+                {data: {}, render: function(data, row) {
+                        return data['activity_night'];
+                    }
+                },
+                {data: {}, render: function(data, row) {
+                        return data['activity_holliday'];
+                    }
+                }
+            ]
+        });
+    }
+
+    {# Función encargada de recargar el ajax del datatable #}
+    let reloadDataTableRates = function() {
+        $("#table_rates").DataTable().destroy();
+        createTableRates();
+    }
+    {# ################################################### #}
+
+</script>

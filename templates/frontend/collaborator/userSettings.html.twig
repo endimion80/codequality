@@ -1,0 +1,405 @@
+{% extends 'includes/sidebar.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+    {{parent()}}
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-data_management.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-asitur_datatable.css') }}">
+
+{% endblock %}
+
+{% block content %}
+    
+    <div id="page-title">
+        <ul class="nav nav-tabs nav-justified">
+            <li class="nav-item col-md-4">
+                <a class="nav-link active" data-toggle="tab" href="#tabDates">{{"settings.dateAndTime"|trans}}</a>
+                <hr class="tab-active-hr">
+            </li>
+            <li class="nav-item col-md-4">
+                <a class="nav-link" data-toggle="tab" href="#tabNotify">{{"settings.notify"|trans}}</a>
+            </li>
+            <li class="nav-item col-md-4">
+                <a class="nav-link" data-toggle="tab" href="#tabLenguage">{{"settings.lenguage"|trans}}</a>
+            </li>
+        </ul>
+    </div>
+
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+        <div class="tab-content">
+            <div class="tab-pane active" id="tabDates" role="tabpanel" aria-labelledby="tabDates-tab">
+            
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class='labelBlue'>
+                            {{"settings.formatDate"|trans}}
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class='labelGrey'>
+                            {{"settings.chooseFormatDate"|trans}}:
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <div>
+                            <input type="checkbox" class='dateCheckbox imgCheckbox' data-format='d/m/Y' data-formatsql='%d/%m/%Y' />
+                            <label class='labelCheckbox'>22/06/2020 ({{"settings.predeterminado"|trans}})</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" class='dateCheckbox imgCheckbox' data-format='W, d M Y' data-formatsql='%W, %d %M %Y'/>
+                            <label class='labelCheckbox'>Miércoles, 22 de junio de 2020</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" class='dateCheckbox imgCheckbox'  data-format='d/m' data-formatsql='%d/%m'/>
+                            <label class='labelCheckbox'>20/06</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" class='dateCheckbox imgCheckbox'  data-format='e/c/Y'  data-formatsql='%e/%c/%Y'/>
+                            <label class='labelCheckbox'>20/6/2020</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" class='dateCheckbox imgCheckbox'  data-format='d/b' data-formatsql='%d/%b'/>
+                            <label class='labelCheckbox'>22/jun</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" class='dateCheckbox imgCheckbox'  data-format='d/b/Y' data-formatsql='%d/%b/%Y'/>
+                            <label class='labelCheckbox'>22/jun/2020</label>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class='labelBlue'>
+                            {{"settings.formatHour"|trans}}
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class='labelGrey'>
+                            {{"settings.chooseFormatHour"|trans}}:
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <div>
+                            <input type="checkbox" class='hourCheckbox imgCheckbox' data-format='H:i' data-formatsql='%H:%i'/>
+                            <label class='labelCheckbox'>13:30 ({{"settings.predeterminado"|trans}})</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" class='hourCheckbox imgCheckbox' data-format='h:i p' data-formatsql='%h:%i %p'/>
+                            <label class='labelCheckbox'>1:30 pm</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" class='hourCheckbox imgCheckbox'  data-format='H:i:s' data-formatsql='%H:%i:%s'/>
+                            <label class='labelCheckbox'>13:30:55</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" class='hourCheckbox imgCheckbox'  data-format='h:i:s p' data-formatsql='%h:%i:%s %p'/>
+                            <label class='labelCheckbox'>1:30:55 pm</label>
+                        </div>
+                        
+                    </div>
+                </div>
+
+
+            </div>
+
+            
+            <div class="tab-pane" id="tabNotify" role="tabpanel" aria-labelledby="tabNotify-tab">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class='labelBlue'>
+                            {{"settings.receiveNotification"|trans}}
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        {{"general.no"|trans|upper}}
+                        <input id='emailNotificationActive' class="checkSwitch switchery" type="checkbox"
+                        {% if user.emailNotificationActive %} checked {% endif %}> 
+                        {{"general.yes"|trans|upper}}
+                    </div>
+                </div>
+
+                <br><br>
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <label class='labelGrey'>
+                            {{"settings.emailNotification"|trans}}:
+                        </label>
+                    </div>
+                    <div class="col-md-7">
+                        <div>
+                            <input id = 'notificationEmailOriginal' type="checkbox" class='notificationTypeCheckbox imgCheckbox' data-notificationtype='original' {% if user.emailNotification is null or 
+                                                                                                                                    user.emailNotification == ''%} checked {% endif %} />
+                            <label class='labelCheckbox'>{{ user.email }}</label>
+                        </div>
+                        <div>
+                            <input id = 'notificationEmailCopy' type="checkbox" class='notificationTypeCheckbox imgCheckbox' data-notificationtype='otro' {% if user.emailNotification is not null and 
+                                                                                                                                    user.emailNotification != ''%} checked {% endif %}/>
+                            <label class='labelCheckbox'>{{"settings.other"|trans}}</label>
+                            <div style='margin-left: 45px;'>
+                                <input id ='mailCCInput' type='text' class='form-control filter_inputs' placeholder='{{"settings.emailInput"|trans}}' value='{{ user.emailNotification }}'/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+
+            <div class="tab-pane" id="tabLenguage" role="tabpanel" aria-labelledby="tabLenguage-tab">
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class='labelBlue'>
+                            {{"dataTable.email.log.locale"|trans}}
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class='labelGrey'>
+                            {{"settings.chooseLanguage"|trans}}:
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <div>
+                            <input type="checkbox" class='languageCheckbox imgCheckbox' data-language='es' {% if user.getLocale() == 'es'%} checked {% endif %}/>
+                            <label class='labelCheckbox'>{{"settings.spanish"|trans}} ({{"settings.predeterminado"|trans}})</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" class='languageCheckbox imgCheckbox' data-language='en' {% if user.getLocale() == 'en'%} checked {% endif %}/>
+                            <label class='labelCheckbox'>{{"settings.english"|trans}}</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" class='languageCheckbox imgCheckbox' data-language='fr' {% if user.getLocale() == 'fr'%} checked {% endif %}/>
+                            <label class='labelCheckbox'>{{"settings.french"|trans}}</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" class='languageCheckbox imgCheckbox' data-language='it' {% if user.getLocale() == 'it'%} checked {% endif %}/>
+                            <label class='labelCheckbox'>{{"settings.italian"|trans}}</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" class='languageCheckbox imgCheckbox' data-language='pt' {% if user.getLocale() == 'pt'%} checked {% endif %}/>
+                            <label class='labelCheckbox'>{{"settings.portuguese"|trans}}</label>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12" style='text-align: right;'>
+                <button class='btnSave btnDefault'>{{"general.save"|trans}}</button>
+            </div>
+        </div>
+
+
+    </div>
+    <!--===================================================-->
+    <!--End page content-->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    $(document).ready(function(){
+        
+        
+        $("#top-settings").css({"background-color": "var(--main-blue)"});    
+        $("#top-settings img").css({"filter": "grayscale(100%) brightness(200%)"});
+        
+        // $('#test1').is(":checked"); // comprobar dato
+        // $('#test1').prop('checked', true);
+        // $('#test1').trigger('update'); // actualizar animacion
+
+        $('.nav-link').click(function(){
+            $('.nav-link').removeClass('active');
+            $('.tab-active-hr').remove();
+            $(this).addClass('active');
+            $(this).append("<hr class='tab-active-hr'>");
+        });
+
+        $('.imgCheckbox').imgCheckbox({
+            uncheckPath: "{{ asset('media/uncheck.png') }}",
+			checkPath: "{{ asset('media/check.png') }}"
+        });
+ 
+
+        $('.dateCheckbox').change(function(){
+            $('.dateCheckbox').prop('checked', false);
+            $(this).prop('checked', true);
+            $('.dateCheckbox').trigger('update');
+        });
+
+        $('.hourCheckbox').change(function(){
+            $('.hourCheckbox').prop('checked', false);
+            $(this).prop('checked', true);
+            $('.hourCheckbox').trigger('update');
+        });
+
+        $('.notificationTypeCheckbox').change(function(){
+            $('.notificationTypeCheckbox').prop('checked', false);
+            $(this).prop('checked', true);
+            $('.notificationTypeCheckbox').trigger('update');
+        });
+
+        $('.languageCheckbox').change(function(){
+            $('.languageCheckbox').prop('checked', false);
+            $(this).prop('checked', true);
+            $('.languageCheckbox').trigger('update');
+        });      
+
+        // Inicializamos
+        $('.dateCheckbox').each(function(){
+            if ($(this).data('format') == "{{ user.dateFormat }}")
+                $(this).prop('checked', true);
+        });
+
+        $('.hourCheckbox').each(function(){
+            if ($(this).data('format') == "{{ user.hourFormat }}")
+                $(this).prop('checked', true);
+        });
+        $('.dateCheckbox').trigger('update');
+        $('.hourCheckbox').trigger('update');
+        // fin inicializacion
+
+        var switch_elems = Array.prototype.slice.call(document.querySelectorAll('.checkSwitch'));
+                    
+        switch_elems.forEach(function(html){
+            new Switchery(html, {   disabled: false, 
+                                    color: "var(--main-blue)",
+                                    secondaryColor: '#cdd3db'
+                                });
+        });
+
+        $('.notificationTypeCheckbox').change(function(){
+            if ($(this).data('notificationtype')=='original')
+                $('#mailCCInput').val('');
+        });
+
+        $('#mailCCInput').change(function(){
+            controlEmailNotification();
+        });
+
+        function controlEmailNotification(){
+            if ($('#mailCCInput').val()==''){
+                $('#notificationEmailOriginal').prop('checked', true);
+                $('#notificationEmailCopy').prop('checked', false);
+            }
+            else{
+                $('#notificationEmailOriginal').prop('checked', false);
+                $('#notificationEmailCopy').prop('checked', true);
+            }
+            $('.notificationTypeCheckbox').trigger('update');
+        }
+
+
+        $('.btnSave').click(function(){
+            var dateFormat = '';
+            var dateFormatSql = '';
+            var hourFormat = '';
+            var hourFormatSql = '';
+            var email_notification_active = $('#emailNotificationActive').prop('checked');
+            var email_notification = $('#mailCCInput').val();
+            var language = '';
+            
+            controlEmailNotification();
+
+            $('.dateCheckbox').each(function(){
+                if ($(this).prop('checked')){
+                    dateFormat = $(this).data('format');
+                    dateFormatSql = $(this).data('formatsql');
+                }
+            });
+
+            $('.hourCheckbox').each(function(){
+                if ($(this).prop('checked')){
+                    hourFormat = $(this).data('format');
+                    hourFormatSql = $(this).data('formatsql');
+                }
+            });
+
+            $('.languageCheckbox').each(function(){
+                if ($(this).prop('checked')){
+                    language = $(this).data('language');
+                }
+            });
+
+            swal.fire({
+                text: "{{'general.saveChanges'|trans}}",
+                title: '',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: "{{'general.confirm'|trans}}",
+                cancelButtonText: "{{'general.cancel'|trans}}",
+                onClose: () => {}
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url:'{{ path('user_settings_save') }}',
+                        data: {
+                            'dateFormat': dateFormat,
+                            'dateFormatSql': dateFormatSql,
+                            'hourFormat': hourFormat,
+                            'hourFormatSql': hourFormatSql,
+                            'email_notification_active': email_notification_active,
+                            'email_notification': email_notification,
+                            'language': language
+                        },
+                        type:"POST",
+                        dataType: "json",
+                        success: function(data){
+                            //console.log(data);
+                            if (data.status)
+                                Swal.fire("{{'general.saved'|trans}}", '', 'success');
+                            else
+                                Swal.fire("{{'general.form.error'|trans}}", data.errors.join(', '), 'error');
+                        },
+                        error:function(err){
+                            swal.fire({
+                                title: '{{ ("general.form.error")|trans }}',
+                                html: '',
+                                icon: 'error',
+                                showConfirmButton: true
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+    </script>
+
+{% endblock %}

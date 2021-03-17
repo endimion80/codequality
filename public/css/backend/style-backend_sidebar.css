@@ -1,0 +1,131 @@
+#navbar-container {
+    height: 70px;
+    background-color: var(--main-black);
+}
+
+#backend_sidebar_navbar-header {
+    height: 100%;
+    background-color: var(--main-black);
+}
+
+#backend_sidebar_navbar-brand {
+    height: 100%;
+    width: 70px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--main-black);
+}
+
+#mainnav-container {
+    padding-top: 70px;
+    background-color: var(--main-black);
+}
+
+#mainnav-menu a {
+    padding: 12px 14px;
+    font-weight: normal;
+}
+
+#mainnav-menu-wrap {
+    background-color: var(--main-black);
+}
+
+.navbar-content {
+    box-shadow: none;
+}
+
+.menu-popover.popover {
+    margin-left: 20px;
+}
+
+#container.mainnav-lg #mainnav-menu a span {
+    vertical-align: super;
+}
+
+#asitur_logo {
+    position: absolute;
+    left: 45%;
+    top: 15px;
+}
+
+.navbar-top-links > li > a {
+    height: 70px;
+}
+
+.menu-popover > .popover-content > .single-content {
+    padding: 18px 14px;
+}
+
+.menu-popover > .popover-title {
+    padding: 18px 14px;
+    font-weight: normal !important;
+}
+
+.menu-popover > .popover-title strong {
+    font-weight: bold !important;
+}
+
+span.single-content {
+    font-weight: bold !important;
+    color: white !important;
+}
+
+.menu-popover > .popover-content > .single-content strong {
+    font-weight: bold;
+}
+
+#container.mainnav-sm #mainnav-container,
+#container.mainnav-sm #navbar .navbar-brand{
+    width: 70px;
+}
+
+#asitur_logo_responsive {
+    position: relative;
+    top: 15px;
+}
+
+.responsive_zone_icons {
+    margin-right: 10px;
+    filter: grayscale(100%) brightness(150%);
+}
+
+.responsive_zone_text{
+    vertical-align: middle !important;
+}
+
+#content-container {
+    padding-top: 70px;
+}
+
+.collapse li a{
+    font-weight: normal !important;
+}
+
+
+/* Se activa hasta un ancho máximo de 767px (inclusive) */
+@media (max-width: 767px) {
+    .navbar-content {
+        display: none;
+    }
+}
+
+/* Se activa hasta un ancho mínimo de 768px (inclusive) */
+@media (min-width: 768px) {
+    #asitur_logo_responsive {
+        display: none;
+    }
+
+    .menu_responsive_zone {
+        display: none;
+    }
+
+    #container.mainnav-sm #content-container {
+        padding-left: 70px;
+    }
+
+    #content-container {
+        padding-top: 70px;
+    }
+
+}

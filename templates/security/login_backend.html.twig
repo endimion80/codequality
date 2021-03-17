@@ -1,0 +1,156 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+    {{parent()}}
+
+    <link rel="stylesheet" href="{{ asset('css/backend/style-backend_base.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/backend/style-backend_login.css') }}">
+
+{% endblock %}
+
+
+{% block body %}
+
+
+	<div id="container" class="cls-container">
+		
+		<!-- LOGIN FORM -->
+		<!--===================================================-->
+		<div class="cls-content" style="padding-top: 6vh;">
+			<div>
+				<img id="asitur_logo" src='{{asset("media/logo-asitur-blanco.png")}}' width="180px" height="54px">
+			</div>
+			<div class="cls-content-sm panel backend_login_full_panel">
+                
+                {# TODO: ELIMINAR #}
+                {% if isTestingIP %}
+                <!--XXXXXXXXXX-->
+                <!-- Testing -->
+                    <div style="display: flex;">
+                        <button id='log1Test' class='btn btn-lg btn-primary' style='    margin: 10px;
+                                                                                        font-size: 15px;
+                                                                                        padding: 2px 10px;'>Backend1 </button>
+                    </div>
+                {% endif %}
+                <!--XXXXXXXXXX-->
+                {# TODO FIN #}
+                
+				<div class="panel-body backend_login_panel">
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
+
+                    {% if app.user %}
+                        <div id="already_connected">
+                            {{"login.form.already.connected"|trans}} <a href="{{ path('backend_home') }}" style="color:darkslategrey"><b>{{ app.user.username }}</b></a>, <a href="{{ path('backend_logout') }}" style="color:#0094d9"><b>{{"general.exit"|trans}}</b></a>
+                        </div>
+                        <br>
+                    {% endif %}
+
+                    <img src='{{asset("media/user-icon.png")}}' width="55px" height="55px" style='margin-bottom: 33px;'>
+                    <h3>{{"login.form.title"|trans}}</h3>
+                    <br>
+					<form id='login_form' class="form-horizontal" method="post">
+                        <label for="inputEmail" class="login_label">{{"login.form.email"|trans}}</label>
+                        <div class="input-group mar-btm" style="width: 100%;">
+                            <input id="inputEmail" type="email" name="backend_email" class="form-control asitur_input login_input" placeholder="{{'general.input.placeholder.email'|trans}}" spellcheck="false" required autofocus>
+                            <span class="input-group-btn">
+                                <button class="btn btn-labeled login_input_button" type="button" tabindex="-1">
+                                    <img id="email_remove_btn" src='{{asset("media/equis.png")}}' width="24px" height="24px" style="display: none;">
+                                </button>
+                            </span>
+                        </div>
+                        <br>
+                        <label for="inputPassword" class="login_label">{{"login.form.password"|trans}}</label>
+                        <div class="input-group mar-btm" style="width: 100%;">
+                            <input id="inputPassword" type="password" name="backend_password" class="form-control asitur_input login_input" placeholder="{{'general.input.placeholder.password'|trans}}" spellcheck="false" required>
+                            <span class="input-group-btn">
+                                <button class="btn btn-labeled login_input_button" type="button" tabindex="-1">
+                                    <img id="show_password_btn" src='{{asset("media/blue_eye.png")}}' width="24px" height="24px" style="display: none;">
+                                </button>
+                            </span>
+                        </div>
+                        <br>
+						<div class="row">
+							<div class="col-xs-12 text-left checkbox">
+								<label id="remember_me_label"class="form-checkbox form-normal form-primary form-text">
+								<input id="remember_me" name="_remember_me" type="checkbox" checked> {{"login.form.remember_me"|trans}}
+								</label>
+							</div>
+                            <input type="hidden" name="_csrf_token"
+                                value="{{ csrf_token('authenticate') }}"
+                            >
+						</div>
+                        <br><br>
+						<button id='btnSubmit' class="btn btn-lg btn-block btn-dark" type="submit">
+							 {{"login.form.submit"|trans}}
+						</button>
+					</form>
+				</div>
+			</div>
+			<div class="pad-ver bottom_links">
+				<a href="{{ path('policy_privacy') }}" class="btn-link mar-rgt">{{"general.use_conditions_and_confidentiality"|trans}}</a>
+				<a href="{{ path('policy_cookies') }}" class="btn-link mar-lft">{{"general.cookies_policy"|trans}}</a>
+			</div>
+		</div>
+		<!--===================================================-->
+		
+	</div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+        /*<!--XXXXXXXXXX Testing -->*/
+        {% if isTestingIP %}
+        $('#log1Test').click(function(){
+            $('#inputEmail').val('backend@gmail.com').keyup();
+            $('#inputPassword').val('1234').keyup();
+        });
+        {% endif %}
+        /*<!--XXXXXXXXXX-->*/
+
+        $(document).ready(function(){
+            
+            {#* Email input  #}
+            $("#inputEmail").keyup(function(){
+                if($("#inputEmail").val() != "") {
+                    $("#email_remove_btn").css({"display": ""});
+                } else {
+                    $("#email_remove_btn").css({"display": "none"});
+                }
+            });
+
+            $("#email_remove_btn").click(function(){
+                $("#inputEmail").val("").keyup();
+            });
+            {#* ************ #}
+
+            {#* Password input  #}
+            $("#inputPassword").keyup(function(){
+                if($("#inputPassword").val() != "") {
+                    $("#show_password_btn").css({"display": ""});
+                } else {
+                    $("#show_password_btn").css({"display": "none"});
+                }
+            });
+
+            $("#show_password_btn").click(function(){
+                if( $("#inputPassword").attr("type") == "password") {
+                    $("#inputPassword").attr("type", "text");
+                } else {
+                    $("#inputPassword").attr("type", "password");
+                }
+            });
+            {#* ***********  #}
+
+        });
+
+
+    </script>
+{% endblock %}

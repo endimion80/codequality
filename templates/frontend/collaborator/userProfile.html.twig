@@ -1,0 +1,162 @@
+{% extends 'includes/sidebar.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+    {{parent()}}
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-data_management.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-asitur_datatable.css') }}">
+    <style>
+        .filter_inputs{
+            width: 100%;
+        }
+        #changePasswordContent{
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <!--Page Title-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="page-title">
+        <h1 class="page-header text-overflow">{{"general.profile.header"|trans}}</h1>
+    </div>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--End page title-->
+
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+
+        <div class="row">
+            <div class="col-md-3 alignRight">
+                <label class='labelGrey'>
+                    {{"login.form.email"|trans}}:
+                </label>
+            </div>
+            <div class="col-md-9">
+                <div>
+                    <label class='labelInput'>{{user.email}}</label>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-3 alignRight">
+                <label class='labelGrey'>
+                    {{"dataTable.logs.user"|trans}}:
+                </label>
+            </div>
+            <div class="col-md-3">
+                <div>
+                    <input id ='name' type='text' class='form-control filter_inputs' placeholder='{{"profile.nameInput"|trans}}' value='{{ user.name }}'/>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-3 alignRight">
+                <label class='labelGrey'>
+                    {{"login.form.password"|trans}}:
+                </label>
+            </div>
+            <div class="col-md-3">
+                
+                <button id='btnChangePassword' class='btnDefaultMini'>{{"change_password.form.new_password"|trans}}</button>
+
+                <div id='changePasswordContent'>
+                    <div style='margin-bottom: 15px;'>
+                        <input id ='password' type='password' class='form-control filter_inputs' placeholder='{{"change_password.form.title"|trans}}' value=''/>
+                    </div>
+                    <div>
+                        <input id ='password2' type='password' class='form-control filter_inputs' placeholder='{{"change_password.form.new_password_check"|trans}}' value=''/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12" style='text-align: right;'>
+                <button class='btnSave btnDefault'>{{"general.save"|trans}}</button>
+            </div>
+        </div>
+
+        
+    </div>
+    <!--===================================================-->
+    <!--End page content-->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+
+    <script>
+        $(document).ready(function(){
+            $("#top-profile").css({"background-color": "var(--main-blue)"});    
+            $("#top-profile img").css({"filter": "grayscale(100%) brightness(200%)"});    
+
+            $('#btnChangePassword').click(function(){
+                $('#btnChangePassword').fadeOut(function(){
+                    $('#changePasswordContent').fadeIn();
+                });
+            });
+
+            $('.btnSave').click(function(){
+                var password = '';
+                var error = false;
+                if ($('#password').val() != ''){
+                    password = $('#password').val();
+                    if ($('#password').val() != $('#password2').val() ){
+                        Swal.fire("{{'change_password.form.not_same'|trans}}", '', 'error');
+                        error = true;
+                    }
+                }
+                
+                if (!error){
+                    swal.fire({
+                        text: "{{'general.saveChanges'|trans}}",
+                        title: '',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: "{{'general.confirm'|trans}}",
+                        cancelButtonText: "{{'general.cancel'|trans}}",
+                        onClose: () => {}
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            $.ajax({
+                                url:'{{ path('user_profile_save') }}',
+                                data: {
+                                    'name': $('#name').val(),
+                                    'password': password
+                                },
+                                type:"POST",
+                                dataType: "json",
+                                success: function(data){
+                                    //console.log(data);
+                                    if (data.status)
+                                        Swal.fire("{{'general.saved'|trans}}", '', 'success');
+                                    else
+                                        Swal.fire("{{'general.form.error'|trans}}", data.errors.join(', '), 'error');
+                                },
+                                error:function(err){
+                                    swal.fire({
+                                        title: '{{ ("general.form.error")|trans }}',
+                                        html: '',
+                                        icon: 'error',
+                                        showConfirmButton: true
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+
+            });
+        });
+    </script>
+
+{% endblock %}

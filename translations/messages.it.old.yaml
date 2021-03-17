@@ -1,0 +1,417 @@
+login.form.title: 'Accedi al tuo account'
+login.form.already.connected: 'Sei connesso come'
+login.form.email: E-mail
+login.form.password: 'Parola d''ordine'
+login.form.remember_me: 'Ricorda i dati'
+login.form.submit: Entra
+login.form.password_recovery: 'Hai dimenticato la password?'
+change_password.form.title: 'Inserisci la tua nuova password'
+change_password.form.new_password: 'Nuova password'
+change_password.form.new_password_check: 'Reinserire la password'
+change_password.form.not_same: 'Le passwords non corrispondono'
+general.accept: Accettare
+change_password.form.passwords_not_matching: 'Le passwords non corrispondono'
+forgot_password.title: 'Hai dimenticato la tua password?'
+forgot_password.subtitle: 'Non preoccuparti, inserisci la tua email e riceverai un''e-mail con i passaggi per recuperarla.'
+forgot_password.email.placeholder: 'Scrivi la tua email'
+general.send: Spedire
+general.exit: Esci
+general.save: Salva
+general.confirm: Confermare
+general.cancel: Annulla
+general.yes: Sì
+general.no: Non
+general.saveChanges: 'Vuoi salvare le modifiche?'
+general.saved: 'Modifiche salvate'
+general.cancelled: Annullato
+general.use_conditions_and_confidentiality: 'Termini di utilizzo e riservatezza'
+general.cookies_policy: 'Politica sui cookie'
+general.toDefine: Definire
+general.needSelectRow: 'È necessario selezionare qualche riga'
+forgot_password.check_inbox: 'Controlla la tua casella di posta, è stata inviata un''e-mail'
+forgot_password.write_email: 'Inserisci un''e-mail'
+forgot_password.email_not_registered: 'L''email inserita non è registrata'
+sidebar.home: Inizio
+sidebar.file_card: File
+sidebar.reporting: Segnalazione
+sidebar.completion_and_invoicing: 'Completamento e fatturazione'
+sidebar.logs: Registri
+sidebar.translations: Traduzioni
+sidebar.parameters: Parametri
+dataTable.translations.label: Etichetta
+dataTable.translations.need_check: 'Dai un''occhiata?'
+dataTable.logs.user: Utente
+dataTable.logs.type: Genere
+dataTable.logs.creation_date: 'Data di creazione'
+dataTable.logs.comment: Commento
+dataTable.email.log.intervention_id: 'ID intervento'
+dataTable.email.log.subject: Affare
+dataTable.email.log.creation_date: 'Data di creazione'
+dataTable.email.log.email_to: Per
+dataTable.email.log.email_cc: DC
+dataTable.email.log.email_bcc: BCC
+dataTable.email.log.is_delivered: Inviato
+dataTable.email.log.template: Modello
+dataTable.email.log.template_content: 'Contenuto del modello'
+dataTable.email.log.locale: Linguaggio
+dataTable.email.log.backup: Backup
+dataTable.sms.logs.intervention_id: 'ID intervento'
+dataTable.sms.logs.creation_date: 'Data di creazione'
+dataTable.sms.logs.sms_content: Soddisfare
+dataTable.sms.logs.sms_name: Nome
+dataTable.sms.logs.sms_type: Genere
+dataTable.sms.logs.sms_phone: Telefono
+dataTable.sms.logs.is_delivered: Inviato
+dataTable.sms.logs.debug: debug
+backend.translations.guide.update: 'Le chiavi non trovate vengono aggiunte ai file YAML e il database viene aggiornato con questi file'
+backend.translations.guide.fix: 'Le traduzioni incomplete vengono completate con l''API di Google e le traduzioni vengono controllate e formattate'
+backend.translations.guide.export: 'Le traduzioni vengono esportate dal database in file YAML'
+dataTable.general.lengthMenu.all: Tutti
+dataTable.general.language.sProcessing: 'In lavorazione ...'
+dataTable.general.language.sLengthMenu: 'Mostra record _MENU_'
+dataTable.general.language.sZeroRecords: 'Nessun risultato trovato'
+dataTable.general.language.sEmptyTable: 'Nessun dato disponibile in questa tabella'
+dataTable.general.language.sInfo: 'Visualizzazione dei record da _START_ a _END_ su un totale di _TOTAL_ record'
+dataTable.general.language.sInfoEmpty: 'Visualizzazione dei record da 0 a 0 su un totale di 0 record'
+dataTable.general.language.sInfoFiltered: '(filtrando un totale di _MAX_ record)'
+dataTable.general.language.sSearch: Ricerca
+dataTable.general.language.sLoadingRecords: 'Caricamento in corso'
+dataTable.general.language.oPaginate.sFirst: Primo
+dataTable.general.language.oPaginate.sLast: 'Più recente'
+dataTable.general.language.oPaginate.sNext: 'A seguire'
+dataTable.general.language.oPaginate.sPrevious: Precedente
+dataTable.general.language.oAria.sSortAscending: 'Abilita per ordinare la colonna in ordine crescente'
+dataTable.general.language.oAria.sSortDescending: 'Attivare per ordinare la colonna in ordine decrescente'
+dataTable.tab.logs: Registri
+dataTable.tab.emails: Email
+dataTable.tab.sms: SMS
+general.loading: 'Caricamento in corso'
+dataTable.parameters.name: Nome
+dataTable.parameters.type: Genere
+dataTable.parameters.value: Valore
+dataTable.parameters.description: Descrizione
+sidebar.collaborators: Collaboratori
+general.important: IMPORTANTE!
+backend.translations.warning: 'In caso di modifica di una qualsiasi traduzione nella tabella, generare i file aggiornati utilizzando il comando'
+backend.parameters.warning: 'In caso di modifica di qualsiasi parametro da qui, deve essere aggiunto anche nel comando'
+dataTable.collaborators.username: 'Nome utente'
+dataTable.collaborators.email: E-mail
+dataTable.collaborators.name: Nome
+dataTable.collaborators.actions: Azioni
+dataTable.collaborators.login: Accesso
+data_management.tab.branch_offices: Filiali
+data_management.tab.cranes: Gru
+data_management.tab.operators: Operatori
+dataTable.branchOffices.town: POSIZIONE
+dataTable.branchOffices.province: PROVINCIA
+dataTable.branchOffices.zone: ZONA
+dataTable.branchOffices.telephone: TELEFONI
+dataTable.branchOffices.sinisterEmail: 'SINISTER EMAIL'
+dataTable.branchOffices.invoicingEmail: 'FATTURAZIONE EMAIL'
+dataTable.branchOffices.contactPerson: REFERENTE
+dataTable.asitur.language.sLengthMenu: 'Oggetti per pagina'
+dataTable.asitur.sendNotification: 'INVIA AVVISO'
+dataTable.asitur.export: ESPORTARE
+dataTable.asitur.filter: FILTRO
+dataTable.asitur.search: CERCARE
+dataTable.intervention.reference: Atti
+dataTable.intervention.placeholder.reference: 'Indica File'
+dataTable.intervention.dateCreation: 'Richiedi data e ora'
+dataTable.intervention.placeholder.dateCreation: 'Indicare la data'
+dataTable.intervention.datePickup: 'data e ora della posizione'
+dataTable.intervention.address: 'Indirizzo della posizione'
+dataTable.intervention.placeholder.address: 'Inserisci l''indirizzo'
+dataTable.intervention.fails: Colpa
+dataTable.intervention.isRis: 'Tipo di assistenza'
+dataTable.intervention.request: Richiesta
+dataTable.intervention.placeholder.request: 'Indicare la richiesta'
+general.ris: RIS
+general.no_ris: 'no RIS'
+general.search: Ricerca
+backend.translations.label.steps: 'Passaggi per aggiornare le traduzioni'
+backend.translations.guide.complete: 'Modificare la colonna ES delle nuove traduzioni nel Database (o nella tabella di gestione della piattaforma).'
+backend.translations.delete_cache: 'Per mostrare le modifiche in produzione sarà necessario svuotare la cache'
+general.export.branch_offices: Filiali
+data_management.input.placeholder.management_type: 'Indica la gestione'
+general.sync: Sincronizzare
+sidebar.profile: Profilo
+sidebar.settings: Ambientazione
+sidebar.logout: 'Cancella la sottoscrizione'
+sidebar.responsive_zone: 'Opzioni utente'
+dataTable.tab.log: Log
+dataTable.collaborators.collaborator: Collaboratore
+dataTable.asitur.new: NUOVO
+dataTable.asitur.edit: MODIFICARE
+dataTable.asitur.remove: RIMUOVERE
+dataTable.asitur.digital_asign: INCARICO
+dataTable.asitur.rates: ALIQUOTE
+dataTable.asitur.time_control: 'CONTROLLO DEL TEMPO'
+general.filter: Filtro
+data_management.input.label.town: Posizione
+data_management.input.label.province: Provincia
+data_management.input.label.telephone: Telefono
+data_management.input.label.sinister_email: 'Email sinistra'
+data_management.input.label.invoicing_email: 'Fatturazione tramite posta elettronica'
+data_management.input.label.contact_person: Referente
+data_management.input.placeholder.town: 'Indicare la località'
+data_management.input.placeholder.province: 'Indica la provincia'
+data_management.input.placeholder.telephone: 'Indica il telefono'
+data_management.input.placeholder.sinister_email: 'Indicare e-mail'
+data_management.input.placeholder.invoicing_email: 'Indicare e-mail'
+data_management.input.placeholder.contact_person: 'Indicare il contatto'
+general.export.success: 'Esportazione completata'
+general.export.error: 'Errore di esportazione del file'
+general.download.error: 'Errore durante il download del file'
+dataTable.cranes.code: IDENTIFICATORE
+dataTable.cranes.plate: ISCRIZIONE
+dataTable.cranes.brand: MARCA
+dataTable.cranes.model: MODELLO
+dataTable.cranes.crane_type: GENERE
+dataTable.cranes.services: 'SERVIZI ASSOCIATI'
+dataTable.cranes.zones: 'AREE DI SERVIZIO'
+dataTable.cranes.management_type: 'TIPO DI INCARICO'
+dataTable.cranes.status: 'SPENTO ACCESO'
+dataTable.cranes.label: ETICHETTATO
+data_management.input.label.code: Identificatore
+data_management.input.label.plate: Iscrizione
+data_management.input.label.brand: Marca
+data_management.input.label.model: Modello
+data_management.input.label.crane_type: Genere
+data_management.input.label.services: 'Servizi associati'
+data_management.input.label.label: Etichettato
+data_management.input.label.zones: 'Aree di servizio'
+data_management.input.label.management_type: 'Tipo di incarico'
+data_management.input.label.status: Stato
+data_management.input.placeholder.code: 'Indica l''identificatore'
+data_management.input.placeholder.plate: 'Indica la registrazione'
+data_management.input.placeholder.brand: 'Indica la marca'
+data_management.input.placeholder.model: 'Indica il modello'
+data_management.input.placeholder.crane_type: 'Indica il tipo'
+data_management.input.placeholder.services: 'Indica i servizi'
+data_management.input.placeholder.label: 'Indica l''etichettatura'
+data_management.input.placeholder.zones: 'Indica la zona'
+dataTable.operators.identifier: IDENTIFICATORE
+dataTable.operators.mobile_phone: MOBILE
+dataTable.operators.availability_status: DISPONIBILITÀ
+dataTable.operators.assigned_crane: 'GRU ASSEGNATA'
+data_management.input.label.identifier: Identificatore
+data_management.input.label.mobile_phone: Mobile
+data_management.input.label.availability_status: Disponibilità
+data_management.input.label.assigned_crane: 'Gru assegnata'
+data_management.input.placeholder.identifier: 'Indica l''identificatore'
+data_management.input.placeholder.mobile_phone: 'Indica Mobile'
+data_management.input.placeholder.assigned_crane: 'Indica gru'
+data_management.crane_status.select.option.active: Attivo
+data_management.crane_status.select.option.damaged: Danneggiato
+data_management.crane_status.select.option.retired: Ritiro
+general.input.placeholder.email: esempio@email.com
+general.input.placeholder.password: 'parola d''ordine'
+backend.collaborators.header: 'Utenti in collaborazione'
+backend.log.header: Log
+backend.email_log.header: 'Registro e-mail'
+backend.sms_log.header: 'Registro SMS'
+backend.translations.header: Traduzioni
+backend.parameters.header: Parametri
+general.profile.header: Profilo
+general.settings.header: Ambientazione
+general.add: Inserisci
+modal.title.new_collaboratorUser: 'Nuovo utente collaboratore'
+modal.input.collaboratorUser.username: 'Nome utente'
+modal.input.collaboratorUser.collaborator: 'Entità collaborante'
+modal.input.collaboratorUser.email: E-mail
+modal.input.collaboratorUser.password: 'Parola d''ordine'
+modal.input.collaboratorUser.name: Nome
+modal.input.collaboratorUser.cif: CIF
+general.modal.success: 'L''operazione ha avuto successo'
+general.modal.error: 'C''è stato un errore'
+general.form.allfields.mandatory: 'Tutti i campi sono obbligatori'
+general.form.error: 'C''è stato un errore'
+form.collaboratorUser.username.alreadyExists: 'Questo nome utente esiste già'
+form.collaboratorUser.email.alreadyExists: 'Questa email esiste già'
+form.collaboratorUser.cif.alreadyExists: 'Questo CIF esiste già'
+data_management.operator.availability_status.available: 'A disposizione'
+data_management.operator.availability_status.not_available: 'Non disponibile'
+general.go_back_to_list: 'Torna alla lista'
+settings.dateAndTime: 'Data e ora'
+settings.notify: 'Notifiche e avvisi'
+settings.lenguage: Linguaggio
+settings.formatDate: 'Formato data'
+settings.chooseFormatDate: 'Scegli il formato della data da applicare'
+detail_branch_office.branch_office_data: 'Dati di filiale'
+detail_branch_office.branch_office_cranes: Gru
+detail_branch_office.branch_office_operators: Operatori
+detail_branch_office.branch_office_zones: 'Aree in cui serve'
+detail_branch_office.branch_office_documents: 'Allegato di documenti'
+detail_branch_office.input.label.address: Direzione
+detail_branch_office.input.label.phone: Telefono
+detail_branch_office.input.label.sinister_email: 'Email sinistra'
+detail_branch_office.input.label.invoicing_email: 'Fatturazione tramite posta elettronica'
+detail_branch_office.input.label.contact_person: Referente
+settings.predeterminado: predeterminato
+settings.formatHour: 'Formato orario'
+settings.chooseFormatHour: 'Scegli il formato dell''ora da applicare'
+settings.receiveNotification: 'Ricevi notifiche e avvisi?'
+settings.emailNotification: 'Indica l''email in cui desideri ricevere le notifiche'
+settings.other: Altro
+settings.emailInput: 'Indica l''email'
+settings.chooseLanguage: 'Scegli la lingua della piattaforma'
+settings.spanish: Spagnolo
+settings.english: Inglese
+settings.french: Francese
+settings.italian: Italiano
+settings.portuguese: Portoghese
+profile.name: Nome
+profile.nameInput: 'Immettere un nome'
+intervention.pendingToClose: 'In attesa di chiusura'
+intervention.pentingToFinish: 'In attesa di completamento'
+attachment.list.error: 'Errore durante il recupero degli allegati'
+form.crane.plate.alreadyExists: 'Questa targa esiste già'
+form.crane.reference.alreadyExists: 'Questo identificatore esiste già'
+modal.general.operation.synchronizationError: 'Sincronizzazione fallita'
+modal.attachment.upload.failed: 'Errore durante l''importazione dei file'
+modal.cranes.not_selected: 'Nessuna gru selezionata'
+general.mail.regards: 'Provider Network Department'
+general.mail.regards2: 'Assistenza Asitur'
+detail_intervention.intervention_data: Intervento
+detail_intervention.code: Atti
+detail_intervention.reference: Politica
+detail_intervention.insurance_entity: Azienda
+detail_intervention.reference_cia: 'Riferimento dell''azienda.'
+detail_intervention.date: Data
+detail_intervention.status: Stato
+detail_intervention.origin: Origine
+detail_intervention.destination: Destinazione
+detail_intervention.whats_happend: 'Cosa succede'
+detail_intervention.where_is: 'Dov''è'
+detail_intervention.sinister: Sinistro
+detail_intervention.failure_type: 'Tipo di guasto'
+detail_intervention.failure_cause_type: Sottocausa
+detail_intervention.ris_cause: 'Causa RIS'
+detail_intervention.caller_name: 'Nome assicurato'
+detail_intervention.signer_dni: DNI
+detail_intervention.caller_phone: Telefono
+detail_intervention.service: Servizio
+detail_intervention.service_tooltip: 'Se vuoi cambiare servizio, contatta l''Amministratore Asitur'
+detail_intervention.plate: Iscrizione
+detail_intervention.brand: Marca
+detail_intervention.model: Modello
+detail_intervention.description: Osservazioni
+detail_intervention.is_ris: 'Riparazione in loco'
+detail_intervention.riscause_operator: 'Motivo RIS'
+detail_intervention.is_failure: 'Servizio fallito'
+detail_intervention.budget_asitur: 'Budget Asitur'
+detail_intervention.budget_crane: 'Budget del fornitore'
+detail_intervention.null: '-'
+reporting.intervention: Interventi
+reporting.invoices: Fattura
+datatable.btn.deliveryNote: 'Bolla d''accompagnamento'
+datatable.btn.photos: Fotografie
+dataTable.intervention.town: Posizione
+dataTable.intervention.placeholder.town: 'Inserisci la posizione'
+datatable.reporting.risType: 'Tipo RIS'
+datatable.reporting.status: Stato
+datatable.reporting.reference: 'Nessun file'
+datatable.reporting.dateFrom: 'Data da'
+datatable.reporting.dateTo: 'Data a'
+datatable.reporting.town: Posizione
+datatable.reporting.km: 'KM Tours'
+datatable.reporting.ris: RIS
+modal.title.new_crane: 'Registrazione della gru'
+data_management.input.label.reference: Identificatore
+modal.input.crane.branchOffice: Filiale
+modal.input.crane.label: Etichettato
+modal.input.crane.model: Modello
+modal.input.crane.type: 'Tipo di gru'
+modal.input.crane.availabilityStatus: Disponibilità
+modal.input.crane.creationDate: 'Data di dimissione'
+crane.management_type.manual: Manuale
+crane.management_type.automatic: Automatico
+data_management.input.placeholder.reference: 'Indica l''identificatore'
+dataTable.cranes.reference: IDENTIFICATORE
+modal.crane.remove: 'Sei sicuro di voler cancellare le gru selezionate?'
+modal.crane.remove.confirm: 'Annulla l''iscrizione'
+modal.general.operation.success: 'L''operazione ha avuto successo'
+modal.general.operation.error: 'Impossibile eseguire l''operazione'
+modal.crane.change_management_type: 'Sei sicuro di voler cambiare il tipo di assegnazione delle gru selezionate?'
+detail.attachments: 'Allegato di documenti'
+detail_crane.crane_data: 'Dati sulla gru'
+detail_crane.input.label.plate: Iscrizione
+detail_crane.input.label.reference: Identificatore
+detail_crane.input.label.brand: Marca
+detail_crane.input.label.model: Modello
+detail_crane.input.label.managementType: 'Tipo di incarico'
+detail_crane.input.label.status: Stato
+detail_crane.input.label.label: Etichettato
+detail_crane.input.label.availabilityStatus: Disponibilità
+detail_crane.input.label.craneType: Genere
+detail_crane.input.label.preferentialServices: 'Servizi preferenziali'
+detail_crane.input.label.availableServices: 'Servizi disponibili'
+detail_crane.attended_branch_offices: 'Filiali servite'
+detail_crane.attended_branch_offices.subtext: 'Filiali registrate alle quali questa gru può essere associata'
+modal.crane.remove.individual: 'L''attuale gru è in fase di disattivazione, vuoi continuare?'
+detail_crane.save.success: 'La modifica ha avuto successo'
+modal.crane.attachment.remove: 'Il file selezionato verrà eliminato, vuoi continuare?'
+modal.general.remove: Rimuovere
+detail_crane.input.placeholder.services: 'Aggiungi servizio'
+dashboard.labelRis: RIS
+dashboard.labelCostAvg: 'Costo medio'
+dashboard.labelRefuse: Respinto
+dashboard.labelSatisfied: Soddisfazione
+dashboard.labelNC: NC
+general.no_filter: 'Non filtrato'
+modal.input.crane.deletionDate: 'Data di dimissione'
+form.operator.username.alreadyExists: missing_form.operator.username.alreadyExists
+form.operator.dni.alreadyExists: missing_form.operator.dni.alreadyExists
+form.operator.reference.alreadyExists: missing_form.operator.reference.alreadyExists
+modal.operators.not_selected: missing_modal.operators.not_selected
+general.execute: missing_general.execute
+general.saving: missing_general.saving
+general.updating: missing_general.updating
+sidebar.debug: missing_sidebar.debug
+login.form.set_password: missing_login.form.set_password
+dataTable.dashboard.operator: missing_dataTable.dashboard.operator
+dataTable.dashboard.province_branchoffice: missing_dataTable.dashboard.province_branchoffice
+dataTable.dashboard.town_branchoffice: missing_dataTable.dashboard.town_branchoffice
+dataTable.dashboard.ris_percentage: missing_dataTable.dashboard.ris_percentage
+detail_operator.operator_data: missing_detail_operator.operator_data
+detail_operator.input.label.reference: missing_detail_operator.input.label.reference
+detail_operator.input.label.mobile_phone: missing_detail_operator.input.label.mobile_phone
+detail_operator.assigned_crane: missing_detail_operator.assigned_crane
+detail_operator.assigned_crane.subtext: missing_detail_operator.assigned_crane.subtext
+modal.operator.label.branch_office: missing_modal.operator.label.branch_office
+detail_operator.select.branch_office.placeholder: missing_detail_operator.select.branch_office.placeholder
+detail_operator.select.crane_type.placeholder: missing_detail_operator.select.crane_type.placeholder
+detail_operator.operator_availability: missing_detail_operator.operator_availability
+detail_operator.operator_password: missing_detail_operator.operator_password
+detail_operator.change_password: missing_detail_operator.change_password
+detail_operator.change_password_check: missing_detail_operator.change_password_check
+detail_operator.select.crane_type.error: missing_detail_operator.select.crane_type.error
+modal.operator.remove.individual: missing_modal.operator.remove.individual
+modal.general.remove.confirm: missing_modal.general.remove.confirm
+modal.attachment.remove: missing_modal.attachment.remove
+modal.title.new_operator: missing_modal.title.new_operator
+modal.operator.label.username: missing_modal.operator.label.username
+modal.operator.label.mobile_phone: missing_modal.operator.label.mobile_phone
+modal.operator.label.password: missing_modal.operator.label.password
+modal.operator.label.password_again: missing_modal.operator.label.password_again
+modal.operator.label.name: missing_modal.operator.label.name
+modal.operator.label.last_name: missing_modal.operator.label.last_name
+modal.operator.label.reference: missing_modal.operator.label.reference
+modal.operator.label.dni: missing_modal.operator.label.dni
+modal.operator.label.crane: missing_modal.operator.label.crane
+data_management.operator.assigned_crane.none: missing_data_management.operator.assigned_crane.none
+modal.operator.label.creation_date: missing_modal.operator.label.creation_date
+modal.operator.label.status: missing_modal.operator.label.status
+general.error.loading.data: missing_general.error.loading.data
+general.password.both_same: missing_general.password.both_same
+modal.operator.remove: missing_modal.operator.remove
+dashboard.no_filter_collaborator: missing_dashboard.no_filter_collaborator
+dashboard.no_filter_branchoffice: missing_dashboard.no_filter_branchoffice
+dashboard.no_filter_crane: missing_dashboard.no_filter_crane
+dataTable.dashboard.reference: missing_dataTable.dashboard.reference
+dataTable.dashboard.request_date: missing_dataTable.dashboard.request_date
+dataTable.dashboard.province: missing_dataTable.dashboard.province
+dataTable.dashboard.service: missing_dataTable.dashboard.service
+dataTable.dashboard.status: missing_dataTable.dashboard.status
+dataTable.dashboard.branchoffice: missing_dataTable.dashboard.branchoffice
+dataTable.dashboard.cause: missing_dataTable.dashboard.cause

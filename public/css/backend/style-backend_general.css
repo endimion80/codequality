@@ -1,0 +1,21 @@
+.collaborators_modal_inputs,
+.cranes_modal_inputs {
+    height: 36px;
+}
+
+#translations_steps_heading {
+    cursor: pointer;
+}
+
+#translations_steps_heading:hover {
+    background-color: grey;
+    color: white;
+}
+
+.editable-click {
+    border-bottom: none !important;
+}
+
+.editable-click:hover {
+    color: dodgerblue;
+}

@@ -1,0 +1,221 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-base.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-sidebar.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-base_asitur.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    <div id="container" class="effect mainnav-sm navbar-fixed mainnav-fixed">
+		
+		<!--NAVBAR-->
+		<!--===================================================-->
+		<header id="navbar">
+
+			<img id="asitur_logo" src='{{asset("media/logo-asitur.png")}}' width="130px" height="39px">
+
+			<div id="navbar-container" class="boxed">
+
+				<!--Navigation toogle button-->
+				<!--================================-->
+				<div id="frontend_sidebar_navbar-header" class="navbar-header">
+                
+					<a id="frontend_sidebar_navbar-brand" class="mainnav-toggle navbar-brand" href="#">
+						<img id="menu-icon" class="section-icon" src='{{asset("media/home/menu.png")}}' width="42px" height="42px">
+					</a>
+                    
+					<img id="asitur_logo_responsive" src='{{asset("media/logo-asitur.png")}}' width="130px" height="39px">
+					
+				</div>
+				<!--================================-->
+				<!--End Navigation toogle button-->
+
+
+				<!--Navbar Top from content-->
+				<!--================================-->
+				<div class="navbar-content clearfix">
+					<ul class="nav navbar-top-links pull-left">
+					</ul>
+
+					<ul class="nav navbar-top-links pull-right">
+
+						<!-- Profile -->
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<li>
+							<a id="top-profile" class="top-right-buttons" href="{{ path('user_profile') }}">
+								<img class="top-icons" src='{{asset("media/user-icon.png")}}' width="42x" height="42px">
+							</a>
+						</li>
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<!-- End Profile -->
+
+						<!-- Settings -->
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<li>
+							<a id="top-settings" class="top-right-buttons" href="{{ path('user_settings') }}">
+								<img src='{{asset("media/home/settings.png")}}' width="42x" height="42px">
+							</a>
+						</li>
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<!-- End Settings -->
+
+						<!-- Logout -->
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<li>
+							<a id="top-logout" class="top-right-buttons" href="{{ path('app_logout') }}">
+								<img src='{{asset("media/home/logout.png")}}' width="38px" height="42px">
+							</a>
+						</li>
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<!-- End Logout -->
+
+					</ul>
+				</div>
+				<!--================================-->
+				<!--End Navbar Top from content-->
+
+			</div>
+		</header>
+		<!--===================================================-->
+		<!--END NAVBAR-->
+
+		<div class="boxed">
+
+			<!--CONTENT CONTAINER-->
+			<!--===================================================-->
+			<div id="content-container">
+			
+            {% block content %}{% endblock %}
+
+			</div>
+			<!--===================================================-->
+			<!--END CONTENT CONTAINER-->
+
+
+			
+			<!--MAIN NAVIGATION-->
+			<!--===================================================-->
+			<nav id="mainnav-container">
+				<div id="mainnav">
+
+					<!--Menu-->
+					<!--================================-->
+					<div id="mainnav-menu-wrap">
+						<div class="nano">
+							<div class="nano-content">
+								<ul id="mainnav-menu" class="list-group">
+						
+									<!-- Inicio -->
+									<li id="home_li">
+										<a href="{{ path('user_home') }}">
+                                            <img class="section-icon" 
+                                                src='{{asset("media/home/inicio.png")}}' 
+                                                srcset="{{asset('media/home/inicio@2x.png')}} 2x, {{asset('media/home/inicio@3x.png')}} 3x">
+											<span class="menu-title">
+												{{"sidebar.home"|trans}}
+											</span>
+										</a>
+									</li>
+						
+									<!-- Ficha -->
+									<li id="data_management_li">
+										<a href="{{ path('data_management') }}">
+                                            <img id="data_management_icon" class="section-icon" 
+                                                src='{{asset("media/home/ico-recogida.png")}}' 
+                                                srcset="{{asset('media/home/ico-recogida@2x.png')}} 2x, {{asset('media/home/ico-recogida@3x.png')}} 3x"
+                                                style="padding: 1px 6.5px;">
+											<span class="menu-title">
+												{{"sidebar.file_card"|trans}}
+											</span>
+										</a>
+									</li>
+
+									<!-- Reporting -->
+									<li id="reporting_li">
+										<a href="{{ path('reporting') }}">
+                                            <img class="section-icon" 
+                                                src='{{asset("media/home/reporting.png")}}' 
+                                                srcset="{{asset('media/home/reporting@2x.png')}} 2x, {{asset('media/home/reporting@3x.png')}} 3x">
+											<span class="menu-title">
+												{{"sidebar.reporting"|trans}}
+											</span>
+										</a>
+									</li>
+
+									<!-- Finalización y facturación -->
+									<li id="intervention_li">
+										<a href="{{ path('intervention_list') }}">
+                                            <img class="section-icon" 
+                                                src='{{asset("media/home/mis-servicios.png")}}' 
+                                                srcset="{{asset('media/home/mis-servicios@2x.png')}} 2x, {{asset('media/home/mis-servicios@3x.png')}} 3x">
+											<span class="menu-title">
+												{{"sidebar.completion_and_invoicing"|trans}}
+											</span>
+										</a>
+									</li>
+						
+									<!-- Cabecera de la parte responsive del menú -->
+									<li class="list-header menu_responsive_zone">{{"sidebar.responsive_zone"|trans}}</li>
+						
+									<!-- Perfil -->
+									<li class="menu_responsive_zone">
+										<a href="{{ path('user_profile') }}">
+											<img class="responsive_zone_icons" src='{{asset("media/user-icon.png")}}' width="30px" height="30px">
+											<span class="menu-title responsive_zone_text">
+												<strong>{{"sidebar.profile"|trans}}</strong>
+											</span>
+										</a>
+									</li>
+
+									<!-- Configuración -->
+									<li class="menu_responsive_zone">
+										<a href="{{ path('user_settings') }}">
+											<img class="responsive_zone_icons" src='{{asset("media/home/settings.png")}}' width="30px" height="30px">
+											<span class="menu-title responsive_zone_text">
+												<strong>{{"sidebar.settings"|trans}}</strong>
+											</span>
+										</a>
+									</li>
+
+									<!-- Cerrar sesión -->
+									<li class="menu_responsive_zone">
+										<a href="{{ path('app_logout') }}">
+											<img class="responsive_zone_icons" src='{{asset("media/home/logout.png")}}' width="28px" height="30px">
+											<span class="menu-title responsive_zone_text">
+												<strong>{{"sidebar.logout"|trans}}</strong>
+											</span>
+										</a>
+									</li>
+
+								</ul>
+
+							</div>
+						</div>
+					</div>
+					<!--================================-->
+					<!--End menu-->
+
+				</div>
+			</nav>
+			<!--===================================================-->
+			<!--END MAIN NAVIGATION-->
+
+		</div>
+
+	</div>
+	<!--===================================================-->
+	<!-- END OF CONTAINER -->
+		
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+    </script>
+{% endblock %}

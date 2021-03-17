@@ -1,0 +1,75 @@
+# Start writing your Dockerfile easily
+FROM php:7.1-apache
+
+# Indicamos que la terminal debe ser no interactiva
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y zlib1g-dev libzip-dev tar openssl libxrender-dev libx11-dev libxext-dev libfontconfig1-dev libfreetype6-dev fontconfig libcurl3-dev libxml2-dev wget xfonts-base xfonts-75dpi libc-client2007e-dev libc-client-dev libkrb5-dev libpng-dev libjpeg62-turbo-dev curl cron nano tree net-tools dnsutils iputils-ping
+
+# Descargamos y descomprimimos WKHTMLTOX
+RUN wget "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb"
+RUN dpkg -i wkhtmltox_0.12.5-1.buster_amd64.deb
+
+# Modulos PHP
+RUN docker-php-ext-install zip
+RUN docker-php-ext-install curl
+RUN docker-php-ext-install soap
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+RUN docker-php-ext-install gd
+RUN docker-php-ext-install mbstring
+RUN docker-php-ext-install dom
+RUN docker-php-ext-install intl
+RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
+RUN docker-php-ext-install imap
+RUN docker-php-ext-install bcmath
+RUN docker-php-ext-install pdo_mysql
+
+# Creamos las carpetas donde irá el proyecto
+RUN mkdir /var/www/rira.com
+RUN mkdir /var/www/rira.com/web
+
+# Directorio para las sesiones
+RUN mkdir /var/lib/php/
+RUN mkdir /var/lib/php/sessions
+RUN chmod 0777 -R /var/lib/php/sessions
+
+# Ponemos que cuando abramos el pod vaya a esa carpeta
+WORKDIR /var/www/rira.com/web
+COPY ./ /var/www/rira.com/web
+
+# Permisos especiales para el fichero debug 
+RUN chmod 777 /var/www/rira.com/web/src/Command/TestDebugCommand.php 
+
+# Copiamos la configuración
+COPY ./docker/default.conf /etc/apache2/sites-available/000-default.conf
+COPY ./docker/extra-conf.ini /usr/local/etc/php/conf.d/extra-conf.ini
+RUN rm /etc/apache2/sites-enabled/*
+RUN a2ensite 000-default.conf
+
+# Conexion a test
+COPY ./.env.test /var/www/rira.com/web/.env.local
+
+# Copiamos y damos permisos al SCRIPT de inicialización del docker
+COPY ./docker/startup.sh /etc/startup.sh
+RUN chmod 777 /etc/startup.sh
+
+# Copiamos en el PATH de la máquina el siguiente texto para ejecutar el bin que existe en los vendors
+RUN PATH=$PATH:/usr/src/apps/vendor/bin:bin
+
+# Configuramos el crontab
+COPY ./docker/crontab /var/spool/cron/crontabs/root
+RUN crontab /var/spool/cron/crontabs/root
+RUN ln -s /usr/local/bin/php /usr/bin/php
+
+# Configuramos los scripts
+#COPY ./scripts/* /root/scripts/
+#RUN chmod 777 -R /root/scripts/
+
+# Instalamos composer
+#RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+#RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
+# Ponemos correctamente la hora del servidor
+ENV TZ=Europe/Madrid
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+ENTRYPOINT ["/etc/startup.sh"]

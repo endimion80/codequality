@@ -1,0 +1,97 @@
+.cls-container {
+    background-color: var(--main-blue);
+}
+
+#btnSubmit {
+    background-color: var(--main-blue);
+    color: white;
+    border-radius: 6px;
+}
+
+#forgot_password {
+    color: var(--main-blue);
+    float: right;
+    margin-top: -10px;
+}
+
+#asitur_logo{
+    margin-bottom: 60px;
+}
+
+.login_label {
+    display: flex;
+    color: #6b7c93;
+    font-size: 16px;
+}
+
+.login_input {
+    font-weight: bold;
+    font-size: 16px;
+    color: var(--main-grey);
+}
+
+.login_input::placeholder {
+    font-weight: normal;
+    font-style: italic;
+    color: var(--main-blue);
+}
+
+.frontend_login_panel,
+.recover_password_panel {
+    padding: 40px 40px !important;
+}
+
+.login_input_button {
+    padding: 0 !important;
+    background-color: white;
+    box-shadow: none !important;
+}
+
+.login_input_button:before {
+    margin: 0;
+}
+
+#remember_me_label {
+    font-size: 16px;
+    color: var(--main-grey);
+}
+
+#remember_me_label:before {
+    border-radius: 2px !important;
+}
+
+#remember_me_label.active:before {
+    background-color: var(--main-blue);
+    border-color: var(--main-blue);
+}
+
+@media screen and (min-width: 576px){
+    .cls-content .cls-content-sm {
+        width: 425px;
+    }
+}
+
+@media screen and (max-width: 576px){ 
+
+    #asitur_logo{
+        margin-bottom: 20px;
+    }
+
+    .cls-content {
+        padding-top: 20px;
+    }
+
+    .frontend_login_full_panel,
+    .recover_password_full_panel {
+        width: 100% !important;
+    }
+
+    .bottom_links {
+        display: flex !important;
+        flex-direction: column;
+    }
+
+    .bottom_links > a{
+        margin-bottom: 10px;
+    }
+}

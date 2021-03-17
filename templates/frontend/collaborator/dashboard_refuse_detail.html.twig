@@ -1,0 +1,287 @@
+<div id='subFilterRisRow' style='display: flex; justify-content: flex-end;'>
+    {# Filtro Sucursal #}
+    {% if typeData != "br_id" %}
+    <div class="filter_inputs_div">
+        <select id="subFilterBranchOffice" name="branchOffice" class="sub_filter_inputs form-control select_inputs chosen">
+            <option value =''>{{"general.branch_office"|trans}}</option>
+        </select>
+    </div>
+    {% endif %}
+
+    {# Filtro Operario #}
+    <div class="filter_inputs_div">
+        <select id="subFilterOperator" name="operator" class="sub_filter_inputs form-control select_inputs chosen">
+            <option value =''>{{"general.operator"|trans}}</option>
+            {% for operator in operators %}
+                <option value ='{{operator.id}}'>{{operator.reference}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    {# Filtro Provincia vehículo #}
+    {% if typeData != "vh_province_id" %}
+    <div class="filter_inputs_div">
+        <select id="subFilterProvince" name="vh_province" class="sub_filter_inputs form-control select_inputs chosen">
+            <option value =''>{{"general.vehicle_province"|trans}}</option>
+            {% for province in provinces %}
+                <option value ='{{province.id}}'>{{province.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    {% endif %}
+
+    {# Filtro Provincia sucursal #}
+    {% if typeData != "br_province_id" %}
+    <div class="filter_inputs_div">
+        <select id="subFilterBranchOfficeProvince" name="br_province" class="sub_filter_inputs form-control select_inputs chosen">
+            <option value =''>{{"general.branch_office_province"|trans}}</option>
+            {% for province in provinces %}
+                <option value ='{{province.id}}'>{{province.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    {% endif %}
+
+    {# Filtro Localidad sucursal #}
+    {% if typeData != "br_town_id" %}
+    <div class="filter_inputs_div">
+        <select disabled id="subFilterBranchOfficeTown" name="br_town" class="sub_filter_inputs form-control select_inputs chosen">
+            <option value =''>{{"general.branch_office_town"|trans}}</option>
+        </select>
+    </div>
+    {% endif %}
+
+    {# Filtro Fecha #}
+    <div class="filter_inputs_div">
+        <input id="subFilterDateRange" name='dateRange' class="sub_filter_inputs asitur_input datepicker" value='01/01/{{ "now"|date("Y") }} - 31/12/{{ "now"|date("Y") }}' 
+            style='width: 100%;'/>
+    </div>
+
+    {# Filtro RIS/No RIS #}
+    <div class="filter_inputs_div">
+        <select id="subFilterCancellationType" name="cancellationType" class="sub_filter_inputs form-control select_inputs chosen updateDataInfo">
+            <option value =''>{{"dataTable.dashboard.refuse"|trans}}</option>
+            {% for cancellation in cancellationType %}
+                <option value ='{{cancellation.id}}'>{{cancellation.description}}</option>
+            {% endfor %}
+        </select>
+        <!--
+        <select id="subFilterIsRis" name="isRis" class="sub_filter_inputs form-control select_inputs chosen updateDataInfo">
+            <option value =''>{{"dashboard.no_filter_ris_noRis"|trans}}</option>
+            <option value ='1'>{{"dashboard.select.ris"|trans}}</option>
+            <option value ='0'>{{"dashboard.select.no_ris"|trans}}</option>
+        </select>
+        -->
+    </div>
+</div>
+
+<div class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+        <table id="tableRefuseDetail" class="table">
+            <thead>
+                <tr>
+                    <th>{{"dataTable.dashboard.ris.request_date"|trans|upper}}</th>
+                    <th>{{"dataTable.dashboard.reference"|trans|upper}}</th>
+                    <th>{{"dataTable.dashboard.operator"|trans|upper}}</th>
+                    <th>{{"dashboard.select.ris"|trans|upper}}</th>
+                    <th>{{"dataTable.dashboard.cause"|trans|upper}}</th>
+                    <th>{{"dataTable.dashboard.comments"|trans|upper}}</th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+
+<script>
+
+    var fullSubFilters = [];
+    var tableRefuseDetail = null;
+   
+    $("#filterIsRis").chosen();
+    $(".sub_filter_inputs.select_inputs").chosen();
+
+    $('#subFilterDateRange').daterangepicker();
+
+    {# Sucursales chosen #}
+    $.ajax({
+        url:'{{ path('dashboard_get_branch_offices') }}',
+        data: {collaboratorId: "{{collaborator.id}}" },
+        type:"POST",
+        dataType: "json",
+        cache:false,
+        success: function(data){
+            $('#subFilterBranchOffice').html("<option value =''>{{'dashboard.no_filter_branchoffice'|trans}}</option>");
+            for(var i = 0 ; i < data.length; i++){
+                var newOption = $('<option>');
+                newOption.val(data[i].id);
+                newOption.html(data[i].name + ' (' + data[i].province + ')');
+                $('#subFilterBranchOffice').append(newOption.clone());
+            }
+            $('#subFilterBranchOffice').trigger("chosen:updated");
+        },
+        error:function(err){
+            console.log('error');
+            console.log(err);
+        }
+    });
+
+    {# Localidades chosen #}
+    $('#subFilterBranchOfficeProvince').on('change', function(){
+        if($(this).val() == "") {
+            $("#subFilterBranchOfficeTown").empty();
+            $("#subFilterBranchOfficeTown").append('<option value=""> {{"general.branch_office_town"|trans}} </option>');
+            $("#subFilterBranchOfficeTown").attr('disabled', 'disabled');
+            $("#subFilterBranchOfficeTown").trigger("chosen:updated");
+        } else {
+            $.ajax({
+                url:'{{ path('town_chosen_list') }}',
+                data: {"province": $(this).val() },
+                type:"POST",
+                dataType: "json",
+                cache:false,
+                success: function(data){
+                    $('#subFilterBranchOfficeTown').html("<option value =''>{{'general.branch_office_town'|trans}}</option>");
+                    for(var i = 0 ; i < data.length; i++){
+                        var newOption = $('<option>');
+                        newOption.val(data[i].id);
+                        newOption.html(data[i].name);
+                        $('#subFilterBranchOfficeTown').append(newOption.clone());
+                    }
+                    $("#subFilterBranchOfficeTown").removeAttr('disabled');
+                    $('#subFilterBranchOfficeTown').trigger("chosen:updated");
+                },
+                error:function(err){
+                    console.log('error');
+                    console.log(err);
+                }
+            });
+        }
+    });
+
+    getSubFilters();
+    createRefuseDetailDataTable();
+
+    function createRefuseDetailDataTable() {
+        if(tableRefuseDetail == null) {
+
+            tableRefuseDetail = $('#tableRefuseDetail').DataTable({
+                dom: "<'row'<'col-sm-12't>><'row'<'col-sm-5'l><'col-sm-7'p>>",
+                order: [0, 'DESC'],
+                searching: true,
+                rowReorder: true,
+                columnDefs: [
+                    { orderable: true, className: 'reorder', targets: [0,1,2,3,4,5] },
+                    { orderable: false, targets: [6] }
+                ],
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "{{('dataTable.general.lengthMenu.all')|trans}}"]
+                ],
+                responsive: false,
+                autoWidth: false,
+                scrollX: true,
+                processing: false,
+                serverSide: true,
+                pagingType: "full_numbers",
+                language: {
+                    "sProcessing": "{{ ('dataTable.general.language.sProcessing ') | trans }}",
+                    "sLengthMenu": "{{ ('dataTable.asitur.language.sLengthMenu') | trans}}: _MENU_",
+                    "sZeroRecords": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                    "sEmptyTable": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                    "sInfo": "{{ ('dataTable.general.language.sInfo') | trans }}",
+                    "sInfoEmpty": "{{ ('dataTable.general.language.sInfoEmpty') | trans }}",
+                    "sInfoFiltered": "{{ ('dataTable.general.language.sInfoFiltered') | trans }}",
+                    "sInfoPostFix": "",
+                    "sSearch": "{{ ('dataTable.general.language.sSearch') | trans }}:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "{{ ('dataTable.general.language.sLoadingRecords') | trans }}",
+                    "oPaginate": {
+                        "sFirst": "<<",
+                        "sLast": ">>",
+                        "sNext": ">",
+                        "sPrevious": "<",
+                    },
+                    "oAria": {
+                        "sSortAscending": ": {{ ('dataTable.general.language.oAria.sSortAscending') | trans }}",
+                        "sSortDescending": ": {{ ('dataTable.general.language.oAria.sSortDescending') | trans }}"
+                    },
+                },
+                ajax: {
+                    url: "{{ path('dashboard_tab_refuse_table_detail') }}",
+                    method: 'POST',
+                    data: {
+                        fullSubFilters
+                    }
+                },
+                initComplete: function() {
+                    // Enable THEAD scroll bars
+                    $('.dataTables_scrollHead').css('overflow', 'auto');
+
+                    // Sync THEAD scrolling with TBODY
+                    $('.dataTables_scrollHead').on('scroll', function () {
+                        $('.dataTables_scrollBody').scrollLeft($(this).scrollLeft());
+                    });
+                },
+                drawCallback: function() {
+                    
+                },
+                columns: [
+                    {data: 'requestDate'},
+                    {data: 'reference'},
+                    {data: 'operator'},
+                    {data: {}, render: function(data, row) {
+                            if(data["isRis"] == 1) {
+                                html = "<span>{{'dashboard.select.ris'|trans}}</span>";
+                            } else if(data["isRis"] == 0){
+                                html = "<span>{{'dashboard.select.no_ris'|trans}}</span>";
+                            } else {
+                                html = "";
+                            }
+                            return html;
+                        }
+                    },
+                    {data: 'risCause'},
+                    {data: 'comments'},
+                    {data: {}, render: function(data, row) {
+                            html = '<form action="{{ path("intervention_details") }}" target="_blank" method="POST" style="margin: 0; display: flex; justify-content: center; align-items: center;">';
+                            html += '<input type="hidden" name="intervention_id" value="'+data.id+'">';
+                            html += '<button class="btn detail-button" style="color: #a4b0c0; padding: 0; box-shadow: none;"><i class="fa fa-2x fa-chevron-right"></i></button>';
+                            html += '</form>'
+                            return html;
+                        }
+                    }
+                ]
+            });
+        }
+    }
+
+    function getSubFilters() {
+        let sub_filters = new Object();
+        $('.sub_filter_inputs').each(function() {
+            sub_filters[$(this).attr('name')] = $(this).val();
+        });
+
+        fullSubFilters = {
+            'collaboratorId': $("#filterCollaborator").val(),
+            'subFilters': sub_filters,
+            'groupByFilter': {
+                'groupByData': "{{groupByData}}",
+                'typeData': "{{typeData}}",
+            }
+        };
+    }
+
+    function reloadRisDetailDataTable() {
+        getSubFilters();
+        $("#tableRefuseDetail").DataTable().search(JSON.stringify(fullSubFilters)).draw();
+    }
+
+    $(".sub_filter_inputs").change(function() {
+        reloadRisDetailDataTable();
+    });
+
+</script>

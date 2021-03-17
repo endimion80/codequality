@@ -1,0 +1,165 @@
+<style>
+    #editor1{
+        height: 650px;
+    }
+    #editor_response{
+        background-color: #2d2d2d;
+        padding: 5px;
+        height: 575px;
+        box-shadow: 0 2px 0 rgba(0,0,0,0.05);
+        color: #7cff7c;
+        overflow-y: scroll;
+    }
+
+    #editor_response_content{
+        padding: 5px;
+    }
+
+    .borderSeparator{
+        border-color: #7cff7c;
+        margin: 20px 0px;
+    }
+</style>
+
+<div class='row'>
+    <div class='col-md-8'>
+        <pre id="editor1">{{contentText}}</pre>
+    </div>
+    <div class='col-md-4'>
+
+        <div id='editor_controls' class='row'>
+            <input id='token' type='hidden' value='{{password_enc}}'/>
+            <div class='col-md-5'>
+                <button id="btnSave" class="form-control btn btn-block btn-primary btn-labeled fa fa-save">
+                        {{"general.save"|trans}}
+                </button>      
+            </div>
+
+            <div class='col-md-5'>
+                <button id="btnRun" class="form-control btn btn-block btn-success btn-labeled fa fa-play">
+                        {{"general.execute"|trans}}
+                </button>      
+            </div>
+
+            <div class='col-md-2'>
+                <button id="btnClear" class="form-control btn btn-icon btn-danger fa fa-trash" style='height: 30px;'>
+                </button>      
+            </div>
+        </div>
+
+        <hr>
+
+        <div class='row'>
+            <div id='editor_response'class='col-md-12'>
+                <div id='editor_response_content'>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ asset('js/editor/kitchen-sink/require.js') }}"></script>
+<script>
+    $('#container_login').fadeOut();
+    $("#btnSave").prop("disabled",true);
+    var editor = null;
+    // setup paths
+    require.config({paths: { "ace" : "{{ asset('js/editor/lib/ace') }}"}});
+    // load ace and extensions
+    require(["ace/ace"], function(ace) {
+        editor = ace.edit("editor1");
+        editor.setTheme("ace/theme/tomorrow_night_eighties");
+        editor.session.setMode("ace/mode/{{editor_mode}}");
+        editor.getSession().setTabSize(2);
+        editor.setAutoScrollEditorIntoView(false);  
+
+
+        editor.session.on('change', function(delta) {
+            // delta.start, delta.end, delta.lines, delta.action
+            $("#btnSave").prop("disabled",false);
+        });
+    });
+    setTimeout(function(){
+        $('#container_debug').fadeIn();
+    },500);
+
+    function sendToServer(mode){
+        if (mode == 'save')
+            $("#btnSave").html("{{'general.saving'|trans}}");
+
+        $.ajax({
+            url:'{{ path("backend_debug_save_and_run") }}',
+            data: {
+                'fileContent': editor.getValue(),
+                'password': $('#token').val(),
+                'mode': mode
+            },
+            type:"POST",
+            success: function(data){
+                if (mode == 'save'){
+                    $("#btnSave").html("{{'general.save'|trans}}");
+                    $("#btnSave").prop("disabled",true);
+                    $("#btnRun").prop("disabled",true);
+                    
+                    $("#btnRun").html("{{'general.updating'|trans}}");
+                    setTimeout(function(){
+                        $("#btnRun").html("{{'general.execute'|trans}}");
+                        $("#btnRun").prop("disabled",false);
+                    }, 4000);
+                }
+                else{
+                    $('#editor_response_content').append("<hr class='borderSeparator'>");
+                    $('#editor_response_content').append(data);
+                    $('#editor_response').scrollTop($('#editor_response')[0].scrollHeight);
+                }
+            },
+            error:function(err){
+                swal.fire({
+                    title: err,
+                    html: '',
+                    icon: 'error',
+                    showConfirmButton: true
+                });
+            }
+        });
+    }
+
+    $('#btnRun').click(function(){
+        $("#btnRun").html("{{'general.loading'|trans}}");
+         $("#btnRun").prop("disabled",true);
+        setTimeout(function(){
+            $("#btnRun").html("{{'general.execute'|trans}}");
+            $("#btnRun").prop("disabled",false);
+        }, 2000);
+        sendToServer('run');
+    });// run
+
+
+
+    $(window).bind('keydown', function(event) {
+        if (event.ctrlKey || event.metaKey) {
+            switch (String.fromCharCode(event.which).toLowerCase()) {
+            case 's':
+            case 'g':
+                event.preventDefault();
+                if(!$("#btnSave").prop("disabled"))
+                    sendToServer('save');
+                break;
+            }
+        }
+    });
+
+
+    $('#btnSave').click(function(){
+        sendToServer('save');
+    });// run
+
+    $('#btnClear').click(function(){
+        $('#editor_response_content').empty();
+    });// run
+</script>
+
+<script src="{{ asset('js/editor/show_own_source.js') }}"></script>
+
+</body>
+</html>

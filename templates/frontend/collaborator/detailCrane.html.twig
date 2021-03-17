@@ -1,0 +1,986 @@
+{% extends 'includes/sidebar.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+{{parent()}}
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-data_management.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-asitur_datatable.css') }}">
+
+{% endblock %}
+
+{% block content %}
+
+    <!--Page Title-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="page-title">
+        <ul class="nav nav-tabs nav-justified">
+            <li class="nav-item col-md-4">
+                <a class="nav-link" href="{{ path('branch_offices') }}">{{"data_management.tab.branch_offices"|trans}}</a>
+            </li>
+            <li class="nav-item col-md-4">
+                <a class="nav-link active">{{"data_management.tab.cranes"|trans}}</a>
+                <hr class="tab-active-hr">
+            </li>
+            <li class="nav-item col-md-4">
+                <a class="nav-link" href="{{ path('operators') }}">{{"data_management.tab.operators"|trans}}</a>
+            </li>
+        </ul>
+    </div>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--End page title-->
+
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+
+        {# Bloque de botones de la parte superior de la tabla #}
+        <div class="filters_and_buttons" style="padding: 0; display: flex; justify-content: space-between; margin-bottom: 25px;">
+            <div id="top_left_div" style="padding: 0;">
+                {# Volver #}
+                <a class="go_back_link" href="{{ path('cranes') }}"><i class="fa fa-2x fa-chevron-left"></i>{{"general.go_back_to_list"|trans}}</a>
+                {# Editar #}
+                {% if mode == "read_only" %}
+                    <form id="edit_form" action="{{ path('detail_crane') }}" method="POST" style="display: none;">
+                        <input type="hidden" name="craneId" value="{{ crane.id }}">
+                        <input type="hidden" name="mode" value="edit_allowed">
+                    </form>
+                    <button type="button" class="btn top_left-buttons edit-button"> <img src="{{asset("media/datatables/lapiz-icono.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.edit')|trans}}</button>
+                {% else %}
+                    <button disabled type="button" class="btn top_left-buttons edit-button" style="font-weight: bold; color: var(--main-blue); opacity: 1; filter: var(--filter-main-blue);"> <img src="{{asset("media/datatables/lapiz-icono.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.edit')|trans}}</button>
+                {% endif %}
+                {# Eliminar #}
+                <button type="button" class="btn top_left-buttons remove-button"> <img src="{{asset("media/datatables/basura-icono.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.remove')|trans}}</button>
+                {# Tarifas #}
+                <button type="button" class="btn top_left-buttons rates-button"> <img src="{{asset("media/datatables/euro.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.rates')|trans}}</button>
+                {# Exportar #}
+                <button type="button" class="btn top_left-buttons export-button"> <img src="{{asset("media/datatables/export.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.export')|trans}}</button>
+            </div>
+            {% if mode == "edit_allowed" %}
+            <div id="top_right_div" style="padding: 0; border-left: 2px #dbdbdb solid;">
+                {# Guardar #}
+                <button id="save-button" type="button" class="btn filtering-buttons"> <img src="{{asset("media/save.png")}}" width="17px" height="18px"> &nbsp; {{('general.save')|trans|upper}}</button>
+            </div>
+            {% endif %}
+        </div>
+        {# ################################################## #}
+
+        <hr id="datatable_hr" class="datatable_hr" style="margin-bottom: 20px;">
+
+        <!--Panel Datos de grúa-->
+        <div class="panel">
+            <!--Panel heading-->
+            <div id="crane_data_heading" class="panel-heading custom_collapse_panel_heading" data-target="#crane_data_body" data-toggle="collapse">
+                <div class="panel-control">
+                    <button class="btn btn-default" ><i class="fa fa-chevron-down"></i></button>
+                </div>
+                <h3 class="panel-title" style="font-weight: 600;">{{'detail_crane.crane_data'|trans}}</h3>
+            </div>
+            <!--Panel body-->
+            <div id="crane_data_body" class="collapse in">
+                <div class="panel-body">
+                    <div class="row" style="margin: 0; font-size: 16px;">
+                        {# Matrícula #}
+                        <div class="col-sm-6 col-md-4 col-lg-2" style="margin-bottom: 20px;">
+                            <label for="plate-input" class="asitur_label regular_label" style="margin-bottom: 17px;">{{"detail_crane.input.label.plate"|trans}}</label>
+                            {% if mode == "read_only" %}
+                                <br/>
+                                <p class="labelGrey_16">{{ crane.plate }}</p>
+                            {% else %}
+                                <input id="plate-input" name="c_plate" value="{{ crane.plate }}" type="text" class="form-control asitur_input data_input" spellcheck="false" maxlength="15">
+                            {% endif %}
+                        </div>
+                        {# Identificador #}
+                        <div class="col-sm-6 col-md-4 col-lg-2" style="margin-bottom: 20px;">
+                            <label for="reference-input" class="asitur_label regular_label" style="margin-bottom: 17px;">{{"detail_crane.input.label.reference"|trans}}</label>
+                            {% if mode == "read_only" %}
+                                <br/>
+                                <p class="labelGrey_16">{{ crane.reference }}</p>
+                            {% else %}
+                                <input id="reference-input" name="c_reference" value="{{ crane.reference }}" type="text" class="form-control asitur_input data_input" spellcheck="false" maxlength="50">
+                            {% endif %}
+                        </div>
+                        {# Marca #}
+                        <div class="col-sm-6 col-md-4 col-lg-2" style="margin-bottom: 20px;">
+                            <label for="brand-input" class="asitur_label regular_label" style="margin-bottom: 17px;">{{"detail_crane.input.label.brand"|trans}}</label>
+                            {% if mode == "read_only" %}
+                                <br/>
+                                <p class="labelGrey_16">{{ crane.brand.description }}</p>
+                            {% else %}
+                                <div style="display: block;">
+                                    <select id="brand-chosen-select" name="c_brand" class="select_inputs detailSelect data_input" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                        {% for brand in brands %}
+                                            <option value="{{ brand.id}}"> {{ brand.description }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endif %}
+                        </div>
+                        {# Modelo #}
+                        <div class="col-sm-6 col-md-4 col-lg-2" style="margin-bottom: 20px;">
+                            <label for="model-input" class="asitur_label regular_label" style="margin-bottom: 17px;">{{"detail_crane.input.label.model"|trans}}</label>
+                            {% if mode == "read_only" %}
+                                <br/>
+                                <p class="labelGrey_16">{{ crane.model.description }}</p>
+                            {% else %}
+                                <div style="display: block;">
+                                    <select disabled id="model-chosen-select" name="c_model" class="select_inputs detailSelect data_input" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                    </select>
+                                </div>
+                            {% endif %}
+                        </div>
+                        {# Tipo de asignación #}
+                        <div class="col-sm-6 col-md-4 col-lg-2" style="margin-bottom: 20px;">
+                            <label for="managementType-input" class="asitur_label regular_label" style="margin-bottom: 17px;">{{"detail_crane.input.label.managementType"|trans}}</label>
+                            {% if mode == "read_only" %}
+                                <br/>
+                                <p class="labelGrey_16">{{ crane.managementType.description }}</p>
+                            {% else %}
+                                <div style="display: block;">
+                                    <select id="managementType-chosen-select" name="c_managementType" class="select_inputs detailSelect data_input" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                        {% for craneManagementType in craneManagementTypes %}
+                                            <option value="{{ craneManagementType.id}}"> {{ craneManagementType.description }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endif %}
+                        </div>
+                        {# Estado #}
+                        <div class="col-sm-6 col-md-4 col-lg-2" style="margin-bottom: 20px;">
+                            <label for="status-input" class="asitur_label regular_label" style="margin-bottom: 17px;">{{"detail_crane.input.label.status"|trans}}</label>
+                            <br/>
+                            {% if mode == "read_only" %}
+                                {% if crane.craneStatus.id == 1 %}
+                                    <div title="{{'data_management.crane_status.select.option.active'|trans}}">
+                                        <span style="margin-right: 5px; vertical-align: middle; color: var(--main-grey);">OFF</span>
+                                        <input class="check_status switchery" type="checkbox" checked>
+                                        <span style="margin-left: 5px; font-weight: bold; vertical-align: middle; color: var(--main-grey);">ON</span>
+                                    </div>
+                                {% elseif crane.craneStatus.id == 2 %}
+                                    <div title="{{'data_management.crane_status.select.option.damaged'|trans}}">
+                                        <span style="margin-right: 5px; font-weight: bold; vertical-align: middle; color: var(--main-grey);">OFF</span>
+                                        <input class="check_status switchery" type="checkbox">
+                                        <span style="margin-left: 5px; vertical-align: middle; color: var(--main-grey);">ON</span>
+                                    </div>
+                                {% else %}
+                                    <div title="{{'data_management.crane_status.select.option.retired'|trans}}">
+                                        <span style="margin-right: 5px; font-weight: bold; vertical-align: middle; color: var(--main-grey);">OFF</span>
+                                        <input class="check_status switchery" type="checkbox">
+                                        <span style="margin-left: 5px; vertical-align: middle; color: var(--main-grey);">ON</span>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <div style="display: block;">
+                                    <select id="craneStatus-chosen-select" name="c_craneStatus" class="select_inputs detailSelect data_input" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                        {% for craneStatus in craneStatusList %}
+                                            <option value="{{ craneStatus.id}}"> {{ craneStatus.description }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 0; margin-top: 42px; font-size: 16px;">
+                        {# Rótulo #}
+                        <div class="col-sm-6 col-md-4 col-lg-2" style="margin-bottom: 20px;">
+                            <label for="label-chosen-select" class="asitur_label regular_label" style="margin-bottom: 17px;">{{"detail_crane.input.label.label"|trans}}</label>
+                            {% if mode == "read_only" %}
+                                <br/>
+                                <p class="labelGrey_16">{{ crane.labeledType.description }}</p>
+                            {% else %}
+                                <div style="display: block;">
+                                    <select id="label-chosen-select" name="c_label" class="select_inputs detailSelect data_input" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                        {% for label in labels %}
+                                            <option value="{{ label.id}}"> {{ label.description }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endif %}
+                        </div>
+                        {# Disponibilidad #}
+                        <div class="col-sm-6 col-md-4 col-lg-2" style="margin-bottom: 20px;">
+                            <label for="label-input" class="asitur_label regular_label" style="margin-bottom: 17px;">{{"detail_crane.input.label.availabilityStatus"|trans}}</label>
+                            {% if mode == "read_only" %}
+                                <br/>
+                                <p class="labelGrey_16">{{ crane.getAvailabilityStatus().description }}</p>
+                            {% else %}
+                                <div style="display: block;">
+                                    <select id="availabilityStatus-chosen-select" name="c_availabilityStatus" class="select_inputs detailSelect data_input" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                        {% for craneAvailabilityStatus in craneAvailabilityStatusList %}
+                                            <option value="{{ craneAvailabilityStatus.id}}"> {{ craneAvailabilityStatus.description }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endif %}
+                        </div>
+                        {# Tipo #}
+                        <div class="col-sm-6 col-md-4 col-lg-2" style="margin-bottom: 20px;">
+                            <label for="craneType-input" class="asitur_label regular_label" style="margin-bottom: 17px;">{{"detail_crane.input.label.craneType"|trans}}</label>
+                            {% if mode == "read_only" %}
+                                <br/>
+                                <p class="labelGrey_16">{{ crane.craneType.description }}</p>
+                            {% else %}
+                                <div style="display: block;">
+                                    <select id="type-chosen-select" name="c_type" class="select_inputs detailSelect data_input" tabindex="-1">
+                                        <option value=""> ---- </option>
+                                        {% for craneType in craneTypes %}
+                                            <option value="{{ craneType.id}}"> {{ craneType.description }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endif %}
+                        </div>
+                        {# Servicios preferentes #}
+                        <div class="col-sm-6 col-md-4 col-lg-2" style="margin-bottom: 20px;">
+                            <label for="preferentialServices-input" class="asitur_label regular_label" style="margin-bottom: 17px; display: block;">{{"detail_crane.input.label.preferentialServices"|trans}}</label>
+                            {% if mode == "read_only" %}
+                                {% for pService in preferentialServices %}
+                                    <p class="labelGrey_16">{{ pService.description }}</p>
+                                {% endfor %}
+                            {% else %}
+                                <div id="prefServicesToAppend">
+                                    {% for pService in preferentialServices %}
+                                        <div class="pService" style="margin-bottom: 17px; display: flex;">
+                                            <div id="{{ pService.id }}" class="form-control asitur_input_to_delete">{{ pService.description }}</div>
+                                            <div style="height: 35px; border-bottom: 1px solid lightgrey">
+                                                <img class="asitur_input_to_delete-img pref_service_to_delete" data-id="{{ pService.id }}" src='{{asset("media/equis.png")}}' width="24px" height="24px">
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    <div style="display: block;">
+                                        <select id="new_prefService-chosen-select" class="select_inputs" tabindex="-1"></select>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        {# Servicios disponibles #}
+                        <div class="col-sm-6 col-md-6 col-lg-4" style="margin-bottom: 20px;">
+                            <label for="availableServices-input" class="asitur_label regular_label" style="margin-bottom: 17px; display: block;">{{"detail_crane.input.label.availableServices"|trans}}</label>
+                            {% if mode == "read_only" %}
+                                {% if availableServices|length > 3 %}
+                                    {% set availableServiceslength = ((availableServices|length / 2) + 1) %}
+                                {% else %}
+                                    {% set availableServiceslength = availableServices|length + 1 %}
+                                {% endif %}
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" style="margin-bottom: 20px;">
+                                    {% for aService in availableServices %}
+                                        {% if loop.index < availableServiceslength %}
+                                            <p class="labelGrey_16">{{ aService.description }}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" style="margin-bottom: 20px;">
+                                    {% for aService in availableServices %}
+                                        {% if loop.index >= availableServiceslength %}
+                                            <p class="labelGrey_16">{{ aService.description }}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div id="avServicesToAppend">
+                                    {% for aService in availableServices %}
+                                        <div class="aService col-xs-12 col-sm-12 col-md-6 col-lg-6" style="margin-bottom: 17px; display: flex;">
+                                            <div id="{{ aService.id }}" class="form-control asitur_input_to_delete">{{ aService.description }}</div>
+                                            <div style="height: 35px; border-bottom: 1px solid lightgrey">
+                                                <img class="asitur_input_to_delete-img av_service_to_delete" data-id="{{ aService.id }}" src='{{asset("media/equis.png")}}' width="24px" height="24px">
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <select id="new_avService-chosen-select" class="select_inputs" tabindex="-1"></select>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Panel Sucursales atendidas-->
+        <div class="panel">
+            <!--Panel heading-->
+            <div id="attended_branch_offices_heading" class="panel-heading custom_collapse_panel_heading" data-target="#attended_branch_offices_body" data-toggle="collapse">
+                <div class="panel-control">
+                    <button class="btn btn-default" ><i class="fa fa-chevron-down"></i></button>
+                </div>
+                <h3 class="panel-title" style="font-weight: 600;">{{'detail_crane.attended_branch_offices'|trans}}</h3>
+            </div>
+            <!--Panel body-->
+            <div id="attended_branch_offices_body" class="collapse in">
+                <div class="panel-body">
+                    <div class="row" style="margin: 0; font-size: 16px;">
+                        <div class="col-sm-12 col-md-12 col-lg-12" style="margin-bottom: 20px;">
+                            <p class="labelGrey">{{"detail_crane.attended_branch_offices.subtext"|trans}}:</p>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 0; font-size: 16px;">
+                        {% if mode == "read_only" %}
+                            {% for branchOffice in collaboratorBranchOffices %}
+                            <div class="col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 20px;">
+                                {% if branchOffice.id in craneBranchOffices %}
+                                    <img style="margin-right: 5px;" src="{{asset("media/check.png")}}">
+                                    <span class="labelGrey">{{branchOffice.name}}</span>
+                                {% else %}
+                                    <img style="margin-right: 5px;" src="{{asset("media/uncheck.png")}}">
+                                    <span class="labelGrey">{{branchOffice.name}}</span>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            {% for branchOffice in collaboratorBranchOffices %}
+                            <div class="col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 20px; display: flex; align-items: center;">
+                                {% if branchOffice.id in craneBranchOffices %}
+                                    <input type='checkbox' class='checkboxBranchOffice imgCheckbox' data-branchoffice='{{branchOffice.id}}' checked/>
+                                    <span class="labelGrey" style="margin-left: 10px;">{{branchOffice.name}}</span>
+                                {% else %}
+                                    <input type='checkbox' class='checkboxBranchOffice imgCheckbox' data-branchoffice='{{branchOffice.id}}'/>
+                                    <span class="labelGrey" style="margin-left: 10px;">{{branchOffice.name}}</span>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Panel Anexo de documentos-->
+        <div class="panel">
+            <!--Panel heading-->
+            <div id="attachments_heading" class="panel-heading custom_collapse_panel_heading" data-target="#attachments_body" data-toggle="collapse">
+                <div class="panel-control">
+                    <button class="btn btn-default" ><i class="fa fa-chevron-down"></i></button>
+                </div>
+                <h3 class="panel-title" style="font-weight: 600;">{{'detail.attachments'|trans}}</h3>
+            </div>
+            <!--Panel body-->
+            <div id="attachments_body" class="collapse in">
+                <input type="file" id="fileToImport" name="attachment[]" class="hidden">
+                <div id="attachments_panel_body" class="panel-body row" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
+                    {% if mode == "edit_allowed" %}
+                    <div id="import_file" class="attachment_icon_img attachment_icon_import">
+                        <img src="{{asset("media/import_file.png")}}">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!--===================================================-->
+    <!--End page content-->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+        $(document).ready(function(){
+            var time = null;
+            var html2 = "";
+            
+            {#* Arrays que se utilizarán al guardar  #}
+            var prefServicesToAdd = [], avServicesToAdd = []; {#* Ids de los collaboratorServices a añadir #}
+            var branchOfficesSelected = [];
+            var attachmentsToAdd = [];
+            var attachmentsToRemove = [];
+
+            {% for pServ in preferentialServices %}
+                prefServicesToAdd.push({{ pServ.id }}); 
+            {% endfor %}
+            
+            {% for avServ in availableServices %}
+                avServicesToAdd.push({{ avServ.id }}); 
+            {% endfor %}
+
+            {% for branchOffice in craneBranchOffices %}
+                branchOfficesSelected.push({{ branchOffice }});
+            {% endfor %}
+
+            {#* ###################################  #}
+
+            $('.imgCheckbox').imgCheckbox({
+                uncheckPath: "{{ asset('media/uncheck_empty.png') }}",
+                checkPath: "{{ asset('media/check.png') }}"
+            });
+
+            var switch_elems = Array.prototype.slice.call(document.querySelectorAll('.check_status'));
+
+            if( "{{ mode }}" == "read_only" ) {
+                switch_elems.forEach(function(html){
+                    new Switchery(html, {disabled: true, 
+                                         disabledOpacity: 1,
+                                         color: "var(--main-blue)",
+                                         secondaryColor: '#cdd3db'
+                                        });
+                });
+            }
+
+            {#* Inicialización de Inputs y Selects #}
+            $(".detailSelect").chosen({ width:'180px !important' });
+            $("#new_prefService-chosen-select").chosen({ width:'auto !important' });
+            $("#new_avService-chosen-select").chosen({ width:'auto !important' });
+            reloadNewServiceChosen();
+            {#* ################################### #}
+
+            {#* Select añadir servicio preferente y disponible #}
+            $('#new_prefService-chosen-select').on('change', function(){
+                let newPrefHtml = "";
+
+                if($(this).val() != "") {
+                    {% for auxService in collaboratorServices %}
+                        if ($(this).val() == {{ auxService.id }}) {
+                            newPrefHtml += '<div class="pService" style="margin-bottom: 17px; display: flex;">';
+                            newPrefHtml += '<div id="{{ auxService.id }}" class="form-control asitur_input_to_delete">{{ auxService.description }}</div>';
+                            newPrefHtml += '<div style="height: 35px; border-bottom: 1px solid lightgrey">';
+                            newPrefHtml += '<img class="asitur_input_to_delete-img pref_service_to_delete" data-id="{{ auxService.id }}" src="{{asset("media/equis.png")}}" width="24px" height="24px">';
+                            newPrefHtml += '</div></div>';
+                            $("#prefServicesToAppend").prepend(newPrefHtml);
+                            prefServicesToAdd.push({{ auxService.id }});
+                        }
+                    {% endfor %}
+                }
+                $(".pref_service_to_delete").click(function(){
+                    $(this).closest(".pService").remove();
+
+                    const index = prefServicesToAdd.indexOf($(this).data("id"));
+                    if(index > -1) {
+                        prefServicesToAdd.splice(index, 1);
+                    }
+                    reloadNewServiceChosen();
+                });
+                reloadNewServiceChosen();
+            });
+
+            $('#new_avService-chosen-select').on('change', function(){
+                let newAvHtml = "";
+
+                if($(this).val() != "") {
+                    {% for auxService in collaboratorServices %}
+                        if ($(this).val() == {{ auxService.id }}) {
+                            newAvHtml += '<div class="aService col-xs-12 col-sm-12 col-md-6 col-lg-6" style="margin-bottom: 17px; display: flex;">';
+                            newAvHtml += '<div id="{{ auxService.id }}" class="form-control asitur_input_to_delete">{{ auxService.description }}</div>';
+                            newAvHtml += '<div style="height: 35px; border-bottom: 1px solid lightgrey">';
+                            newAvHtml += '<img class="asitur_input_to_delete-img av_service_to_delete" data-id="{{ auxService.id }}" src="{{asset("media/equis.png")}}" width="24px" height="24px">';
+                            newAvHtml += '</div></div>';
+                            $("#avServicesToAppend").prepend(newAvHtml);
+                            avServicesToAdd.push({{ auxService.id }});
+                        }
+                    {% endfor %}
+                }
+                $(".av_service_to_delete").click(function(){
+                    $(this).closest(".aService").remove();
+
+                    const index = avServicesToAdd.indexOf($(this).data("id"));
+                    if(index > -1) {
+                        avServicesToAdd.splice(index, 1);
+                    }
+                    reloadNewServiceChosen();
+                });
+                reloadNewServiceChosen();
+            });
+            {#* ############################################## #}
+
+            {#* Acción de actualización de checkboxes #}
+            $('.checkboxBranchOffice').change(function(){
+                var branch_office_id = $(this).data('branchoffice');
+                if ($(this).is(":checked")){
+                    if(!branchOfficesSelected.includes(branch_office_id)) {
+                        branchOfficesSelected.push(branch_office_id);
+                    }
+                }
+                else{
+                    var index = branchOfficesSelected.indexOf(branch_office_id);
+                    if (index > -1) {
+                        branchOfficesSelected.splice(index, 1);
+                    }
+                }
+            });
+            {#* ####################### #}
+
+            $('#brand-chosen-select').val("{{ crane.brand.id }}");
+            $("#brand-chosen-select").trigger("chosen:updated");
+
+            $.getJSON("{{ path('model_chosen_list') }}",{
+                brand: $(this).val()
+            }, function(json){
+                $("#model-chosen-select").empty();
+                $("#model-chosen-select").append('<option value=""> ---- </option>');
+                $.each(json, function (idx, obj) {
+                    $("#model-chosen-select").append('<option value="' + obj.id + '">' + obj.description + '</option>');
+                });
+                $("#model-chosen-select").removeAttr('disabled');
+                $("#model-chosen-select").val("{{ crane.model.id }}");
+                $("#model-chosen-select").trigger("chosen:updated");
+            });
+
+            $('#managementType-chosen-select').val("{{ crane.managementType.id }}");
+            $("#managementType-chosen-select").trigger("chosen:updated");
+
+            $('#craneStatus-chosen-select').val("{{ crane.craneStatus.id }}");
+            $("#craneStatus-chosen-select").trigger("chosen:updated");
+
+            $('#label-chosen-select').val("{{ crane.labeledType.id }}");
+            $("#label-chosen-select").trigger("chosen:updated");
+
+            $('#availabilityStatus-chosen-select').val("{{ crane.availabilityStatus.id }}");
+            $("#availabilityStatus-chosen-select").trigger("chosen:updated");
+
+            $('#type-chosen-select').val("{{ crane.craneType.id }}");
+            $("#type-chosen-select").trigger("chosen:updated");
+
+            $('#brand-chosen-select').on('change', function(){
+                if($(this).val() == "") {
+                    $("#model-chosen-select").empty();
+                    $("#model-chosen-select").append('<option value=""> ---- </option>');
+                    $("#model-chosen-select").attr('disabled', 'disabled');
+                    $("#model-chosen-select").trigger("chosen:updated");
+                } else {
+                    $.getJSON("{{ path('model_chosen_list') }}",{
+                        brand: $(this).val()
+                    }, function(json){
+                        $("#model-chosen-select").empty();
+                        $("#model-chosen-select").append('<option value=""> ---- </option>');
+                        $.each(json, function (idx, obj) {
+                            $("#model-chosen-select").append('<option value="' + obj.id + '">' + obj.description + '</option>');
+                        });
+                        $("#model-chosen-select").removeAttr('disabled');
+                        $("#model-chosen-select").trigger("chosen:updated");
+                    });
+                }
+            });                                             
+            {#* ################################## #}
+            {#* Eliminar servicios #}
+            $(".pref_service_to_delete").click(function(){
+                $(this).closest(".pService").remove();
+
+                const index = prefServicesToAdd.indexOf($(this).data("id"));
+                if(index > -1) {
+                    prefServicesToAdd.splice(index, 1);
+                }
+                reloadNewServiceChosen();
+            });
+
+            $(".av_service_to_delete").click(function(){
+                $(this).closest(".aService").remove();
+
+                const index = avServicesToAdd.indexOf($(this).data("id"));
+                if(index > -1) {
+                    avServicesToAdd.splice(index, 1);
+                }
+                reloadNewServiceChosen();
+            });
+            {#* ################## #}
+
+            {#* Para que el apartado correspondiente en la barra lateral esté activo #}
+            $("#data_management_li").addClass("active");
+            {#* #################################################################### #}
+
+            {#* Botón Editar #}
+            $(".edit-button").click(function() {
+                $("#edit_form").submit();
+            });
+            {#* ############ #}
+
+            {#* Botón Eliminar #}
+            $(".remove-button").click(function() {
+                swal.fire({
+                    title: '',
+                    html: '{{"modal.crane.remove.individual"|trans}}',
+                    icon: 'warning',
+                    showConfirmButton: true,
+                    confirmButtonText: "{{'modal.general.remove.confirm'|trans}}",
+                    confirmButtonColor: "red",
+                    focusConfirm: false,
+                    allowEnterKey: false,
+                    showCancelButton: true,
+                    cancelButtonText: "{{'general.cancel'|trans}}"
+                }).then((result) => {
+                    if(result.isConfirmed) {
+                        $.ajax({
+                            url:'{{ path('cranes_delete') }}',
+                            data: {
+                                'arrayChecked': ['{{ crane.id }}']
+                            },
+                            type:"POST",
+                            success: function(data){
+                                if (data.status){
+                                    swal.fire({
+                                        title: '{{ ("modal.general.operation.success")|trans }}',
+                                        html: "",
+                                        icon: 'success',
+                                        showConfirmButton: false
+                                    });
+                                    setTimeout(function() {
+                                        window.location.replace("{{ path('cranes') }}");
+                                    }, 1500);
+                                } else {
+                                    swal.fire({
+                                        title: data.message,
+                                        html: '',
+                                        icon: 'error',
+                                        showConfirmButton: true
+                                    });
+                                }
+                            },
+                            error: function(err){
+                                swal.fire({
+                                    title: '{{ ("modal.general.operation.error")|trans }}',
+                                    html: '',
+                                    icon: 'error',
+                                    showConfirmButton: true
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+            {#* ############ #}
+
+            {#* Botón Tarifas #}
+            $(".rates-button").click(function() {
+                swal.fire({
+                    title: 'Por definir',
+                    html: "",
+                    icon: 'info',
+                    showConfirmButton: true
+                });
+            });
+            {#* ############################################## #}
+
+            {#* Exportación de una grúa #}
+            $(".export-button").click(function() {
+                $.ajax({
+                    url:'{{ path('detail_crane_export_excel') }}',
+                    data: {
+                        'form_filters': null,
+                        'search_filter': null,
+                        'craneId': "{{ crane.id }}",
+                    },
+                    type:"POST",
+                    success: function(data){
+                        if (data.status){
+                            swal.fire({
+                                title: '{{ ("general.export.success")|trans }}',
+                                html: "",
+                                icon: 'success',
+                                showConfirmButton: true
+                            });
+
+                            var fileName = data.data.fileName;
+                            var filePath = data.data.filePath;
+                            
+                            var formTmp = document.createElement('form');
+                            $(formTmp).attr('action',"{{ path('download_file') }}");
+                            $(formTmp).attr('name','formTmp');
+                            $(formTmp).attr('target','_blank');
+                            $(formTmp).attr('enctype','multipart/form-data');
+                            $(formTmp).attr('method','post');
+                            $(formTmp).append("<input type='hidden' name='fileName' value='" + fileName + "'/>");
+                            $(formTmp).append("<input type='hidden' name='filePath' value='" + filePath + "'/>");
+                            document.body.appendChild(formTmp);
+                            document.formTmp.submit();
+                            document.body.removeChild(formTmp);
+                        } else {
+                            swal.fire({
+                                title: '{{ ("general.export.error")|trans }}',
+                                html: '',
+                                icon: 'error',
+                                showConfirmButton: true
+                            });
+                        }
+                    },
+                    error:function(err){
+                        swal.fire({
+                            title: '{{ ("general.export.error")|trans }}',
+                            html: '',
+                            icon: 'error',
+                            showConfirmButton: true
+                        });
+                    }
+                });
+            });
+            {#* ####################### #}
+
+            {#* Botón guardar #}
+            $("#save-button").click(function() {
+
+                if( $.trim($("#plate-input").val())                 == ""     ||
+                    $.trim($("#reference-input").val())             == ""     ||
+                    $("#brand-chosen-select").val()                 == ""     ||
+                    $("#model-chosen-select").val()                 == ""     ||
+                    $("#managementType-chosen-select").val()        == ""     ||
+                    $("#craneStatus-chosen-select").val()           == ""     ||
+                    $("#label-chosen-select").val()                 == ""     ||
+                    $("#availabilityStatus-chosen-select").val()    == ""     ||
+                    $("#type-chosen-select").val()                  == ""     
+                ) {  
+                    swal.fire({
+                        title: '{{"general.form.allfields.mandatory"|trans}}',
+                        html: '',
+                        icon: 'error',
+                        showConfirmButton: true
+                    });
+                } else {
+
+                    var dataArray = {};
+
+                    $(".data_input").each(function() {
+                        dataArray[$(this).attr("name")] = $(this).val();
+                    });
+
+                    $.ajax({
+                        url:'{{ path("detail_crane_edit_save") }}',
+                        data: {
+                            'craneId': "{{ crane.id }}",
+                            'dataArray': dataArray,
+                            'prefServicesToAdd': prefServicesToAdd,
+                            'avServicesToAdd': avServicesToAdd,
+                            'branchOfficesSelected': branchOfficesSelected,
+                            'attachmentsToAdd': attachmentsToAdd,
+                            'attachmentsToRemove': attachmentsToRemove,
+                        },
+                        type:"POST",
+                        success: function(data){
+                            if(data['status']) {
+                                swal.fire({
+                                    title: "{{'detail_crane.save.success'|trans}}",
+                                    html: "",
+                                    icon: 'success',
+                                    showConfirmButton: true
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                swal.fire({
+                                    title: data.message,
+                                    html: '',
+                                    icon: 'error',
+                                    showConfirmButton: true
+                                });
+                            }
+                        },
+                        error:function(err){
+                            swal.fire({
+                                title: '{{ ("modal.general.operation.error")|trans }}',
+                                html: '',
+                                icon: 'error',
+                                showConfirmButton: true
+                            });
+                        }
+                    });
+                }
+            });
+            {#* ############# #}
+
+            {#* Ajax que obtiene la lista de ficheros adjuntos de la grúa #}
+            $.ajax({
+                url:'{{ path('crane_attachments') }}',
+                data: {
+                    'craneId': "{{ crane.id }}"
+                },
+                type:"POST",
+                success: function(data){
+                    if(data.length) {
+                        let html = "", fileExtension = "";
+                        let imageExtensions = ['png', 'jpg', 'jpeg', 'gif'];
+                        {% if mode == "read_only" %}
+                            $.each(data, function (key, value) {
+                                fileExtension = value["file_name"].split('.').pop();
+                                if(value["file_name"].includes(".pdf")) {
+                                    html += '<div class="attachment_icon attachment_icon_general" data-id="'+ value["id"] +'"> <img src="{{asset("media/file.png")}}">';
+                                    html += '<div class="attachment_icon_text"> <span>'+ value["file_name"] +'</span> </div></div>';
+                                } else if( imageExtensions.includes(fileExtension) ) {
+                                    html += '<div class="attachment_icon attachment_icon_img" data-id="'+ value["id"] +'"> <img src="data:image/'+ fileExtension +';base64, '+ value["file_data"] +'">';
+                                    html += '<div class="attachment_icon_text"> <span>'+ value["file_name"] +'</span> </div></div>';
+                                } else {
+                                    html += '<div class="attachment_icon attachment_icon_general" data-id="'+ value["id"] +'"> <img src="{{asset("media/file_general.png")}}">';
+                                    html += '<div class="attachment_icon_text"> <span>'+ value["file_name"] +'</span> </div></div>';
+                                }
+                            }); 
+                        {% else %}
+                            $.each(data, function (key, value) {
+                                fileExtension = value["file_name"].split('.').pop();
+                                if(value["file_name"].includes(".pdf")) {
+                                    html += '<div class="attachment_icon attachment_icon_general" data-id="'+ value["id"] +'" style="margin-top: -20px;"> <img src="{{asset("media/equis-azul.png")}}" class="delete_img_x"> <img src="{{asset("media/file.png")}}">';
+                                    html += '<div class="attachment_icon_text"> <span>'+ value["file_name"] +'</span> </div></div>';
+                                } else if( imageExtensions.includes(fileExtension) ) {
+                                    html += '<div class="attachment_icon attachment_icon_img" data-id="'+ value["id"] +'" style="margin-top: -37px;"> <img src="{{asset("media/equis-azul.png")}}" class="delete_img_x" style="top: 14px; left: 60px;"> <img src="data:image/'+ fileExtension +';base64, '+ value["file_data"] +'">';
+                                    html += '<div class="attachment_icon_text"> <span>'+ value["file_name"] +'</span> </div></div>';
+                                } else {
+                                    html += '<div class="attachment_icon attachment_icon_general" data-id="'+ value["id"] +'" style="margin-top: -20px;"> <img src="{{asset("media/equis-azul.png")}}" class="delete_img_x"> <img src="{{asset("media/file_general.png")}}">';
+                                    html += '<div class="attachment_icon_text"> <span>'+ value["file_name"] +'</span> </div></div>';
+                                }
+                            }); 
+                        {% endif %}
+
+                        $("#attachments_panel_body").prepend(html);
+
+                        {% if mode == "read_only" %}
+                            {#* Descarga de un fichero adjunto #}
+                            $(".attachment_icon").click(function() {
+                                var attachmentId = $(this).data("id");
+                                $.ajax({
+                                    url:'{{ path('download_attachment') }}',
+                                    data: {
+                                        'attachmentId': attachmentId
+                                    },
+                                    type:"POST",
+                                    success: function(data){
+                                        if (data.status){
+                                            var fileName = data.data.fileName;
+                                            var filePath = data.data.filePath;
+                                            
+                                            var formTmp = document.createElement('form');
+                                            $(formTmp).attr('action',"{{ path('download_file') }}");
+                                            $(formTmp).attr('name','formTmp');
+                                            $(formTmp).attr('target','_blank');
+                                            $(formTmp).attr('enctype','multipart/form-data');
+                                            $(formTmp).attr('method','post');
+                                            $(formTmp).append("<input type='hidden' name='fileName' value='" + fileName + "'/>");
+                                            $(formTmp).append("<input type='hidden' name='filePath' value='" + filePath + "'/>");
+                                            document.body.appendChild(formTmp);
+                                            document.formTmp.submit();
+                                            document.body.removeChild(formTmp);
+                                        } else {
+                                            swal.fire({
+                                                title: '{{ ("general.download.error")|trans }}',
+                                                html: '',
+                                                icon: 'error',
+                                                showConfirmButton: true
+                                            });
+                                        }
+                                    },
+                                    error:function(err){
+                                        swal.fire({
+                                            title: '{{ ("general.download.error")|trans }}',
+                                            html: '',
+                                            icon: 'error',
+                                            showConfirmButton: true
+                                        });
+                                    }
+                                });
+                            });
+                        {% else %}
+                            {#* Borra fichero adjunto (Lo añade a "attachmentsToRemove") #}
+                            $(".attachment_icon").click(function() {
+                                swal.fire({
+                                    title: '',
+                                    html: '{{"modal.attachment.remove"|trans}}',
+                                    icon: 'warning',
+                                    showConfirmButton: true,
+                                    confirmButtonText: "{{'modal.general.remove'|trans}}",
+                                    confirmButtonColor: "red",
+                                    focusConfirm: false,
+                                    allowEnterKey: false,
+                                    showCancelButton: true,
+                                    cancelButtonText: "{{'general.cancel'|trans}}"
+                                }).then((result) => {
+                                    if(result.isConfirmed) {
+                                        attachmentsToRemove.push($(this).data("id"));
+                                        $(this).remove();
+                                    }
+                                });
+                            });
+                        {% endif %}
+                    }
+                },
+                error:function(err){
+                    swal.fire({
+                        title: '{{ ("attachment.list.error")|trans }}',
+                        html: '',
+                        icon: 'error',
+                        showConfirmButton: true
+                    });
+                }
+            });
+            {#* ############################################################# #}
+
+            {#* Importar fichero #}
+            $("#fileToImport").dropzone({
+                url: "{{ path('preupload_attachment') }}",
+                addRemoveLinks: false,
+                maxFilesize: 150, //MB
+                autoProcessQueue: true, // ajuste cola
+                timeout: 180000, /*milliseconds*/
+                acceptedFiles: ".pdf, .jpg, .png, .jpeg, .txt, .PDF, .JPG, .PNG, .JPEG, .TXT",
+                maxFiles: 1,
+                parallelUploads: 5,
+                paramName: "file", // The name that will be used to transfer the file
+                clickable: '.attachment_icon_import img',
+                init: function(){
+                    // config
+                    this.options.dictRemoveFile = "Delete";
+
+                    this.on("success", function(file, responseText) {
+
+                        auxHtml = '<div class="attachment_imported attachment_icon_general" data-filename="'+ responseText.data["fileName"] +'" data-path="'+ responseText.data["filePath"] +'" style="margin-top: -20px;"> <img src="{{asset("media/equis-azul.png")}}" class="delete_img_x"> <img src="{{asset("media/file_imported.png")}}">';
+                        auxHtml += '<div class="attachment_icon_text"> <span>'+ responseText.data["fileName"] +'</span> </div></div>';
+                        $("#attachments_panel_body").prepend(auxHtml);
+
+                        attachmentsToAdd.push({ "fileName": responseText.data["fileName"], "filePath": responseText.data["filePath"] });
+                        
+                        {#* Borra fichero adjunto (Lo borra de "attachmentsToAdd") #}
+                        $(".attachment_imported").click(function() {
+                            swal.fire({
+                                title: '',
+                                html: '{{"modal.attachment.remove"|trans}}',
+                                icon: 'warning',
+                                showConfirmButton: true,
+                                confirmButtonText: "{{'modal.general.remove'|trans}}",
+                                confirmButtonColor: "red",
+                                focusConfirm: false,
+                                allowEnterKey: false,
+                                showCancelButton: true,
+                                cancelButtonText: "{{'general.cancel'|trans}}"
+                            }).then((result) => {
+                                if(result.isConfirmed) {
+                                    for(const [index, elem] of attachmentsToAdd.entries()) {
+                                        if (elem["fileName"] == $(this).data("filename")) {
+                                            attachmentsToAdd.splice(index, 1);
+                                            $(this).remove();
+                                            break;
+                                        }
+                                    }
+                                }
+                            });
+                        });
+                    });
+                    this.on('complete',function(file){
+                        this.removeAllFiles();
+                    });
+                }
+            });
+            {#* ################ #}
+
+
+            function reloadNewServiceChosen() {
+                html2 = "";
+                {% for service in collaboratorServices %}
+                    html2 += '<option class="option_service" data-id="{{ service.id }}" value="{{ service.id }}">{{ service.description }}</option>';
+                {% endfor %}
+                $("#new_prefService-chosen-select, #new_avService-chosen-select").empty();
+                $("#new_prefService-chosen-select, #new_avService-chosen-select").append('<option value=""> {{ "detail_crane.input.placeholder.services"|trans }} </option>');
+                $("#new_prefService-chosen-select, #new_avService-chosen-select").append(html2);
+                $("#new_prefService-chosen-select, #new_avService-chosen-select").trigger("chosen:updated");
+                $(".asitur_input_to_delete-img").each(function() {
+                    $("#new_prefService-chosen-select, #new_avService-chosen-select").find('option[data-id="'+$(this).data("id")+'"]').remove();
+                    $("#new_prefService-chosen-select, #new_avService-chosen-select").trigger("chosen:updated");
+                });
+                $("#new_prefService-chosen-select, #new_avService-chosen-select").trigger("chosen:updated");
+            }
+        
+        });
+
+    </script>
+{% endblock %}

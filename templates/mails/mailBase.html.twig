@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}ASITUR{% endblock %}</title>
+
+        <style>
+            {% block style %}
+            a {
+                border: 1px solid lightgrey;
+                color: white !important;
+                background-color: #0094d9;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+            a:hover {
+                border: 1px solid black;
+                color: #0094d9 !important;
+                background-color: white;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                font-weight: bold;
+            }
+            
+            body{
+                font-family: "Arial";
+            }
+
+            #content{
+                margin: 30px 20px 30px 20px;
+                color: #585858
+            }
+
+            {% endblock %}
+        </style>
+
+    </head>
+    <body>
+        <div id='header'>
+            <img src="{{ web_domain }}media/mail_header.jpg"/>
+        </div>
+        
+        <div id='content' style=''>
+        
+        {% block content %}{% endblock %}
+            <br><br>
+            {{"general.mail.regards"|trans}}<br>
+            {{"general.mail.regards2"|trans}}
+        </div>
+        <div id='footer'>
+            <img src="{{ web_domain }}media/mail_footer.jpg"/>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,299 @@
+{% extends 'includes/backend_sidebar.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+{{parent()}}
+
+    <link href="{{ asset('css/backend/style-backend_general.css') }}" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+
+    <!--Modal add collaboratorUser-->
+    <div class="modal fade" id="add_colUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="display: flex; flex-direction: column; align-items: center;">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 id="myModalLabel">{{ ("modal.title.new_collaboratorUser")|trans }}</h4>
+                </div>
+                <div class="modal-body" style="padding: 15px 25px;">
+                    <form id="modal_add_collaboratorUsers_form">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"modal.input.collaboratorUser.username"|trans}}</label>
+                                    <input id="username_input" type="text" name="c_username" class="form-control collaborators_modal_inputs" maxlength="180">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="control-label">{{"modal.input.collaboratorUser.collaborator"|trans}}</label>
+                                <select id="collaborator-chosen-select" name="c_collaborator" class="collaborators_modal_inputs" tabindex="2">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"modal.input.collaboratorUser.email"|trans}}</label>
+                                    <input id="email_input" type="email" name="c_email" class="form-control collaborators_modal_inputs" maxlength="100">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"modal.input.collaboratorUser.password"|trans}}</label>
+                                    <input id="password_input" type="password" name="c_password" class="form-control collaborators_modal_inputs">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"modal.input.collaboratorUser.name"|trans}}</label>
+                                    <input id="name_input" type="text" name="c_name" class="form-control collaborators_modal_inputs" maxlength="100">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">{{"modal.input.collaboratorUser.cif"|trans}}</label>
+                                    <input id="cif_input" type="text" name="c_cif" class="form-control collaborators_modal_inputs" maxlength="20">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="addColUser_submit" class="btn btn-primary">{{ ("general.accept")|trans }}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!--End modal add collaboratorUser-->
+
+    <!--Page Title-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="page-title">
+        <h1 class="page-header text-overflow">{{"backend.collaborators.header"|trans}}</h1>
+        <br/>
+        <div style="margin-right: 25px; display: flex; justify-content: space-between;">
+            {# <button id="add_button" class="btn btn-success btn-labeled fa fa-plus" data-toggle='modal' data-target='#add_colUser'>{{"general.add"|trans}}</button> #}
+            {# <form id="sync_form" action="{{ path('sync_collaboratorUsers') }}">
+                <button id="sync_button" class="btn btn-info btn-labeled fa fa-refresh">{{"general.sync"|trans}}</button>
+            </form> #}
+        </div>
+    </div>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--End page title-->
+
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+        
+        <div style="display: block;
+                    margin-bottom: 10px;
+                    margin-right: 24px;
+                    margin-top: 20px;
+                    float: right;">
+            <label class="control-label">{{"general.search"|trans}}:</label>
+            <input id="search-input" class='search-input' type="text" placeholder="{{"general.search"|trans}}..." spellcheck="false">
+        </div>
+
+        <!-- Tabla Usuarios colaboradores -->
+        <!--===================================================-->
+        <div class="panel">
+            <div class="panel-body">
+                <table id="table_collaborators" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{{"dataTable.collaborators.username"|trans}}</th>
+                            <th>{{"dataTable.collaborators.email"|trans}}</th>
+                            <th>{{"dataTable.collaborators.name"|trans}}</th>
+                            <th>{{"dataTable.collaborators.collaborator"|trans}}</th>
+                            <th>{{"dataTable.collaborators.actions"|trans}}</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <!--===================================================-->
+    
+
+    </div>
+    <!--===================================================-->
+    <!--End page content-->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+
+<script>
+    $(document).ready(function(){
+        $("#collaboratorUsers_li").addClass("active-link");
+
+        $.getJSON("{{ path('add_collaborator_chosen_list') }}", function(json) {
+            $("#collaborator-chosen-select").empty();
+            $("#collaborator-chosen-select").append('<option value=""> ---- </option>');
+            $.each(json, function (idx, obj) {
+                $("#collaborator-chosen-select").append('<option value="' + obj.id + '">' + obj.name + '</option>');
+            });
+            $("#collaborator-chosen-select").chosen({ width:'100%' });
+        });
+
+        var time = null;
+        createTable();
+
+        $('#search-input').keyup(function() {
+            clearInterval(time);
+            time = setTimeout(function() {
+                reloadDataTable();
+            }, 1500);
+        });
+
+        {#* Comentada porque no se utiliza ahora mismo #}
+        {# $('#sync_button').click(function(){
+            $("#sync_form").submit();
+        }); #}
+
+        $('#addColUser_submit').click(function(){
+
+            $("#modal_add_collaboratorUsers_form").submit(function( event ) {
+                event.preventDefault();
+            });
+
+            if( $.trim($("#username_input").val()) == ""             ||
+                $.trim($("#collaborator-chosen-select").val()) == "" ||
+                $.trim($("#email_input").val()) == ""                ||
+                $.trim($("#password_input").val()) == ""             ||
+                $.trim($("#name_input").val()) == ""                 ||
+                $.trim($("#cif_input").val()) == ""
+            ) {  
+                swal.fire({
+                    title: '{{"general.form.allfields.mandatory"|trans}}',
+                    html: '',
+                    icon: 'error',
+                    showConfirmButton: true
+                });
+            } else {
+                $.ajax({
+                    url:'{{ path("list_collaborator_create") }}',
+                    data: {
+                        'inputs': $('#modal_add_collaboratorUsers_form').serializeArray()
+                    },
+                    type:"POST",
+                    success: function(data){
+                        swal.fire({
+                            title: data["message"],
+                            html: "",
+                            icon: 'success',
+                            showConfirmButton: true
+                        });
+                        reloadDataTable();
+                        $('#modal_add_collaboratorUsers_form').modal('hide');
+                        $(".collaborators_modal_inputs").val('');
+                        $("#collaborator-chosen-select").trigger("chosen:updated");
+                    },
+                    error:function(err){
+                        swal.fire({
+                            title: err["responseJSON"]["message"],
+                            html: '',
+                            icon: 'error',
+                            showConfirmButton: true
+                        });
+                    }
+                });
+            }
+
+        });
+
+    });
+
+    function createTable() {
+
+        $('#table_collaborators').DataTable({
+            order: [0, 'ASC'],
+            searching: false,
+            rowReorder: true,
+            columnDefs: [
+                { orderable: true, className: 'reorder', targets: [0,1,2,3] },
+                { orderable: false, targets: 4 }
+            ],
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100,
+                    "{{('dataTable.general.lengthMenu.all')|trans}}"
+                ]
+            ],
+            responsive: false,
+            autoWidth: false,
+            scrollX: true,
+            processing: false,
+            serverSide: true,
+            pagingType: "full_numbers",
+            language: {
+                "sProcessing": "{{ 'dataTable.general.language.sProcessing' | trans }}",
+                "sLengthMenu": "{{ ('dataTable.general.language.sLengthMenu') | trans}}",
+                "sZeroRecords": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                "sEmptyTable": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                "sInfo": "{{ ('dataTable.general.language.sInfo') | trans }}",
+                "sInfoEmpty": "{{ ('dataTable.general.language.sInfoEmpty') | trans }}",
+                "sInfoFiltered": "{{ ('dataTable.general.language.sInfoFiltered') | trans }}",
+                "sInfoPostFix": "",
+                "sSearch": "{{ ('dataTable.general.language.sSearch') | trans }}:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "{{ ('dataTable.general.language.sLoadingRecords') | trans }}",
+                "oPaginate": {
+                    "sFirst": "{{ ('dataTable.general.language.oPaginate.sFirst') | trans }}",
+                    "sLast": "{{ ('dataTable.general.language.oPaginate.sLast') | trans }}",
+                    "sNext": "{{ ('dataTable.general.language.oPaginate.sNext') | trans }}",
+                    "sPrevious": "{{ ('dataTable.general.language.oPaginate.sPrevious') | trans }}",
+                },
+                "oAria": {
+                    "sSortAscending": ": {{ ('dataTable.general.language.oAria.sSortAscending') | trans }}",
+                    "sSortDescending": ": {{ ('dataTable.general.language.oAria.sSortDescending') | trans }}"
+                },
+            },
+            ajax: {
+                url: "{{ path('collaborators_table') }}",
+                method: 'POST',
+                data: {
+                    'form_filters': $('#table_collaborators').serialize(),
+                    'search_filter': $('#search-input').val(),
+                }
+            },
+            initComplete: function() {},
+            drawCallback: function() {
+
+            },
+            columns: [
+                {data: 'username'},
+                {data: 'email'},
+                {data: 'name'},
+                {data: 'collaborator'},
+                {data: {}, render: function(data, row) {
+                        html = '<div style="display: flex; justify-content: center;"><a class="btn btn-primary" style href="{{ path("login_as_user", {userId: "toReplace"}) }}"  >{{"dataTable.collaborators.login"|trans}}</a></div>';
+                        html = html.replace("toReplace", data['id']);
+
+                        return html;
+                    }
+                }
+            ]
+        });
+    }
+
+    {# Función encargada de recargar el ajax del datatable #}
+    let reloadDataTable = function() {
+        $("#table_collaborators").DataTable().destroy();
+        createTable();
+    }
+    {# ################################################### #}
+
+</script>
+
+
+{% endblock %}

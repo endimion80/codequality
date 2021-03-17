@@ -1,0 +1,230 @@
+body {
+    background-color: white;
+}
+
+#content-container {
+    background-color: white;
+}
+
+#navbar-container {
+    height: 70px;
+    background-color: white;
+    box-shadow: 0 1px 0 0 lightgrey;
+}
+
+#frontend_sidebar_navbar-header {
+    height: 100%;
+    background-color: white;
+}
+
+#frontend_sidebar_navbar-brand {
+    height: 100%;
+    width: 70px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+
+#mainnav-container {
+    padding-top: 70px;
+    background-color: white;
+    box-shadow: 2px 5px 10px darkgrey;
+}
+
+#mainnav-menu a {
+    padding: 12px 14px;
+    font-weight: normal;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    color: var(--main-grey);
+    transition: none;
+    -webkit-transition: none;
+    box-shadow: 0 1px 0 0 lightgrey;
+}
+
+#mainnav-menu a:hover,
+#mainnav-menu a.hover,
+#mainnav-menu li.active a {
+    color: white;
+    background-color: var(--main-blue) !important;
+    /* border-color: var(--main-blue); */
+    font-weight: bold;
+}
+
+#mainnav-menu a:hover img,
+#mainnav-menu a.hover img,
+#mainnav-menu li.active a img {
+    filter: grayscale(100%) brightness(200%);
+}
+
+#mainnav-menu a span {
+    vertical-align: super;
+    transition: none !important;
+    -webkit-transition: none !important;
+}
+
+#container.mainnav-lg #mainnav-menu a #data_management_icon {
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+    padding-left: 16.5px !important;
+    padding-right: 26.5px !important;
+}
+
+#container.mainnav-lg #mainnav-menu a img{
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-left: 10px;
+    padding-right: 20px;
+}
+
+#container.mainnav-in #mainnav-menu a #data_management_icon {
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+    padding-left: 16.5px !important;
+    padding-right: 26.5px !important;
+}
+
+#container.mainnav-in #mainnav-menu a img.section-icon{
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-left: 10px;
+    padding-right: 20px;
+}
+
+#mainnav-menu-wrap {
+    background-color: white;
+}
+
+.navbar-content {
+    box-shadow: none;
+}
+
+.menu-popover.popover {
+    margin-left: 20px;
+}
+
+#asitur_logo {
+    position: absolute;
+    left: 45%;
+    top: 15px;
+}
+
+.navbar-top-links > li > a {
+    height: 70px;
+}
+
+.menu-popover > .popover-content > .single-content {
+    padding: 31.5px 14px;
+    background-color: var(--main-blue);
+}
+
+.menu-popover > .popover-title {
+    padding: 18px 14px;
+    font-weight: normal !important;
+}
+
+.menu-popover > .popover-title strong {
+    font-weight: bold !important;
+}
+
+span.single-content {
+    font-weight: bold !important;
+    color: white !important;
+}
+
+.menu-popover > .popover-content > .single-content strong {
+    font-weight: bold;
+}
+
+#container.mainnav-sm #mainnav-container,
+#container.mainnav-sm #navbar .navbar-brand{
+    width: 70px;
+}
+
+.mainnav-sm #mainnav-menu a .menu-title {
+    display: none !important;
+}
+
+.mainnav-lg #frontend_sidebar_navbar-brand,
+.mainnav-in #frontend_sidebar_navbar-brand {
+    background-color: #c6cbd4;
+}
+
+.mainnav-lg #frontend_sidebar_navbar-brand img,
+.mainnav-in #frontend_sidebar_navbar-brand img {
+    filter: grayscale(100%) brightness(200%);
+}
+
+#asitur_logo_responsive {
+    position: relative;
+    top: 15px;
+    left: 20px;
+}
+
+.responsive_zone_icons {
+    margin-right: 10px;
+}
+
+.responsive_zone_text{
+    vertical-align: middle !important;
+}
+
+#content-container {
+    padding-top: 70px;
+}
+
+.collapse li a{
+    font-weight: normal !important;
+}
+
+.top-right-buttons:hover {
+    background-color: var(--main-blue) !important;
+}
+
+.top-right-buttons:hover img {
+    filter: grayscale(100%) brightness(200%);
+}
+
+.list-header.menu_responsive_zone {
+    margin-top: 50px;
+    box-shadow: 0 1px 0 0 lightgrey;
+    font-size: medium !important;
+    color: var(--main-grey) !important;
+}
+
+/* Se activa hasta un ancho máximo de 767px (inclusive) */
+@media (max-width: 767px) {
+    .navbar-content {
+        display: none;
+    }
+
+    .mainnav-lg #frontend_sidebar_navbar-brand {
+        background-color: white;
+    }
+
+    .mainnav-lg #frontend_sidebar_navbar-brand img {
+        filter: none;
+    }
+}
+
+/* Se activa hasta un ancho mínimo de 768px (inclusive) */
+@media (min-width: 768px) {
+    #asitur_logo_responsive {
+        display: none;
+    }
+
+    .menu_responsive_zone {
+        display: none;
+    }
+
+    #container.mainnav-sm #content-container {
+        padding-left: 70px;
+    }
+
+    #content-container {
+        padding-top: 70px;
+    }
+
+}

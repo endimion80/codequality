@@ -1,0 +1,151 @@
+{% extends 'includes/backend_sidebar.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+{{parent()}}
+
+    <link rel="stylesheet" href="{{ asset('css/backend/style-backend_general.css') }}">
+    <style>
+        #page-content{
+            
+        }
+        #map {
+            height: 650px;
+        }
+
+        .table_phase{
+            background-color: white;
+            border-radius: 3px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <!--Page Title-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="page-title">
+        <h1 class="page-header text-overflow">{{"backend.map.route_stored"|trans}}</h1>
+    </div>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--End page title-->
+
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+
+        <div class='row'>
+            <div class='col-md-9'>
+                <div id="map"></div>
+            </div>
+            <div class='col-md-3'>
+                <table class="table table-striped table_phase">
+                    <thead>
+                        <tr>
+                        <th scope="col">{{"backend.map.date"|trans}}</th>
+                        <th scope="col">{{"backend.map.phase"|trans}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for phaseLog in phaseLogArray %}
+                            <tr>
+                                <td>
+                                    {{ phaseLog.creation_date }}
+                                </td>
+                                <td>
+                                    {{ phaseLog.description }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <!--===================================================-->
+    <!--End page content-->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    {# Mapas #}
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{MAPS_API_KEY}}&callback=initMap&libraries=&v=weekly" defer ></script>
+
+<script>
+    var map;
+
+    function initMap() {
+        var startLatitude = 40.4167;
+        var startLongitude = -3.70325;
+        
+        {% if intervention and intervention.getVhLatitude() and intervention.getVhLongitude() %}
+            startLatitude = "{{ intervention.getVhLatitude() }}";
+            startLongitude = "{{ intervention.getVhLongitude() }}";
+        {% endif %}
+
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: parseFloat(startLatitude), lng: parseFloat(startLongitude) },
+            zoom: 12,
+        });
+    
+
+        function addMarker(title, creationdate, author, lat, lng){
+            var marker = new google.maps.Marker({
+                position: { lat: parseFloat(lat), lng: parseFloat(lng) },
+                map,
+                title: title,
+            });
+
+            var contentHtml = "<h4 class='markerHeading'>"+title+"</h4>"+
+                            "<div class='markerContent'>"+
+                            "Fecha: " + creationdate + "<br>" +
+                            "Por: " + author+"</div>";
+
+            var infowindow = new google.maps.InfoWindow({content: contentHtml});
+
+            marker.addListener("click", () => {
+                infowindow.open(map, marker);
+            });
+
+        }
+
+        {% for phaseLog in phaseLogArray %}
+            addMarker("{{ phaseLog.description }}",
+                        "{{ phaseLog.creation_date }}",
+                        "{{ phaseLog.operator_name }}", 
+                        "{{ phaseLog.latitude }}",
+                        "{{ phaseLog.longitude }}");
+        {% endfor %}
+
+
+        var flightPlanCoordinates = [
+            {% for geoposition in geopositionArray %}
+                { lat: parseFloat("{{ geoposition.latitude }}"), lng: parseFloat("{{ geoposition.longitude }}") },
+            {% endfor %}
+        ];
+
+        //flightPlanCoordinates = flightPlanCoordinates.slice(0, 10);
+        //console.log(flightPlanCoordinates);
+
+         flightPath = new google.maps.Polyline({
+            path: flightPlanCoordinates,
+            geodesic: true,
+            strokeColor: "#FF0000",
+            strokeOpacity: 1.0,
+            strokeWeight: 2,
+        });
+        flightPath.setMap(map);
+        
+    }
+
+    $(document).ready(function(){
+    });// ready
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ ("pdf.deliverynote.deliverynote")|trans }} {{ intervention.id }}</title>
+
+         <style>
+            body {
+                font-family: Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
+                font-size: 12px;
+            }
+            div { margin: -2px; }
+            .page_break { page-break-before: always; }
+            .page{ display:block; height: 975px; width: 700px; } {# A4 #}
+            .row{display: block;}
+            .w2{width: 2%; display: inline-block; vertical-align:top; }
+            .w10{width: 10%; display: inline-block; vertical-align:top; }
+            .w20{width: 20%; display: inline-block; vertical-align:top; }
+            .w25{width: 25%; display: inline-block; vertical-align:top; }
+            .w30{width: 30%; display: inline-block; vertical-align:top; }
+            .w38{width: 38%; display: inline-block; vertical-align:top; }
+            .w40{width: 40%; display: inline-block; vertical-align:top; }
+            .w50{width: 50%; display: inline-block; vertical-align:top; }
+            .w60{width: 60%; display: inline-block; vertical-align:top; }
+            .w70{width: 70%; display: inline-block; vertical-align:top; }
+            .w80{width: 80%; display: inline-block; vertical-align:top; }
+            .w90{width: 90%; display: inline-block; vertical-align:top; }
+            .w100{width: 100%; display: inline-block; vertical-align:top; }
+            .table1 { font-size: 10px; width: 100%; border: none;}
+            .table1 td {margin: 0px; padding: 2px 4px;}
+            .table1 tr:nth-child(odd) {background: #EDEDED}
+            .table1 tr:nth-child(even) {background: white}
+            .table1 tr td:nth-child(1)  {border-right: 1px solid black;}
+            .tablePhoto { margin-left: 15px; }
+            .tablePhoto tr td { width:220px; }
+            .blueHeader {background: #0093D9; color: white; font-weight: bold; padding: 1px 3px; font-size: 15px;}
+            .blueLabel {color: #0093D9;font-size: 12px;margin-left: 2px;}
+            .vehicle{
+                margin-top: 15px;
+                width: 100%;
+            }
+            .checkbox { position: relative;
+                        top: 1px;
+                        height: 8px;
+                        width: 8px;
+                        border: 2px solid #6d6d6d;
+                        display: inline-block;
+                        margin: 2px;
+                        background-color: white;
+            }
+            .photo_container{
+                width: 100%;
+                padding-top: 10px;
+                height:230px;
+            }
+            .photo_element {text-align: center; margin-bottom:10px;}
+            .photo_element img{
+                max-width: 210px;
+                max-height:170px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class='page'>
+            <div class='row'>
+                <div class='w50' style='padding-top:20px;'>
+                    <img id="asitur_logo" src='{{web_domain}}{{asset("media/logo-asitur.png")}}' height="50px">
+
+                    <div style='margin-top:30px; font-size: 12px;'>
+                        {{ intervention.getVhAddress() }}<br>
+                        {{ intervention.getVhTown().getName() }}<br>
+                        {{ intervention.getVhZipcode() }} {{ intervention.getVhProvince().getName() }}<br>
+                        {{ intervention.getSignerDni() }}
+                    </div>
+                </div>
+                <div class='w50' style='padding-top:20px;'>
+                    <table class='table1'  cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.deliverynote_number")|trans }}</td><td>{{ intervention.getCode() }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.deliverynote_reference")|trans }}</td><td>{{ intervention.getReference() }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.collaborator_name")|trans }}</td><td>{{ intervention.getCollaborator().getName() }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.date_and_time")|trans }}</td><td>{{ intervention.getReceptionDate()|date('Y-m-d H:i') }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.crane")|trans }}</td><td>{% if intervention.getCrane() %}{{ intervention.getCrane().getReference() }}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.operator")|trans }}</td><td>{% if intervention.getOperator() %}{{ intervention.getOperator().getReference() }}{% endif %}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class='row'>
+                <div class='w100 blueHeader' style='margin-top:15px;'>
+                    {{ ("pdf.deliverynote.owner_data")|trans }}
+                </div>
+            </div>
+            <div class='row'>
+                <div class='w100 blueLabel' style='margin-top:15px;'>
+                    {{ intervention.getCallerName() }} {{ intervention.getCallerLastName() }}
+                </div>
+            </div>
+
+            <div class='row'>
+                <div class='w100' style='margin-top:5px;'>
+                    <table class='table1'  cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.phone")|trans }}</td>
+                            <td>{{ intervention.getCallerPhone() }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.dni")|trans }}</td>
+                            <td>{{ intervention.getSignerDni() }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.email")|trans }}</td>
+                            <td>{{ intervention.getSignerEmail() }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.plate")|trans }}</td>
+                            <td>{{ intervention.getVhPlate() }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.brand")|trans }}</td>
+                            <td>{{ intervention.getVhBrand().getName() }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.model")|trans }}</td>
+                            <td>{{ intervention.getVhModel().getName() }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.color")|trans }}</td>
+                            <td>{{ intervention.getVhColor() }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <br>
+            <div class='row'>
+                <div class='w100 blueHeader'>
+                    {{ ("pdf.deliverynote.vh_status")|trans }}
+                </div>
+            </div>
+            <br>
+            <div class='row'>
+                <div class='w30'>
+                    {% if intervention.getVhType().getVehicleType() == 'car' %}
+                        <img class="vehicle" src='{{web_domain}}{{asset("media/coche.png")}}' />
+                    {% else %}
+                        <img class="vehicle" src='{{web_domain}}{{asset("media/moto.png")}}' />
+                    {% endif %}
+                </div>
+                <div class='w70'>
+                    <table class='table1'  cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.km")|trans }}</td>
+                            <td>{% if intervention.getKmCheck() %}{{ intervention.getKmCheck() }}{% else %}{{ intervention.getKm() }}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.fuel")|trans }}</td>
+                            <td>{% if intervention.getFuelCheck() %}{{ intervention.getFuelCheck() }}{% else %}{{ intervention.getFuel() }}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.photo")|trans }}</td>
+                            <td>
+                                {% if intervention.getAttachments()|length > 0 %}{{ ("general.yes")|trans }}{% else %}{{ ("general.no")|trans }}{% endif %}
+                                {# <!-- Al final no querían eso-->
+                                <div style='width:80px;'>
+                                Si: <div class='checkbox'>&nbsp;</div>&nbsp;&nbsp;&nbsp;
+                                No: <div class='checkbox'>&nbsp;</div>
+                                </div>
+                                #}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.equipment")|trans }}</td>
+                            <td>{% if intervention.getEquipmentAndObjectsCheck() %}{{ intervention.getEquipmentAndObjectsCheck() }}{% else %}{{ intervention.getEquipmentAndObjects() }}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.vh_dirty")|trans }}</td>
+                            <td>{% if intervention.getDirtyVh() %}{{ ("general.yes")|trans }}{% else %}{{ ("general.no")|trans }}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.vh_scratch_description")|trans }}</td>
+                            <td>{% if intervention.getScratchesOnVh() %}{{ ("general.yes")|trans }}{% else %}{{ ("general.no")|trans }}{% endif %}</td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+            <br>
+            <div class='row'>
+                <div class='w38'>
+                    
+                    <div class='row'>
+                        <div class='w100 blueHeader'>
+                            {{ ("pdf.deliverynote.accident_info")|trans }}
+                        </div>
+                    </div>
+
+                    <div class='row'>
+                        <div class='w100'>
+                            <br>
+                            <table class='table1' cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td>{{ ("pdf.deliverynote.vh_implicated")|trans }}</td>
+                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ ("pdf.deliverynote.n_passengers")|trans }}</td>
+                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ ("pdf.deliverynote.law_enforcement_intervention")|trans }}</td>
+                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div class='w2'>
+                </div>
+                <div class='w60'>
+                    <div class='row'>
+                        <div class='w100 blueHeader'>
+                            {{ ("pdf.deliverynote.origin")|trans }} / {{ ("pdf.deliverynote.destination")|trans }}
+                        </div>
+                    </div>
+
+                    <div class='row'>
+                        <div class='w38'>
+                            <img class="map" src='{{map}}' style='margin-top:20px'/>
+                        </div>
+                        <div class='w2'></div>
+
+                        <div class='w60'>
+                            <br>
+                            <table class='table1' cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td>{{ ("pdf.deliverynote.origin")|trans }}</td>
+                                    <td>{{ intervention.getVhAddress() }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ ("pdf.deliverynote.base_destination")|trans }}</td>
+                                    <td>
+                                        {% if intervention.getDestinationType() == 'Entrega en base' %}
+                                            {{ intervention.getDeliveryName() }} {{ intervention.getDeliveryTown() }}  {{ intervention.getDeliveryProvince() }} {{ intervention.getDeliveryAddress() }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{ ("pdf.deliverynote.home_destination")|trans }}</td>
+                                    <td>
+                                        {% if intervention.getDestinationType() == 'Entrega en domicilio' %}
+                                                {{ intervention.getDeliveryName() }} {{ intervention.getDeliveryTown() }}  {{ intervention.getDeliveryProvince() }} {{ intervention.getDeliveryAddress() }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{ ("pdf.deliverynote.workshop_destination")|trans }}</td>
+                                    <td>
+                                        {% if intervention.getDestinationType() == 'Entrega en taller' %}
+                                            {{ intervention.getDeliveryName() }} {{ intervention.getDeliveryTown() }}  {{ intervention.getDeliveryProvince() }} {{ intervention.getDeliveryAddress() }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{ ("pdf.deliverynote.workshop_delivery_info")|trans }}</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class='row'>
+                <div class='w100 blueHeader'>
+                    {{ ("pdf.deliverynote.RIS")|trans }}
+                </div>
+            </div>
+            <br>
+            <div class='row'>
+                <div class='w10'>
+                    {{ ("pdf.deliverynote.RIS")|trans }}: {% if intervention.getIsRIS() %}{{ ("general.yes")|trans }}{% else %}{{ ("general.no")|trans }}{% endif %}
+                </div>
+
+                <div class='w90'>
+
+                    <table class='table1' cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.failure_type")|trans }}</td>
+                            <td>{{ intervention.getFailureType().getDescription() }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <br>
+            <div class='row'>
+                <div class='w100 blueHeader'>
+                    {{ ("pdf.deliverynote.failure")|trans }}
+                </div>
+            </div>
+            
+            <br>
+            <div class='row'>
+                <div class='w100'>
+                   <table class='table1' cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.observations")|trans }}</td>
+                            <td>{{ intervention.getFailureDescription() }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+
+            <br>
+            <div class='row'>
+                <div class='w50 blueHeader'>
+                    {{ ("pdf.deliverynote.client_signature")|trans }}
+                </div>
+                <div class='w50'></div>
+            </div>
+            <br>
+            <div class='row'>
+                <div class='w25'>
+                    {{ ("pdf.deliverynote.client_signature")|trans }}<br>
+                    <img class="signature" src='{{ intervention.getClientSignature() }}' />
+                </div>
+                <div class='w25'>
+                    {{ ("pdf.deliverynote.delivery_signature")|trans }}<br>
+                    <img class="signature" src='{{ intervention.getReceiverSignature() }}' />
+                </div>
+            </div>
+
+
+        </div><!--page-->
+        
+        <div class="page_break"></div>
+        
+        {# Segunda página #}
+        <div class='page'>
+            <div class='row'>
+                <div class='w50'>
+                    {# No sé si hay que poner el PROVEEDOR#}
+                    <img id="asitur_logo" src='{{web_domain}}{{asset("media/logo-asitur.png")}}' height="50px">
+
+                    <div style='font-size: 12px;'>
+                        {{ intervention.getVhAddress() }}<br>
+                        {{ intervention.getVhTown().getName() }}<br>
+                        {{ intervention.getVhZipcode() }} {{ intervention.getVhProvince().getName() }}<br>
+                        {{ intervention.getSignerDni() }}
+                    </div>
+                </div>
+                <div class='w50'>
+                    <table class='table1'  cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.deliverynote_number")|trans }}</td><td>{{ intervention.getCode() }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.deliverynote_reference")|trans }}</td><td>{{ intervention.getReference() }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.collaborator_name")|trans }}</td><td>{{ intervention.getCollaborator().getName() }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.date_and_time")|trans }}</td><td>{{ intervention.getReceptionDate()|date('Y-m-d H:i') }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.crane")|trans }}</td><td>{% if intervention.getCrane() %}{{ intervention.getCrane().getReference() }}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ ("pdf.deliverynote.operator")|trans }}</td><td>{% if intervention.getOperator() %}{{ intervention.getOperator().getReference() }}{% endif %}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class='row' style='margin-top:10px'>
+                <div class='w100 blueHeader'  >
+                    {{ ("pdf.deliverynote.origin_photos")|trans }}
+                </div>
+                <br>
+            </div>
+
+            <div class='row' style='margin-top:10px;'>
+                {% set i = 0 %}
+                {% set j = 0 %}
+
+                <table class='tablePhoto'>
+                    {% for attachment in intervention.getAttachments() %}
+                        {% if attachment.getPhotoType() == 'creacion_albaran' %}
+                            {% set i = i + 1 %}
+                            {% set j = j + 1 %}
+                            
+                            {% if i == 1 %}
+                                <tr>
+                            {% endif %}
+
+                            <td>
+                                <div class='photo_container'>
+                                    <div class='photo_element'>
+                                        <img src='data:image/png;base64, {{ attachment.getFileData() }}'>
+                                    </div>
+                                    {% if attachment.getDescriptionExtra() %}
+                                        <div class='photo_details'>
+                                            {{ attachment.getDescriptionExtra() }}
+                                        </div>
+                                    {% endif %}
+                                    <div class='photo_latlng'>
+                                        {{ attachment.getLatitude() }},{{ attachment.getLongitude() }}
+                                    </div>
+                                    <div class='photo_date'>
+                                        {{ attachment.getCreationDate()|date('Y-m-d H:i:s') }}
+                                    </div>
+                                </div>
+                            </td>
+
+                            {% if i == 3 %}
+                                {% set i = 0 %}
+                                </tr>
+                            {% endif %}
+
+                        {% endif %}
+                    {% endfor %}
+                    {% if j == 0 %}
+                        <tr>
+                            <td>
+                                {{ ("pdf.deliverynote.no_documents")|trans }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                </table>
+            </div>
+
+            <div><br></div>
+
+            <div class='row'>
+                <div class='w100 blueHeader'  >
+                    {{ ("pdf.deliverynote.delivery_photos")|trans }}
+                </div>
+                <br>
+            </div>
+
+            <div class='row' style='margin-top:10px;'>
+                {% set i = 0 %}
+                {% set j = 0 %}
+
+                <table class='tablePhoto'>
+                    {% for attachment in intervention.getAttachments() %}
+                        {% if attachment.getPhotoType() == 'modificacion_albaran' %}
+                            {% set i = i + 1 %}
+                            {% set j = j + 1 %}
+                            
+                            {% if i == 1 %}
+                                <tr>
+                            {% endif %}
+
+                            <td>
+                                <div class='photo_container'>
+                                    <div class='photo_element'>
+                                        <img src='data:image/png;base64, {{ attachment.getFileData() }}'>
+                                    </div>
+                                    {% if attachment.getDescriptionExtra() %}
+                                        <div class='photo_details'>
+                                            {{ attachment.getDescriptionExtra() }}
+                                        </div>
+                                    {% endif %}
+                                    <div class='photo_latlng'>
+                                        {{ attachment.getLatitude() }},{{ attachment.getLongitude() }}
+                                    </div>
+                                    <div class='photo_date'>
+                                        {{ attachment.getCreationDate()|date('Y-m-d H:i:s') }}
+                                    </div>
+                                </div>
+                            </td>
+
+                            {% if i == 3 %}
+                                {% set i = 0 %}
+                                </tr>
+                            {% endif %}
+
+                        {% endif %}
+                    {% endfor %}
+                    {% if j == 0 %}
+                        <tr>
+                            <td>
+                                {{ ("pdf.deliverynote.no_documents")|trans }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div><!--page-->
+    </body>
+</html>

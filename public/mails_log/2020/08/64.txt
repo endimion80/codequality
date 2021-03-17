@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Titulo</title>
+    </head>
+    <body>
+        <div>
+            Haga clic en el siguiente enlace para reestablecer su contraseña: 
+        
+            <a href="http://localhost/rira_web/publichttp://localhost/rira_web/public/password_recovery/%7B%7B%20token%20%7D%7D" target="_blank">Enlace</a>
+            
+
+
+        </div>
+            </body>
+</html>

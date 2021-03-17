@@ -1,0 +1,194 @@
+{% extends 'includes/backend_sidebar.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+{{parent()}}
+
+
+{% endblock %}
+
+{% block content %}
+
+    <!--Page Title-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="page-title">
+        <h1 class="page-header text-overflow">{{"sidebar.test_app"|trans}}</h1>
+    </div>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--End page title-->
+
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+
+        {# Panel para preparar intervención #}
+        <div class="panel">
+            <div class="panel-body">
+                <h3 style="margin-bottom: 20px; margin-top: 0;">{{"backend.app_testing.prepare_intervention.title"|trans}}</h3>
+                <div class="row" style="display: flex; align-items: flex-end; flex-wrap: wrap; margin-bottom: 20px;">
+                    {# Select Intervención #}
+                    <div class="input_filter_div col-xs-12 col-sm-4 col-md-4 col-lg-2" >
+                        <label for="restart_intervention_input" class="filter_labels">{{"general.intervention"|trans}}:</label>
+                        <select id="restart_intervention_input" name="reset_intervention" class="form-control filter_inputs select_inputs chosen-select">
+                        <option value="">----</option>
+                        {% for intervention in interventions %}
+                            <option value="{{intervention.id}}">{{intervention.id}}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    {# Restablecer valores intervención #}
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2" style="padding-left: 15px; padding-right: 15px; margin-bottom: 15px;">
+                        <button id="reset_button" class="btn btn-warning" style="height: 36px;">{{"backend.app_testing.reset_intervention"|trans}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Panel de test de la notificación #}
+        <div class="panel">
+            <div class="panel-body">
+                <h3 style="margin-bottom: 20px;">{{"backend.app_testing.test_notification.title"|trans}}</h3>
+                <div class="row" style="display: flex; align-items: flex-end; flex-wrap: wrap; margin-bottom: 20px;">
+                    {# Select Operario #}
+                    <div class="input_filter_div col-xs-12 col-sm-4 col-md-4 col-lg-2" >
+                        <label for="operator-input" class="filter_labels">{{"general.operator"|trans}}:</label>
+                        <select id="operator-input" name="operator" class="form-control filter_inputs select_inputs chosen-select">
+                        <option value="">----</option>
+                        {% for operator in operators %}
+                            <option value="{{operator.id}}">{{operator.reference}}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    {# Select Intervención #}
+                    <div class="input_filter_div col-xs-12 col-sm-4 col-md-4 col-lg-2" >
+                        <label for="intervention-input" class="filter_labels">{{"general.intervention"|trans}}:</label>
+                        <select id="intervention-input" name="intervention" class="form-control filter_inputs select_inputs chosen-select">
+                        <option value="">----</option>
+                        {% for intervention in interventions %}
+                            <option value="{{intervention.id}}">{{intervention.id}}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    {# Enviar notificación #}
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2" style="padding-left: 15px; padding-right: 15px; margin-bottom: 15px;">
+                        <button id="test_button" class="btn btn-primary" style="height: 36px;">{{"general.send_notification"|trans}}</button>
+                    </div>
+                </div>
+
+                {# Respuesta de la API #}
+                <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                    <p><b>{{"general.response"|trans}}:</b></p>
+                    <pre id="test_panel" style="background-color: var(--main-black); color: white;"></pre>
+                </div>
+            </div>
+        </div>
+
+
+        
+
+    </div>
+    <!--===================================================-->
+    <!--End page content-->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+
+    <script>
+    $(document).ready(function(){
+
+        $("#appTest_li").addClass("active-link");
+
+        $(".chosen-select").chosen({ width:'100%' });
+
+        $("#test_button").click(function(){
+
+            if($("#operator-input").val() == "" || $("#intervention-input").val() == "" ) {
+                swal.fire({
+                            title: '{{ ("general.form.allfields.mandatory")|trans }}',
+                            html: '',
+                            icon: 'error',
+                            showConfirmButton: true
+                        });
+            } else {
+                $.ajax({
+                    url:'{{ path('backend_app_testing_notification') }}',
+                    data: {
+                        'operator': $("#operator-input").val(),
+                        'intervention': $("#intervention-input").val()
+                    },
+                    type:"POST",
+                    success: function(data){
+
+                        let html = JSON.stringify(data, null, 4);    // stringify with 4 spaces at each level
+                        $("#test_panel").html( html );
+                    },
+                    error:function(err){
+                        swal.fire({
+                            title: '{{ ("general.modal.error")|trans }}',
+                            html: '',
+                            icon: 'error',
+                            showConfirmButton: true
+                        });
+                    }
+                });
+            }
+        });
+
+        $("#reset_button").click(function(){
+
+            if($("#restart_intervention_input").val() == "" ) {
+                swal.fire({
+                    title: '{{ ("general.form.mandatory_field.empty")|trans }}',
+                    html: '',
+                    icon: 'error',
+                    showConfirmButton: true
+                });
+            } else {
+                swal.fire({
+                    title: '{{ ("backend.app_testing.reset_intervention.warning")|trans }}',
+                    html: '',
+                    icon: 'warning',
+                    confirmButtonText: '{{"general.accept"|trans}}',
+                    cancelButtonText: '{{"general.cancel"|trans}}',
+                    showConfirmButton: true,
+                    showCancelButton: true
+                }).then((result) => {
+                    if(result.isConfirmed) {
+                        $.ajax({
+                            url:'{{ path('backend_app_testing_reset_intervention') }}',
+                            data: {
+                                'intervention': $("#restart_intervention_input").val()
+                            },
+                            type:"POST",
+                            success: function(data){
+                                swal.fire({
+                                    title: '{{ ("general.modal.success")|trans }}',
+                                    html: '',
+                                    icon: 'success',
+                                    showConfirmButton: true
+                                });
+                            },
+                            error:function(err){
+                                swal.fire({
+                                    title: '{{ ("general.modal.error")|trans }}',
+                                    html: '',
+                                    icon: 'error',
+                                    showConfirmButton: true
+                                });
+                            }
+                        });
+                    }
+                });
+
+                
+            }
+        });
+
+    });
+    
+    </script>
+
+{% endblock %}

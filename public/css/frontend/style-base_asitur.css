@@ -1,0 +1,136 @@
+.switchery {
+    height: 31px;
+    width: 69px;
+    box-shadow: none !important;
+    transition: none !important;
+}
+
+input:disabled + .switchery {
+    cursor: default;
+}
+
+.switchery > small {
+    height: 31px;
+    width: 31px;
+}
+
+.asitur_label,
+.filter_labels {
+    font-weight: bold;
+    color: var(--main-grey);
+}
+
+.asitur_input,
+.filter_inputs {
+    width: 180px;
+    height: 35px;
+    background-color: transparent;
+    border-bottom: 1px solid #cdd3db;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    font-weight: bold;
+    font-size: 16px;
+    color: var(--main-grey);
+}
+
+.asitur_input_to_delete {
+    /* width: 130px; */
+    width: 100%;
+    height: 35px;
+    background-color: transparent !important;
+    border-bottom: 1px solid #cdd3db;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    padding: 6px 0px 6px 4px;
+    font-weight: bold;
+    font-size: 12px;
+    color: var(--main-grey);
+    cursor: default !important;
+}
+
+.asitur_input_to_delete-img {
+    cursor: pointer;
+    vertical-align: -webkit-baseline-middle;
+    vertical-align: -moz-middle-with-baseline;
+}
+
+.asitur_input.regular_input,
+.asitur_label.regular_label {
+    font-size: 16px;
+}
+
+.asitur_input.regular_input:disabled {
+    cursor: default;
+    background: none;
+}
+
+.asitur_input::placeholder,
+.filter_inputs::placeholder {
+    color:  var(--main-blue);
+    font-weight: normal;
+    font-style: italic;
+}
+
+.attachment_icon_general {
+    text-align: center;
+    padding: 10px 15px 5px 15px;
+    margin: 0 20px 25px 20px;
+    width: 100px;
+    cursor: pointer;
+}
+
+.attachment_icon_general img {
+    margin-bottom: 22px;
+    /* margin-top: 14px; */
+}
+
+.attachment_icon_img {
+    text-align: center;
+    padding: 10px 15px 5px 15px;
+    margin: 0 20px 25px 20px;
+    width: 150px;
+    cursor: pointer;
+}
+
+.attachment_icon_img img {
+    border-radius: 5px;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 8px;
+}
+
+.profile_icon,
+.attachment_icon_import {
+    cursor: default;
+}
+
+.profile_icon img,
+.attachment_icon_import img {
+    cursor: pointer;
+}
+
+.attachment_icon:hover,
+.attachment_icon_import img:hover {
+    background-color: var(--main-blue-light);
+}
+
+.attachment_icon_text {
+    color: var(--main-grey);
+}
+
+.attachment_icon_text span {
+    word-wrap: break-word;
+}
+
+.delete_img_x{
+    top: 6px;
+    margin: 0 !important;
+    position: relative;
+    left: 33px;
+    width: 30px !important;
+    height: 30px !important;
+}

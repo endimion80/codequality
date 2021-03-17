@@ -1,0 +1,165 @@
+{% extends 'includes/backend_sidebar.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+{{parent()}}
+
+{% endblock %}
+
+{% block content %}
+
+    <!--Page Title-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="page-title">
+        <h1 class="page-header text-overflow">{{"backend.sms_log.header"|trans}}</h1>
+    </div>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--End page title-->
+
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+        
+        <div style="display: block;
+                    margin-bottom: 10px;
+                    margin-right: 24px;
+                    margin-top: 20px;
+                    float: right;">
+            <label class="control-label">{{"general.search"|trans}}:</label>
+            <input id="search-input" class='search-input' type="text" placeholder="{{"general.search"|trans}}..." spellcheck="false">
+        </div>
+
+        <!-- Tabla Log de SMS -->
+        <!--===================================================-->
+        <div class="panel">
+            <div class="panel-body">
+                <table id="table_sms_log" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{{"dataTable.sms.logs.intervention_id"|trans}}</th>
+                            <th>{{"dataTable.sms.logs.creation_date"|trans}}</th>
+                            <th>{{"dataTable.sms.logs.sms_content"|trans}}</th>
+                            <th>{{"dataTable.sms.logs.sms_name"|trans}}</th>
+                            <th>{{"dataTable.sms.logs.sms_type"|trans}}</th>
+                            <th>{{"dataTable.sms.logs.sms_phone"|trans}}</th>
+                            <th>{{"dataTable.sms.logs.is_delivered"|trans}}</th>
+                            <th>{{"dataTable.sms.logs.debug"|trans}}</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <!--===================================================-->
+    
+    </div>
+    <!--===================================================-->
+    <!--End page content-->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+
+<script>
+    $(document).ready(function(){
+
+        var time = null;
+        createTable();
+
+        $('#search-input').keyup(function() {
+            clearInterval(time);
+            time = setTimeout(function() {
+                reloadDataTable();
+            }, 1500);
+        });
+
+    });
+
+    function createTable() {
+
+        $('#table_sms_log').DataTable({
+            order: [1, 'DESC'],
+            searching: false,
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100,
+                    "{{('dataTable.general.lengthMenu.all')|trans}}"
+                ]
+            ],
+            responsive: false,
+            autoWidth: false,
+            scrollX: true,
+            processing: false,
+            serverSide: true,
+            pagingType: "full_numbers",
+            language: {
+                "sProcessing": "{{ 'dataTable.general.language.sProcessing' | trans }}",
+                "sLengthMenu": "{{ ('dataTable.general.language.sLengthMenu') | trans}}",
+                "sZeroRecords": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                "sEmptyTable": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                "sInfo": "{{ ('dataTable.general.language.sInfo') | trans }}",
+                "sInfoEmpty": "{{ ('dataTable.general.language.sInfoEmpty') | trans }}",
+                "sInfoFiltered": "{{ ('dataTable.general.language.sInfoFiltered') | trans }}",
+                "sInfoPostFix": "",
+                "sSearch": "{{ ('dataTable.general.language.sSearch') | trans }}:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "{{ ('dataTable.general.language.sLoadingRecords') | trans }}",
+                "oPaginate": {
+                    "sFirst": "{{ ('dataTable.general.language.oPaginate.sFirst') | trans }}",
+                    "sLast": "{{ ('dataTable.general.language.oPaginate.sLast') | trans }}",
+                    "sNext": "{{ ('dataTable.general.language.oPaginate.sNext') | trans }}",
+                    "sPrevious": "{{ ('dataTable.general.language.oPaginate.sPrevious') | trans }}",
+                },
+                "oAria": {
+                    "sSortAscending": ": {{ ('dataTable.general.language.oAria.sSortAscending') | trans }}",
+                    "sSortDescending": ": {{ ('dataTable.general.language.oAria.sSortDescending') | trans }}"
+                },
+            },
+            ajax: {
+                url: "{{ path('sms_logs_table') }}",
+                method: 'POST',
+                data: {
+                    'form_filters': $('#table_sms_log').serialize(),
+                    'search_filter': $('#search-input').val(),
+                }
+            },
+            initComplete: function() {},
+            drawCallback: function() {
+
+            },
+            columns: [
+                {data: 'intervention_id'},
+                {data: 'creation_date'},
+                {data: 'sms_content'},
+                {data: 'sms_name'},
+                {data: 'sms_type'},
+                {data: 'sms_phone'},
+                {data: {}, render: function(data, row) {
+                        let text;
+                        if (data['is_delivered'] == 1) {
+                            text = "{{"general.yes"|trans}}";
+                        }
+                        else {
+                            text = "{{"general.no"|trans}}";
+                        }
+                        return text;
+                    }
+                },
+                {data: 'debug'}
+            ]
+        });
+    }
+
+    {# Función encargada de recargar el ajax del datatable #}
+    let reloadDataTable = function() {
+        $("#table_sms_log").DataTable().destroy();
+        createTable();
+    }
+    {# ################################################### #}
+
+</script>
+
+
+{% endblock %}

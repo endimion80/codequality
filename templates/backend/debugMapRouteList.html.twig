@@ -1,0 +1,158 @@
+{% extends 'includes/backend_sidebar.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+    {{parent()}}
+    <link rel="stylesheet" href="{{ asset('css/backend/style-backend_general.css') }}">
+{% endblock %}
+
+{% block content %}
+    <!--Page Title-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="page-title">
+        <h1 class="page-header text-overflow">{{"sidebar.debug"|trans}} Geolocalización</h1>
+    </div>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--End page title-->
+
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+
+        <div id = 'container_login'>
+            <div class='row'>
+                 <div class='col-md-6 col-md-offset-3'>
+                    <div>
+                        <div class="panel media pad-all">
+
+                            {% if msgFail != '' %}
+                                <div class='row' style='margin-top: 13px;'>
+                                    <div class='col-sm-12 col-md-12 col-lg-12' style='text-align:center'>
+                                        {{msgFail}}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <div class='row' style='margin-top: 13px;'>
+                                <div class='col-sm-12 col-md-12 col-lg-12' style='text-align:center'>
+                                    {{'backend.map.input_id_intervention'|trans}}
+                                </div>
+                            </div>
+                            <div class="media-left">
+                                <span class="icon-wrap icon-wrap-sm icon-circle bg-success">
+                                <i class="fa fa-file-o fa-2x"></i>
+                                </span>
+                            </div>
+                
+                            <div class="media-body">
+                                <div class='row' style='margin-top: 13px;'>
+                                    <div class='col-sm-6 col-md-6 col-lg-6'>
+                                        <input id="intervencion_id" value="" type="text" class="form-control asitur_input data_input" maxlength="8" placeholder = 'id intervencion'>
+                                    </div>
+                                    <div class='col-sm-6 col-md-6 col-lg-6'>
+                                        <button id = 'btnGo' class="form-control btn btn-block btn-primary">
+                                            {{'backend.map.search'|trans}}
+                                        </button>                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="panel media pad-all" style='height: 400px;'>
+
+                            {% if msgFail != '' %}
+                                <div class='row' style='margin-top: 13px;'>
+                                    <div class='col-sm-12 col-md-12 col-lg-12' style='text-align:center'>
+                                        {{msgFail}}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <div class='row' style='margin-top: 13px;'>
+                                <div class='col-sm-12 col-md-12 col-lg-12' style='text-align:center'>
+                                    {{'backend.map.input_id_operator'|trans}}
+                                </div>
+                            </div>
+                            <div class="media-left">
+                                <span class="icon-wrap icon-wrap-sm icon-circle bg-success">
+                                <i class="fa fa-user fa-2x"></i>
+                                </span>
+                            </div>
+                
+                            <div class="media-body" style='overflow: initial'>
+                                <div class='row' style='margin-top: 13px;'>
+                                    <div class='col-sm-3 col-md-3 col-lg-3'>
+                                        <select id="operator_id" name="operator" class="select_inputs chosen-select">
+                                        <option value="">----</option>
+                                        {% for operator in operators %}
+                                            <option value="{{operator.id}}">{{operator.id}} - {{operator.username}}</option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class='col-sm-3 col-md-3 col-lg-3'>
+                                        <input id="initDate" value="{{'now'|date('Y-m-d')}} 00:00:00" type="text" class="form-control asitur_input data_input" maxlength="20" placeholder = 'Inicio'>
+                                    </div>
+                                    
+                                    <div class='col-sm-3 col-md-3 col-lg-3'>
+                                        <input id="endDate" value="{{'now'|date('Y-m-d')}} 23:59:59" type="text" class="form-control asitur_input data_input" maxlength="20" placeholder = 'Fin'>
+                                    </div>
+
+                                    <div class='col-sm-3 col-md-3 col-lg-3'>
+                                        <button id = 'btnGoOperator' class="form-control btn btn-block btn-primary">
+                                            {{'backend.map.search'|trans}}
+                                        </button>                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+ 
+    </div>
+    <!--===================================================-->
+    <!--End page content-->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+
+<script>
+    $(document).ready(function(){
+        $(".chosen-select").chosen({ width:'100%' });
+        $("#routes_li").addClass("active-link");
+
+        var routeToGo = "{{ path('backend_debug_maps_route', {'intervention_id':'XXXXX'}) }}";
+        $('#btnGo').click(function(){
+            if ($('#intervencion_id').val() == ''){
+                  swal.fire({
+                        title: "{{'backend.map.input_value_fail'|trans}}",
+                        html: "",
+                        icon: 'info',
+                        showConfirmButton: true
+                    });
+            }
+            else{
+                var finalRoute = routeToGo.replace("XXXXX", $('#intervencion_id').val());
+                location.replace(finalRoute);
+            }
+        });
+
+        var routeToGoOperator = "{{ path('backend_debug_maps_route_operator', {'operator_id':'XXXXX', 'init_date':'YYYYY' , 'end_date':'ZZZZZ'}) }}";
+        $('#btnGoOperator').click(function(){
+            var finalRoute = routeToGoOperator.replace("XXXXX", $('#operator_id').val());
+            var finalRoute = finalRoute.replace("YYYYY", $('#initDate').val());
+            var finalRoute = finalRoute.replace("ZZZZZ", $('#endDate').val());
+            location.replace(finalRoute);
+        });
+    });// ready
+</script>
+
+
+{% endblock %}

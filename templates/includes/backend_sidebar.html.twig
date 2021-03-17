@@ -1,0 +1,276 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+
+    <link rel="stylesheet" href="{{ asset('css/backend/style-backend_base.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/backend/style-backend_sidebar.css') }}">
+
+	<style>
+		.mainnav-lg .fa-mobile {
+			margin-right: 8px;
+		}
+
+		.mainnav-sm .fa-mobile {
+			margin-left: 8px;
+		}
+	</style>
+
+{% endblock %}
+
+{% block body %}
+
+    <div id="container" class="effect mainnav-sm navbar-fixed mainnav-fixed">
+		
+		<!--NAVBAR-->
+		<!--===================================================-->
+		<header id="navbar">
+
+			<img id="asitur_logo" src='{{asset("media/logo-asitur.png")}}' width="130px" height="39px">
+
+			<div id="navbar-container" class="boxed">
+
+				<!--Navigation toogle button-->
+				<!--================================-->
+				<div id="backend_sidebar_navbar-header" class="navbar-header">
+                
+					<a id="backend_sidebar_navbar-brand" class="mainnav-toggle navbar-brand" href="#">
+						<img id="menu-icon" class="section-icon" src='{{asset("media/home/menu.png")}}' width="42px" height="42px">
+					</a>
+                    
+					<img id="asitur_logo_responsive" src='{{asset("media/logo-asitur.png")}}' width="130px" height="39px">
+					
+				</div>
+				<!--================================-->
+				<!--End Navigation toogle button-->
+
+
+				<!--Navbar Top from content-->
+				<!--================================-->
+				<div class="navbar-content clearfix">
+					<ul class="nav navbar-top-links pull-left">
+					</ul>
+
+					<ul class="nav navbar-top-links pull-right">
+
+						<!-- Profile -->
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<li>
+							<a id="top-profile" class="top-right-buttons" href="{{ path('backend_profile') }}">
+								<img class="top-icons" src='{{asset("media/user-icon.png")}}' width="42x" height="42px">
+							</a>
+						</li>
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<!-- End Profile -->
+
+						<!-- Settings -->
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<li>
+							<a id="top-settings" class="top-right-buttons" href="{{ path('backend_settings') }}">
+								<img src='{{asset("media/home/settings.png")}}' width="42x" height="42px">
+							</a>
+						</li>
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<!-- End Settings -->
+
+						<!-- Logout -->
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<li>
+							<a id="top-logout" class="top-right-buttons" href="{{ path('backend_logout') }}">
+								<img src='{{asset("media/home/logout.png")}}' width="38px" height="42px">
+							</a>
+						</li>
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<!-- End Logout -->
+
+					</ul>
+				</div>
+				<!--================================-->
+				<!--End Navbar Top from content-->
+
+			</div>
+		</header>
+		<!--===================================================-->
+		<!--END NAVBAR-->
+
+		<div class="boxed">
+
+			<!--CONTENT CONTAINER-->
+			<!--===================================================-->
+			<div id="content-container">
+			
+            {% block content %}{% endblock %}
+
+			</div>
+			<!--===================================================-->
+			<!--END CONTENT CONTAINER-->
+
+
+			
+			<!--MAIN NAVIGATION-->
+			<!--===================================================-->
+			<nav id="mainnav-container">
+				<div id="mainnav">
+
+					<!--Menu-->
+					<!--================================-->
+					<div id="mainnav-menu-wrap">
+						<div class="nano">
+							<div class="nano-content">
+								<ul id="mainnav-menu" class="list-group">
+						
+									<!-- Inicio -->
+									<li id="home_li">
+										<a href="{{ path('backend_home') }}">
+											<i class="fa fa-home fa-2x" style="margin-left: 2px;"></i>
+											<span class="menu-title">
+												<strong>{{"sidebar.home"|trans}}</strong>
+											</span>
+										</a>
+									</li>
+						
+									<!-- Colaboradores -->
+									<li id="collaboratorUsers_li">
+										<a href="{{ path('backend_collaborators') }}">
+											<i class="fa fa-users fa-2x"></i>
+											<span class="menu-title">
+												<strong>{{"sidebar.collaborators"|trans}}</strong>
+											</span>
+										</a>
+									</li>
+
+									<!-- Logs -->
+									<li>
+										<a href="#">
+											<i class="fa fa-archive fa-2x"></i>
+											<span class="menu-title">
+												<strong>{{"sidebar.logs"|trans}}</strong>
+											</span>
+											<i class="arrow"></i>
+										</a>
+						
+										<!--Submenu-->
+										<ul class="collapse">
+											<li><a href="{{ path('backend_log') }}">{{"dataTable.tab.log"|trans}}</a></li>
+											<li><a href="{{ path('backend_emails_log') }}">{{"dataTable.tab.emails"|trans}}</a></li>
+											<li><a href="{{ path('backend_sms_log') }}">{{"dataTable.tab.sms"|trans}}</a></li>
+										</ul>
+									</li>
+
+									<!-- Traducciones -->
+									<li id="translations_li">
+										<a href="{{ path('backend_translations') }}">
+											<i class="fa fa-comments fa-2x"></i>
+											<span class="menu-title">
+												<strong>{{"sidebar.translations"|trans}}</strong>
+											</span>
+										</a>
+									</li>
+
+									<!-- Depurador -->
+									<li id="routes_li">
+										<a href="{{ path('backend_debug_maps_route_list') }}">
+											<i class="fa fa-map-marker fa-2x" style="margin-left: 6px; margin-right: 5px;"></i>
+											<span class="menu-title">
+												<strong>{{"sidebar.routes"|trans}}</strong>
+											</span>
+										</a>
+									</li>
+
+									<!-- Test APP -->
+									<li id="appTest_li">
+										<a href="{{ path('backend_app_testing') }}">
+											<i class="fa fa-mobile fa-2x"></i>
+											<span class="menu-title">
+												<strong>{{"sidebar.test_app"|trans}}</strong>
+											</span>
+										</a>
+									</li>
+
+									<!-- Parámetros -->
+									<li id="parameters_li">
+										<a href="{{ path('backend_parameters') }}">
+											<i class="fa fa-cogs fa-2x" style="margin-right: -3px;"></i>
+											<span class="menu-title">
+												<strong>{{"sidebar.parameters"|trans}}</strong>
+											</span>
+										</a>
+									</li>
+
+									<!-- Depurador -->
+									<li id="debug_li">
+										<a href="{{ path('backend_debug_panel') }}">
+											<i class="fa fa-bug fa-2x"></i>
+											<span class="menu-title">
+												<strong>{{"sidebar.debug"|trans}}</strong>
+											</span>
+										</a>
+									</li>
+
+									<!-- PARTE RESPONSIVE DEL MENU -->
+									<li class="list-divider menu_responsive_zone"></li>
+						
+									<!-- Cabecera de la parte responsive del menú -->
+									<li class="list-header menu_responsive_zone">{{"sidebar.responsive_zone"|trans}}</li>
+						
+									<!-- Perfil -->
+									<li class="menu_responsive_zone">
+										<a href="{{ path('backend_profile') }}">
+											<img class="responsive_zone_icons" src='{{asset("media/user-icon.png")}}' width="30px" height="30px">
+											<span class="menu-title responsive_zone_text">
+												<strong>{{"sidebar.profile"|trans}}</strong>
+											</span>
+										</a>
+									</li>
+
+									<!-- Configuración -->
+									<li class="menu_responsive_zone">
+										<a href="{{ path('backend_settings') }}">
+											<img class="responsive_zone_icons" src='{{asset("media/home/settings.png")}}' width="30px" height="30px">
+											<span class="menu-title responsive_zone_text">
+												<strong>{{"sidebar.settings"|trans}}</strong>
+											</span>
+										</a>
+									</li>
+
+									<!-- Cerrar sesión -->
+									<li class="menu_responsive_zone">
+										<a href="{{ path('backend_logout') }}">
+											<img class="responsive_zone_icons" src='{{asset("media/home/logout.png")}}' width="28px" height="30px">
+											<span class="menu-title responsive_zone_text">
+												<strong>{{"sidebar.logout"|trans}}</strong>
+											</span>
+										</a>
+									</li>
+
+								</ul>
+
+							</div>
+						</div>
+					</div>
+					<!--================================-->
+					<!--End menu-->
+
+				</div>
+			</nav>
+			<!--===================================================-->
+			<!--END MAIN NAVIGATION-->
+
+		</div>
+
+	</div>
+	<!--===================================================-->
+	<!-- END OF CONTAINER -->
+		
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    
+    <script>
+
+
+
+    </script>
+{% endblock %}

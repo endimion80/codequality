@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+    {{parent()}}
+
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-base.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-login.css') }}">
+{% endblock %}
+
+{% block body %}
+
+{% include 'security/forgot_pass_modal.html.twig' %}
+
+    <div id="container" class="cls-container">
+		
+		<!-- LOGIN FORM -->
+		<!--===================================================-->
+		<div class="cls-content" style="padding-top: 6vh; text-align: left;">
+		
+
+        <h1>Datos Conex. BD</h1>
+        
+        <pre>
+        conn_env: {{ conn_env }}<br>
+        user: {{ user }}<br>
+        password: {{ password }}<br>
+        hostname: {{ hostname }}<br>
+        dbname: {{ dbname }}<br>
+        CA_CERT: {{ CA_CERT }}<br>
+        resultConection: {{ resultConection }}<br>
+        </pre>
+
+        <br>
+
+        <h1>Codigo llamada</h1>
+        <div>
+            $url -> url de llamada<br>
+            $arrayPost -> es un array de argumentos en caso de que la url tenga algo
+        </div>
+        <pre>
+         $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HEADER, FALSE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+            
+            //curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
+            
+            //curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+            //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+            
+            if (!is_null($arrayPost)){
+                curl_setopt($ch, CURLOPT_POST, TRUE);
+                curl_setopt($ch, CURLOPT_POSTFIELDS,  serialize($arrayPost));
+            }
+
+            $result_curl= curl_exec($ch);
+            $http_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+            $totalTime = curl_getinfo( $ch, CURLINFO_TOTAL_TIME );
+            
+            curl_close($ch);
+
+            $responseCode = strval($http_code);
+        </pre>
+
+        <h1>Ejemplo URL asitur</h1>
+        <h2>URL: <i>{{urlAsitur}}</i></h2>
+        <pre>{{responseAsitur}}</pre>
+        <h1>Ejemplo URL ETC</h1>
+        <h2>URL: <i>{{urlETC}}</i></h2>
+        <pre>{{responseETC}}</pre>
+
+
+
+		</div>
+		<!--===================================================-->
+		
+	</div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+   
+    </script>
+{% endblock %}

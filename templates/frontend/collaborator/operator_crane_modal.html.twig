@@ -1,0 +1,89 @@
+
+{% if operator.getAvailabilityOperatorStatus().getCode() == 'available' %}
+
+    <div class="row">
+        <div class="col-12">
+            <h4>{{"modal.title.assign_crane_operator_denied"|trans}}</h4>
+        </div>
+    </div>
+
+    <div class="row" style='margin-top: 25px;'>
+        <div class="col-12" style='text-align:center;'>
+            <button type="button" id="close_modal" class="btn btn-primary">{{ ("general.accept")|trans }}</button>       
+        </div>
+    </div>
+
+    <script>
+        $('#close_modal').click(function(){
+            $('#crane_operator_modal').modal('hide');
+        });
+    </script>
+
+{% else %}
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="labelGrey" style="margin-bottom: 20px; margin-top: 20px;">{{"detail_operator.assigned_crane"|trans}}:</div>
+            <select id="assignedCrane-input" name="assignedCrane" class="form-control filter_inputs select_inputs chosen-select">
+                <option value=""> {{"detail_operator.select.assigned_crane.placeholder"|trans}} </option>
+                {% for opAvCrane in operatorAvailableCranes %}
+                    <option value="{{opAvCrane.crane.id}}" {% if operator.crane and (operator.crane.id == opAvCrane.crane.id)%}selected{% endif %}>{{opAvCrane.crane.reference}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12" style='text-align:right;'>
+            <button type="button" id="modal_assign_crane" class="btn btn-primary">{{ ("general.save")|trans }}</button>       
+        </div>
+    </div>
+
+    <script>
+        $('#assignedCrane-input').chosen();
+        $('#modal_assign_crane').click(function(){
+            $.ajax({
+                url:'{{ path('operators_change_crane') }}',
+                data: {
+                    'operatorId': '{{ operator.id }}',
+                    'craneId': $('#assignedCrane-input').val()
+                },
+                type:"POST",
+                success: function(data){
+                    if (data.status){
+                        swal.fire({
+                            title: '{{ ("general.saved")|trans }}',
+                            html: '',
+                            icon: 'success',
+                            showConfirmButton: true
+                        });
+                    }
+                    else{
+                        swal.fire({
+                            title: '{{ ("modal.general.operation.error")|trans }}',
+                            html: '',
+                            icon: 'error',
+                            showConfirmButton: true
+                        });
+                    }
+
+                    $('#crane_operator_modal_body').empty();
+                    $('#crane_operator_modal').modal('hide');
+                    arrayChecked = []; // vaciamos el listado
+                    // para que no se pueda volver a usar el boton
+                    // hasta que no se seleccione otro operador
+                    $(".crane-button").prop('disabled', true); 
+                    reloadDataTable();
+                },
+                error: function(err){
+                    swal.fire({
+                        title: '{{ ("modal.general.operation.error")|trans }}',
+                        html: '',
+                        icon: 'error',
+                        showConfirmButton: true
+                    });
+                }
+            });
+        });
+    </script>
+{% endif %}

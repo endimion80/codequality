@@ -1,0 +1,828 @@
+{% extends 'includes/sidebar.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+    {{parent()}}
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-data_management.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-asitur_datatable.css') }}">
+    
+{% endblock %}
+
+{% block content %}
+
+    <!--Page Title-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="page-title">
+        <ul id='menuDataTable' class="nav nav-tabs nav-justified">
+            <li class="nav-item col-md-2">
+                <a class="nav-link active" data-toggle="tab" data-table='Interventions' href="#tabInterventions">{{"reporting.intervention"|trans}}</a>
+                <hr class="tab-active-hr">
+            </li>
+            <li class="nav-item col-md-2">
+                <a class="nav-link" data-toggle="tab" data-table='Invoices' href="#tabInvoices">{{"reporting.invoices"|trans}}</a>
+            </li>
+        </ul>
+    </div>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--End page title-->
+
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="tabInterventions" role="tabpanel" aria-labelledby="tabDates-tab">
+                {# Bloque de botones de la parte superior de la tabla #}
+                <div class="filters_and_buttons" style="padding: 0; display: flex; justify-content: space-between; margin-bottom: 25px;">
+                    <div id="top_left_div" style="padding: 0;">
+                        <button type="button" class="btn top_left-buttons delivery-note-button"> <img src="{{asset("media/datatables/eye.png")}}" height="18px"> &nbsp; {{('datatable.btn.deliveryNote')|trans|upper}}</button>
+                        {#<button type="button" class="btn top_left-buttons photos-button"> <img src="{{asset("media/datatables/eye.png")}}" height="18px"> &nbsp; {{('datatable.btn.photos')|trans|upper}}</button>#}
+                        <button type="button" class="btn top_left-buttons export-button"> <img src="{{asset("media/datatables/export.png")}}" height="18px"> &nbsp; {{('dataTable.asitur.export')|trans}}</button>
+                    </div>
+                    <div id="top_right_div" style="padding: 0; border-left: 2px #dbdbdb solid;">
+                        <button id="filter-button" type="button" class="btn filtering-buttons" data-target="#filter_panel_tabInterventions" data-toggle="collapse"> <img src="{{asset("media/datatables/filter.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.filter')|trans}}</button>
+                        <button id="search-button" type="button" class="btn filtering-buttons" data-target="#search_panel_tabInterventions" data-toggle="collapse"> <img src="{{asset("media/datatables/search.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.search')|trans}}</button>
+                    </div>
+                </div>
+
+                 {# Bloque de filtros en datatable #}
+                <div class="panel" style="box-shadow: none; -webkit-box-shadow: none; margin-bottom: 0;">
+                    <div id="filter_panel_tabInterventions" class="filter_panel collapse">
+                        <div class="panel-body">
+                            <div class="panel-custom-heading">
+                                <div class="panel-control">
+                                    <img class="delete_filters_value" src="{{asset("media/datatables/equis.png")}}" width="32px" height="32px">
+                                </div>
+                                <h3 class="panel-title" style="font-style: italic;">{{"general.filter"|trans}}</h3>
+                            </div>
+                            <form id='filter_Interventions'>
+                                <div class="row" style="margin: 0;">
+                                    <div class="input_filter_div col-sm-6 col-md-4 col-lg-3">
+                                        <label class="filter_labels">{{"data_management.input.label.code"|trans}}</label>
+                                        <input name="id" type="text" class="form-control filter_inputs" placeholder="{{"data_management.input.placeholder.code"|trans}}" spellcheck="false">
+                                    </div>
+
+                                    <div class="input_filter_div col-sm-6 col-md-4 col-lg-3">
+                                        <label class="filter_labels">{{"dataTable.intervention.reference"|trans}}</label>
+                                        <input name="reference" type="text" class="form-control filter_inputs" placeholder="{{"dataTable.intervention.placeholder.reference"|trans}}" spellcheck="false">
+                                    </div>
+
+                                    <div class="input_filter_div col-sm-6 col-md-4 col-lg-3">
+                                        <label class="filter_labels">{{"dataTable.intervention.dateCreation"|trans}}</label>
+                                        <input name="reception_date" type="text" class="form-control filter_inputs" placeholder="{{"dataTable.intervention.placeholder.dateCreation"|trans}}" spellcheck="false">
+                                    </div>
+                                    
+                                    <div class="input_filter_div col-sm-6 col-md-4 col-lg-3">
+                                        <label class="filter_labels">{{"dataTable.intervention.town"|trans}}</label>
+                                        <input name="town" type="text" class="form-control filter_inputs" placeholder="{{"dataTable.intervention.placeholder.town"|trans}}" spellcheck="false">
+                                    </div>
+
+                                </div>
+                                <div class="row" style="margin: 0;">
+                                    <div class="input_filter_div col-sm-6 col-md-4 col-lg-3">
+                                        <label class="filter_labels">{{"dataTable.intervention.isRis"|trans}}</label>
+                                        <select name="is_ris" class="form-control filter_inputs select_inputs chosen-select">
+                                            <option value =''>----</option>
+                                            <option value ='0'>{{"general.no_ris"|trans}}</option>
+                                            <option value ='1'>{{"general.ris"|trans}}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="input_filter_div col-sm-6 col-md-4 col-lg-3">
+                                        <label class="filter_labels">{{"datatable.reporting.risType"|trans}}</label>
+                                        <select name="management_type" class="form-control filter_inputs select_inputs chosen-select">
+                                            <option value =''>----</option>
+                                            {% for management_type in crane_management_type %}
+                                                <option value ='{{ management_type.id }}'>{{management_type.description|trans}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="input_filter_div col-sm-6 col-md-4 col-lg-3">
+                                        <label class="filter_labels">{{"datatable.reporting.status"|trans}}</label>
+                                        <select name="intervention_status" class="form-control filter_inputs select_inputs chosen-select">
+                                            <option value =''>----</option>
+                                            {% for status in intervention_status %}
+                                                <option value ='{{ status.id }}'>{{status.description|trans}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                {# ############################## #}
+
+                {# Bloque de búsqueda en datatable #}
+                <div class="panel" style="box-shadow: none; -webkit-box-shadow: none; margin-bottom: 0;">
+                    <div id="search_panel_tabInterventions" class="search_panel collapse">
+                        <div class="panel-body">
+                            <div class="input-group">
+                                <input id="search-input-Interventions" class='search-input' type="text" class="form-control" placeholder="{{"general.search"|trans}}..." spellcheck="false" autocomplete="false">
+                                <span id="delete_search_value" class="delete_search_value input-group-addon"><img src="{{asset("media/datatables/equis.png")}}" width="32px" height="32px"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# ############################### #}
+
+                <hr class="datatable_hr">
+
+                <table id="tableInterventions" class="table">
+                    <thead>
+                        <tr>
+                            <th><input type='checkbox' class='checkboxFullList imgCheckbox'/></th>
+                            <th>{{"datatable.reporting.reference"|trans|upper}}</th>
+                            <th>{{"datatable.reporting.dateFrom"|trans|upper}}</th>
+                            <th>{{"datatable.reporting.dateTo"|trans|upper}}</th>
+                            <th>{{"datatable.reporting.town"|trans|upper}}</th>
+                            <th>{{"datatable.reporting.km"|trans|upper}}</th>
+                            <th>{{"datatable.reporting.ris"|trans|upper}}</th>
+                            <th>{{"datatable.reporting.risType"|trans|upper}}</th>
+                            <th>{{"datatable.reporting.status"|trans|upper}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+
+            </div>    
+            <div class="tab-pane" id="tabInvoices" role="tabpanel" aria-labelledby="tabDates-tab">
+                
+                <h1>{{ ("general.toDefine")|trans }}</h1>
+
+                {# Bloque de botones de la parte superior de la tabla #}
+                {#
+                <div class="filters_and_buttons" style="padding: 0; display: flex; justify-content: space-between; margin-bottom: 25px;">
+                    <div id="top_left_div" style="padding: 0;">
+                        <button type="button" class="btn top_left-buttons export-button"> <img src="{{asset("media/datatables/export.png")}}" height="18px"> &nbsp; {{('dataTable.asitur.export')|trans}}</button>
+                    </div>
+                    <div id="top_right_div" style="padding: 0; border-left: 2px #dbdbdb solid;">
+                        <button id="filter-button" type="button" class="btn filtering-buttons" data-target="#filter_panel_tabInvoices" data-toggle="collapse"> <img src="{{asset("media/datatables/filter.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.filter')|trans}}</button>
+                        <button id="search-button" type="button" class="btn filtering-buttons" data-target="#search_panel_tabInvoices" data-toggle="collapse"> <img src="{{asset("media/datatables/search.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.search')|trans}}</button>
+                    </div>
+                </div>#}
+
+                {# Bloque de filtros en datatable #}
+                {#
+                <div class="panel" style="box-shadow: none; -webkit-box-shadow: none; margin-bottom: 0;">
+                    <div id="filter_panel_tabInvoices" class="filter_panel collapse">
+                        <div class="panel-body">
+                            <div class="panel-custom-heading">
+                                <div class="panel-control">
+                                    <img class="delete_filters_value" src="{{asset("media/datatables/equis.png")}}" width="32px" height="32px">
+                                </div>
+                                <h3 class="panel-title" style="font-style: italic;">{{"general.filter"|trans}}</h3>
+                            </div>
+                            <form id='filter_Invoices'>
+                                <div class="row" style="margin: 0;">
+                                    <div class="input_filter_div col-sm-6 col-md-4 col-lg-3">
+                                        <label class="filter_labels">{{"data_management.input.label.code"|trans}}</label>
+                                        <input name="id" type="text" class="form-control filter_inputs" placeholder="{{"data_management.input.placeholder.code"|trans}}" spellcheck="false">
+                                    </div>
+
+                                    <div class="input_filter_div col-sm-6 col-md-4 col-lg-3">
+                                        <label class="filter_labels">{{"dataTable.intervention.reference"|trans}}</label>
+                                        <input name="reference" type="text" class="form-control filter_inputs" placeholder="{{"dataTable.intervention.placeholder.reference"|trans}}" spellcheck="false">
+                                    </div>
+
+                                    <div class="input_filter_div col-sm-6 col-md-4 col-lg-3">
+                                        <label class="filter_labels">{{"dataTable.intervention.dateCreation"|trans}}</label>
+                                        <input name="reception_date" type="text" class="form-control filter_inputs" placeholder="{{"dataTable.intervention.placeholder.dateCreation"|trans}}" spellcheck="false">
+                                    </div>
+                                    <div class="input_filter_div col-sm-6 col-md-4 col-lg-3">
+                                        <label class="filter_labels">{{"dataTable.intervention.address"|trans}}</label>
+                                        <input name="vh_address" type="text" class="form-control filter_inputs" placeholder="{{"dataTable.intervention.placeholder.address"|trans}}" spellcheck="false">
+                                    </div>
+                                </div>
+                                <div class="row" style="margin: 0;">
+                                    <div class="input_filter_div col-sm-6 col-md-4 col-lg-3">
+                                        <label class="filter_labels">{{"dataTable.intervention.fails"|trans}}</label>
+                                        <select name="failure_type" class="form-control filter_inputs select_inputs chosen-select">
+                                            <option value =''>----</option>
+                                            {% for failure_type in failure_types %}
+                                                <option value ='{{ failure_type.id }}'>{{failure_type.description|trans}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="input_filter_div col-sm-6 col-md-4 col-lg-3">
+                                        <label class="filter_labels">{{"dataTable.intervention.isRis"|trans}}</label>
+                                        <select name="is_ris" class="form-control filter_inputs select_inputs chosen-select">
+                                            <option value =''>----</option>
+                                            <option value ='0'>{{"general.no_ris"|trans}}</option>
+                                            <option value ='1'>{{"general.ris"|trans}}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="input_filter_div col-sm-6 col-md-4 col-lg-3">
+                                        <label class="filter_labels">{{"dataTable.intervention.request"|trans}}</label>
+                                        <input name="request_type" type="text" class="form-control filter_inputs" placeholder="{{"dataTable.intervention.placeholder.request"|trans}}" spellcheck="false">
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                {# ############################## #}
+
+                {# Bloque de búsqueda en datatable #}
+                {#<div class="panel" style="box-shadow: none; -webkit-box-shadow: none; margin-bottom: 0;">
+                    <div id="search_panel_tabInvoices" class="search_panel collapse">
+                        <div class="panel-body">
+                            <div class="input-group">
+                                <input id="search-input-Invoices" class='search-input' type="text" class="form-control" placeholder="{{"general.search"|trans}}..." spellcheck="false" autocomplete="false">
+                                <span id="delete_search_value" class="delete_search_value input-group-addon"><img src="{{asset("media/datatables/equis.png")}}" width="32px" height="32px"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# ############################### #}
+                {#
+                <hr class="datatable_hr">
+
+                <table id="tableInvoices" class="table">
+                    <thead>
+                        <tr>
+                            <th><input type='checkbox' class='checkboxFullList imgCheckbox'/></th>
+                            <th>{{"dataTable.intervention.reference"|trans|upper}}</th>
+                            <th>{{"dataTable.intervention.dateCreation"|trans|upper}}</th>
+                            <th>{{"dataTable.intervention.datePickup"|trans|upper}}</th>
+                            <th>{{"dataTable.intervention.address"|trans|upper}}</th>
+                            <th>{{"dataTable.intervention.fails"|trans|upper}}</th>
+                            <th>{{"dataTable.intervention.isRis"|trans|upper}}</th>
+                            <th>{{"dataTable.intervention.request"|trans|upper}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+                #}
+            </div>    
+        </div>
+    </div>
+    <!--===================================================-->
+    <!--End page content-->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+
+    <script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
+    <script src="{{ asset('plugins/jszip/jszip-utils.js') }}"></script>
+    <script src="{{ asset('plugins/jszip/filesaver.min.js')}}"></script>
+
+    <script>
+        var table = [];
+        table['Interventions'] = null;
+        table['Invoices'] = null;
+
+        var arrayChecked = [];
+        arrayChecked['Interventions'] = [];
+        arrayChecked['Invoices'] = [];
+
+        $(document).ready(function(){
+            var time = null;
+
+            $("#reporting_li").addClass("active");
+            $(".chosen-select").chosen({disable_search: false});
+
+            // efecto tabs
+            $('.nav-link').click(function(){
+                $('.nav-link').removeClass('active');
+                $('.tab-active-hr').remove();
+                $(this).addClass('active');
+                $(this).append("<hr class='tab-active-hr'>");
+
+                var tableSelected = getActiveTable();
+
+                if (table[tableSelected] != null){
+                    $('#table' + tableSelected).DataTable().destroy();
+                    table[tableSelected] = null;
+                }
+
+                switch(tableSelected){
+                    case 'Interventions':  
+                        createTableInterventions(); break;
+                    case 'Invoices':
+                        createTableInvoices();  break;
+                }
+            });
+
+            $('.nav-link').first().trigger('click'); // accionamos el primero por defecto
+
+            $('.delivery-note-button').click(function(){
+                var tableActive = getActiveTable(); 
+                
+                if (!arrayChecked[tableActive].length){
+                    swal.fire({
+                        title: '{{ ("general.needSelectRow")|trans }}',
+                        html: '',
+                        icon: 'warning',
+                        showConfirmButton: true
+                    });
+                }
+                else{
+                    swal.fire({
+                        title: '{{ ("general.loading")|trans }}',
+                        html: '',
+                        icon: 'warning',
+                        showConfirmButton: false
+                    });
+                    console.log(arrayChecked[tableActive]);
+                    $.ajax({
+                        url:'{{ path('download_delivery_note') }}',
+                        data: {
+                            'interventionList': arrayChecked[tableActive],
+                            'smartPreview': true
+                        },
+                        type:"POST",
+                        success: function(data){
+                            if (!data.status){
+                                swal.fire({
+                                    title: '{{ ("general.export.error")|trans }}',
+                                    html: data.message,
+                                    icon: 'error',
+                                    showConfirmButton: true
+                                });    
+                            }else{
+                                if(data.data.isZip == 'false'){
+                                    var fileName = data.data.fileName;
+                                    var filePath = data.data.filePath;
+                                    var formTmp = document.createElement('form');
+                                    
+                                    if (data.data.type == 'visualize')
+                                        $(formTmp).attr('action',"{{ path('visualize_file') }}");
+                                    else if (data.data.type == 'download')
+                                        $(formTmp).attr('action',"{{ path('download_file') }}");
+                                                                            
+                                    $(formTmp).attr('name','formTmp');
+                                    $(formTmp).attr('target','_blank');
+                                    $(formTmp).attr('enctype','multipart/form-data');
+                                    $(formTmp).attr('method','post');
+                                    $(formTmp).append("<input type='hidden' name='fileName' value='" + fileName + "'/>");
+                                    $(formTmp).append("<input type='hidden' name='filePath' value='" + filePath + "'/>");
+                                    document.body.appendChild(formTmp);
+                                    document.formTmp.submit();
+                                    document.body.removeChild(formTmp);
+                                    swal.fire({
+                                        title: '{{ ("general.export.success")|trans }}',
+                                        html: '',
+                                        icon: 'success',
+                                        showConfirmButton: true
+                                    });         
+                                }
+                                else{
+                                    var zip = new JSZip();
+                                    var baseUrlDownload = "{{ path('download_file_get',{ 'fileName': 'XXXXX' ,'filePath': 'YYYYY' }) }}";
+
+                                    function urlToPromise(url) {
+                                        return new Promise(function(resolve, reject) {
+                                            JSZipUtils.getBinaryContent(url, function (err, data) {
+                                                if(err) {
+                                                    reject(err);
+                                                    swal.fire({
+                                                        title: '{{ ("general.export.error")|trans }}',
+                                                        html: '',
+                                                        icon: 'error',
+                                                        showConfirmButton: true
+                                                    });                                                       
+                                                } else {
+                                                    resolve(data);
+                                                }
+                                            });
+                                        });
+                                    }
+                                    
+                                    for(var i = 0; i < data.data.files.length; i++){
+                                        var finalUrl = baseUrlDownload.replace("XXXXX", data.data.files[i].fileName);
+                                        finalUrl = finalUrl.replace("YYYYY", data.data.files[i].filePath);
+                                        //console.log(finalUrl);
+                                        zip.file(data.data.files[i].fileName, urlToPromise(finalUrl), {binary:true});
+                                    }
+
+                                    // when everything has been downloaded, we can trigger the dl
+                                    zip.generateAsync({type:"blob"}, function updateCallback(metadata) {
+                                        //$(".sweet-alert").find('p').html(metadata.percent.toFixed(2) + " %");
+                                        if(metadata.percent.toFixed(2) == 100){
+                                            
+                                            swal.fire({
+                                                title: '{{ ("general.export.success")|trans }}',
+                                                html: '',
+                                                icon: 'success',
+                                                showConfirmButton: true
+                                            });          
+                                        }
+                                    })
+                                    .then(function callback(blob) {
+                                        saveAs(blob, "Albaranes.zip"); // see FileSaver.js
+                                    });
+                                }
+                            }
+                        },
+                        error:function(err){
+                            swal.fire({
+                                title: '{{ ("general.export.error")|trans }}',
+                                html: '',
+                                icon: 'error',
+                                showConfirmButton: true
+                            });
+                        }
+                    });
+                   
+                }
+            });
+
+            // visualización / descarga fotos ¿?
+            $('.photos-button').click(function(){
+                swal.fire({
+                    title: '{{ ("general.toDefine")|trans }} Fotos',
+                    html: '',
+                    icon: 'warning',
+                    showConfirmButton: true
+                });
+            });
+
+            {#* Borra el contenido de los inputs en el datatable #}
+            $(".delete_filters_value").click(function() {
+                $(".filter_inputs").val('');
+                $(".select_inputs").trigger("chosen:updated");
+                reloadDataTable();
+            });  
+
+            $(".delete_search_value").click(function() {
+                $(".search-input").val('');
+                reloadDataTable();
+            });
+
+            /* TODOOO */
+            function reloadDataTable(){
+                var tableActive = getActiveTable(); 
+                var form_filters = new Object();
+                $('#filter_' + tableActive+ ' .filter_inputs').each(function () {
+                    form_filters[$(this).attr('name')] = $(this).val();
+                });
+
+                var fullFilters = {
+                    'form_filters': form_filters,
+                    'search_filter': $('#search-input-' + tableActive).val(),
+                    'type': tableActive
+                }
+                
+                $("#table" + tableActive).DataTable().search(JSON.stringify(fullFilters)).draw();
+                
+                // Si lo activamos, cada vez que se realice una búsqueda con el filtros
+                //arrayChecked[tableActive] = []; //? duda de si hacerlo
+            }
+
+            $('.search-input').keyup(function() {
+                clearInterval(time);
+                time = setTimeout(function() {
+                    reloadDataTable();
+                }, 1500);
+            });
+
+            $('.filter_inputs').keyup(function() {
+                clearInterval(time);
+                time = setTimeout(function() {
+                    reloadDataTable();
+                }, 1500);
+            });
+
+            $('.select_inputs').on('change', function(){
+                reloadDataTable();
+            });
+
+
+            $(".export-button").click(function() {
+                var tableActive = getActiveTable(); 
+
+                if (!arrayChecked[tableActive].length){
+                    swal.fire({
+                        title: '{{ ("general.needSelectRow")|trans }}',
+                        html: '',
+                        icon: 'warning',
+                        showConfirmButton: true
+                    });
+                }
+                else{
+                    $.ajax({
+                        url:'{{ path('reporting_table_export_excel') }}',
+                        data: {
+                            'interventionList': arrayChecked[tableActive]
+                        },
+                        type:"POST",
+                        success: function(data){
+                            //console.log(data);
+                            
+                            swal.fire({
+                                title: '{{ ("general.export.success")|trans }}',
+                                html: "",
+                                icon: 'success',
+                                showConfirmButton: true
+                            });
+                            if (data.status){
+                                var fileName = data.data.fileName;
+                                var filePath = data.data.filePath;
+                                
+                                var formTmp = document.createElement('form');
+                                $(formTmp).attr('action',"{{ path('download_file') }}");
+                                $(formTmp).attr('name','formTmp');
+                                $(formTmp).attr('target','_blank');
+                                $(formTmp).attr('enctype','multipart/form-data');
+                                $(formTmp).attr('method','post');
+                                $(formTmp).append("<input type='hidden' name='fileName' value='" + fileName + "'/>");
+                                $(formTmp).append("<input type='hidden' name='filePath' value='" + filePath + "'/>");
+                                document.body.appendChild(formTmp);
+                                document.formTmp.submit();
+                                document.body.removeChild(formTmp);
+                            }
+                        },
+                        error:function(err){
+                            swal.fire({
+                                title: '{{ ("general.export.error")|trans }}',
+                                html: '',
+                                icon: 'error',
+                                showConfirmButton: true
+                            });
+                        }
+                    });
+                }
+            });
+        });// document ready
+
+        {# Creación Datatable #}
+        function createTableInterventions() {
+            table['Interventions'] = $('#tableInterventions').DataTable({
+                dom: "<'row'<'col-sm-12't>><'row'<'col-sm-5'l><'col-sm-7'p>>",
+                order: [0, 'ASC'],
+                searching: true,
+                rowReorder: true,
+                columnDefs: [
+                    { orderable: true, className: 'reorder', targets: [1,2,4,5,7,8] },
+                    { orderable: false, targets: [0,3,6,9] }
+                ],
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "{{('dataTable.general.lengthMenu.all')|trans}}"]
+                ],
+                responsive: false,
+                autoWidth: true,
+                scrollX: true,
+                processing: false,
+                serverSide: true,
+                pagingType: "full_numbers",
+                language: {
+                    "sProcessing": "{{ ('dataTable.general.language.sProcessing ') | trans }}",
+                    "sLengthMenu": "{{ ('dataTable.asitur.language.sLengthMenu') | trans}}: _MENU_",
+                    "sZeroRecords": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                    "sEmptyTable": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                    "sInfo": "{{ ('dataTable.general.language.sInfo') | trans }}",
+                    "sInfoEmpty": "{{ ('dataTable.general.language.sInfoEmpty') | trans }}",
+                    "sInfoFiltered": "{{ ('dataTable.general.language.sInfoFiltered') | trans }}",
+                    "sInfoPostFix": "",
+                    "sSearch": "{{ ('dataTable.general.language.sSearch') | trans }}:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "{{ ('dataTable.general.language.sLoadingRecords') | trans }}",
+                    "oPaginate": {
+                        "sFirst": "<<",
+                        "sLast": ">>",
+                        "sNext": ">",
+                        "sPrevious": "<",
+                    },
+                    "oAria": {
+                        "sSortAscending": ": {{ ('dataTable.general.language.oAria.sSortAscending') | trans }}",
+                        "sSortDescending": ": {{ ('dataTable.general.language.oAria.sSortDescending') | trans }}"
+                    },
+                },
+                ajax: {
+                    url: "{{ path('reporting_table') }}",
+                    method: 'POST',
+                    data: {
+                        'type': 'Interventions'
+                    }
+                },
+                initComplete: function() {},
+                drawCallback: function() {
+                    // check checked
+                    $('.checkboxInterventions').each(function(){
+                        var intervention_id = $(this).data('intervention');
+                        var index = arrayChecked['Interventions'].indexOf(intervention_id);
+                        if (index > -1) 
+                            $(this).prop('checked', true);
+                    });
+
+                    // recarga visual
+                    reloadCheckbox();
+
+                    // Acción de actualización
+                    $('.checkboxInterventions').change(function(){
+                        var intervention_id = $(this).data('intervention');
+                        if ($(this).is(":checked")){
+                            if(!arrayChecked['Interventions'].includes(intervention_id))
+                                arrayChecked['Interventions'].push(intervention_id);
+
+                            $(this).closest("tr").addClass("rowSelected");
+                        }
+                        else{
+                            var index = arrayChecked['Interventions'].indexOf(intervention_id);
+                            if (index > -1) 
+                                arrayChecked['Interventions'].splice(index, 1);
+
+                            $(this).closest("tr").removeClass("rowSelected");
+                        }
+                    });// change
+                   
+                },
+                columns: [
+                    {data: {}, render: function(data, row) {
+                        var html = "<input type='checkbox' class='checkboxInterventions imgCheckbox' data-intervention='"+data.id+"'/>";
+                        return html;
+                        }
+                    },
+                    {data: 'reference'},
+                    {data: 'reception_date'},
+                    {data: 'date_last_update'},
+                    {data: 'town'},
+                    {data: 'distance'},
+                    {data: 'is_ris'},
+                    {data: 'crane_management_type'},
+                    {data: 'intervention_status'},
+                    {data: {}, render: function(data, row) {
+                            html = '<form action="{{ path("intervention_details") }}" method="POST" target="_blank" style="margin: 0; display: flex; justify-content: center; align-items: center;">';
+                            html += '<input type="hidden" name="intervention_id" value="'+data.id+'">';
+                            html += '<button class="btn detail-button" style="color: #a4b0c0; padding: 0; box-shadow: none;"><i class="fa fa-2x fa-chevron-right"></i></button>';
+                            html += '</form>'
+                            return html;
+                        }
+                    }
+                ]
+            });
+        }
+
+        function createTableInvoices(){
+            swal.fire({
+                title: '{{ ("general.toDefine")|trans }} - Facturacion',
+                html: '',
+                icon: 'warning',
+                showConfirmButton: true
+            });
+        }
+/*
+        function createTableInvoices() {
+            table['Invoices'] = $('#tableInvoices').DataTable({
+                dom: "<'row'<'col-sm-12't>><'row'<'col-sm-5'l><'col-sm-7'p>>",
+                order: [0, 'ASC'],
+                searching: true,
+                rowReorder: true,
+                columnDefs: [
+                    { orderable: true, className: 'reorder', targets: [1,2,4,5,7] },
+                    { orderable: false, targets: [0,3,6,8] }
+                ],
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "{{('dataTable.general.lengthMenu.all')|trans}}"]
+                ],
+                responsive: false,
+                autoWidth: true,
+                scrollX: true,
+                processing: false,
+                serverSide: true,
+                pagingType: "full_numbers",
+                language: {
+                    "sProcessing": "{{ ('dataTable.general.language.sProcessing ') | trans }}",
+                    "sLengthMenu": "{{ ('dataTable.asitur.language.sLengthMenu') | trans}}: _MENU_",
+                    "sZeroRecords": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                    "sEmptyTable": "{{ ('dataTable.general.language.sZeroRecords') | trans }}",
+                    "sInfo": "{{ ('dataTable.general.language.sInfo') | trans }}",
+                    "sInfoEmpty": "{{ ('dataTable.general.language.sInfoEmpty') | trans }}",
+                    "sInfoFiltered": "{{ ('dataTable.general.language.sInfoFiltered') | trans }}",
+                    "sInfoPostFix": "",
+                    "sSearch": "{{ ('dataTable.general.language.sSearch') | trans }}:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "{{ ('dataTable.general.language.sLoadingRecords') | trans }}",
+                    "oPaginate": {
+                        "sFirst": "<<",
+                        "sLast": ">>",
+                        "sNext": ">",
+                        "sPrevious": "<",
+                    },
+                    "oAria": {
+                        "sSortAscending": ": {{ ('dataTable.general.language.oAria.sSortAscending') | trans }}",
+                        "sSortDescending": ": {{ ('dataTable.general.language.oAria.sSortDescending') | trans }}"
+                    },
+                },
+                ajax: {
+                    url: "{{ path('interventions_table') }}",
+                    method: 'POST',
+                    data: {
+                        'type': 'Invoices'
+                    }
+                },
+                initComplete: function() {},
+                drawCallback: function() {
+                    // check checked
+                    $('.checkboxInvoices').each(function(){
+                        var intervention_id = $(this).data('intervention');
+                        var index = arrayChecked['Invoices'].indexOf(intervention_id);
+                        if (index > -1) 
+                            $(this).prop('checked', true);
+                    });
+
+                    // recarga visual
+                    reloadCheckbox();
+
+                    // Acción de actualización
+                    $('.checkboxInvoices').change(function(){
+                        var intervention_id = $(this).data('intervention');
+                        if ($(this).is(":checked")){
+                            if(!arrayChecked['Invoices'].includes(intervention_id))
+                                arrayChecked['Invoices'].push(intervention_id);
+                        }
+                        else{
+                            var index = arrayChecked['Invoices'].indexOf(intervention_id);
+                            if (index > -1) 
+                                arrayChecked['Invoices'].splice(index, 1);
+                        }
+                    });// change
+                },
+                columns: [
+                    {data: {}, render: function(data, row) {
+                        var html = "<input type='checkbox' class='checkboxInvoices imgCheckbox' data-intervention='"+data.id+"'/>";
+                        return html;
+                        }
+                    },
+                    {data: 'reference'},
+                    {data: 'reception_date'},
+                    {data: 'located_Vh_Date'},
+                    
+                    {data: {}, render: function(data, row) {
+                        var html = data.vh_address;
+                        if (data.zip_code != '' && data.zip_code !== undefined)
+                            html += ' ' +  data.zip_code;
+                        return html;
+                        }
+                    },
+
+                    {data: 'failure_type'},
+                    {data: 'is_ris'},
+                    {data: 'request_type'},
+                    {data: {}, render: function(data, row) {
+                            html = '<form action="{{ path("intervention_details") }}" method="POST" target="_blank" style="margin: 0; display: flex; justify-content: center; align-items: center;">';
+                            html += '<input type="hidden" name="intervention_id" value="'+data.id+'">';
+                            html += '<button class="btn detail-button" style="color: #a4b0c0; padding: 0; box-shadow: none;"><i class="fa fa-2x fa-chevron-right"></i></button>';
+                            html += '</form>'
+                            return html;
+                        }
+                    }
+                ]
+            });
+        }
+*/
+        {# #### Datatable #### #}
+
+        function reloadCheckbox(){
+            $('.imgCheckbox').imgCheckbox({
+                uncheckPath: "{{ asset('media/uncheck_empty.png') }}",
+                checkPath: "{{ asset('media/check.png') }}"
+            });
+
+            $('.checkboxFullList').imgCheckbox({
+                uncheckPath: "{{ asset('media/uncheck_empty.png') }}",
+                checkPath: "{{ asset('media/check.png') }}"
+            });
+        }
+
+        $('.checkboxFullList').change(function(){
+            var tableActive = getActiveTable(); 
+            
+            var active = false;
+            if ($(this).is(":checked"))
+                active = true;
+            
+            $('.checkbox' + tableActive).each(function(){
+                $(this).prop('checked', active);
+                $(this).trigger('update');
+                $(this).trigger('change');
+            });// change
+        });
+
+        function getActiveTable(){
+            var tableActive = '';                 
+            $('#menuDataTable li a').each(function(){
+                if ($(this).hasClass('active'))
+                    tableActive = $(this).data('table');
+            });
+            return tableActive;
+        }
+
+    </script>
+
+{% endblock %}

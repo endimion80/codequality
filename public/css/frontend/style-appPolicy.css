@@ -1,0 +1,21 @@
+body {
+    background-color: var(--main-blue);
+}
+
+.policy_full_panel {
+    background-color: white;
+    border-radius: 1px !important;
+}
+
+.policy_title_panel {
+    padding: 15px 0px 10px 0px !important;
+    text-align: center;
+}
+
+.policy_panel {
+    padding: 0px 15px 0px 15px !important;
+    border-bottom: solid 20px transparent;
+    text-align: justify;
+}
+
+

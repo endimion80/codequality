@@ -1,0 +1,101 @@
+security:
+    encoders:
+        App\Entity\CollaboratorUser:
+            algorithm: 'bcrypt'
+            cost: 13
+        App\Entity\Operator:
+            algorithm: 'bcrypt'
+            cost: 13
+        App\Entity\User:
+            algorithm: 'bcrypt'     
+            cost: 13
+
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        frontend_user_provider:
+            entity:
+                class: App\Entity\CollaboratorUser
+                property: email  
+        api_user_provider:
+            entity:
+                class: App\Entity\Operator
+                property: email
+        backend_user_provider:
+            entity:
+                class: App\Entity\User
+                #property: email    
+                
+        # used to reload user from session & other features (e.g. switch_user)
+        # used to reload user from session & other features (e.g. switch_user)
+    firewalls:        
+            
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        backend:
+            anonymous: ~
+            pattern: ^/backend
+            provider: backend_user_provider
+            guard:
+                authenticators:
+                    - App\Security\BackendAuthenticator
+            logout:
+                path: backend_logout
+                target: backend_login
+            remember_me:
+                secret:   '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                path:   /
+                name: REMEMBERME
+
+        frontend:
+            anonymous: lazy
+            provider: frontend_user_provider
+            guard:
+                authenticators:
+                    - App\Security\CollaboratorUserAuthenticator
+            logout:
+                path: app_logout
+                target: app_login
+            remember_me:
+                secret:   '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                path:     /
+                
+        api:
+            anonymous: lazy
+            provider: api_user_provider
+            guard:
+                authenticators:
+                    - App\Security\OperatorAuthenticator
+
+        
+
+                # where to redirect after logout
+                # target: app_any_route            
+            # remember_me:
+            #     key: cupon1234
+            #     lifetime: 604800
+                #domain: %DOMAIN_COOKIE%        
+           
+                # where to redirect after logout
+                # target: app_any_route
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/(es|en|ru|it|pt|fr)/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/backend/(login|login_check|logout), roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/(login|login_check|logout), roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/backend, roles: ROLE_BACKEND }
+        - { path: ^/user, roles: ROLE_USER }
+        - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }

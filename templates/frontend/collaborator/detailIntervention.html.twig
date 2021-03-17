@@ -1,0 +1,623 @@
+{% extends 'includes/sidebar.html.twig' %}
+
+{% block title %}Asitur - {{ intervention.reference }}{% endblock %}
+
+{% block stylesheets %}
+{{parent()}}
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-data_management.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-asitur_datatable.css') }}">
+{% endblock %}
+
+{% block content %}
+
+    <!--Page Title-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--End page title-->
+
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+
+        {# Bloque de botones de la parte superior de la tabla #}
+        <div class="filters_and_buttons" style="padding: 0; display: flex; justify-content: space-between; margin-bottom: 25px;">
+            <div id="top_left_div" style="padding: 0;">
+                <a class="go_back_link" href="{{ path('intervention_list') }}"><i class="fa fa-2x fa-chevron-left"></i>{{"general.go_back_to_list"|trans}}</a>
+                
+                {# Editar #}
+                {% if mode == "read_only" %}
+                    <form id="edit_form" action="{{ path('intervention_details') }}" method="POST" style="display: none;">
+                        <input type="hidden" name="intervention_id" value="{{ intervention.id }}">
+                        <input type="hidden" name="mode" value="edit_allowed">
+                    </form>
+                    <button type="button" class="btn top_left-buttons edit-button"> <img src="{{asset("media/datatables/lapiz-icono.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.edit')|trans}}</button>
+                {% else %}
+                    <button disabled type="button" class="btn top_left-buttons edit-button" style="font-weight: bold; color: var(--main-blue); opacity: 1; filter: var(--filter-main-blue);"> <img src="{{asset("media/datatables/lapiz-icono.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.edit')|trans}}</button>
+                {% endif %}
+                <button type="button" class="btn top_left-buttons export-button"> <img src="{{asset("media/datatables/export.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.export')|trans}}</button>
+                <button type="button" class="btn top_left-buttons delivery-note-button"> <img src="{{asset("media/datatables/eye.png")}}" height="18px"> &nbsp; {{('datatable.btn.deliveryNote')|trans|upper}}</button>
+            </div>
+
+            {% if mode == "edit_allowed" %}
+            <div id="top_right_div" style="padding: 0; border-left: 2px #dbdbdb solid;">
+                {# Guardar #}
+                <button id="save-button" type="button" class="btn filtering-buttons"> <img src="{{asset("media/save.png")}}" width="17px" height="18px"> &nbsp; {{('general.save')|trans|upper}}</button>
+            </div>
+            {% endif %}
+
+        </div>
+        {# ################################################## #}
+        
+        <hr id="datatable_hr" class="datatable_hr" style="margin-bottom: 20px;">
+
+        <!--Panel Datos de sucursal-->
+        <div class="panel">
+            <!--Panel heading-->
+            <div class="panel-heading custom_collapse_panel_heading" data-target="#intervention_data_body" data-toggle="collapse">
+                <div class="panel-control">
+                    <button class="btn btn-default" ><i class="fa fa-chevron-down"></i></button>
+                </div>
+                <h3 class="panel-title" style="font-weight: 600;">{{'detail_intervention.intervention_data'|trans}}</h3>
+            </div>
+            <!--Panel body-->
+            <div id="intervention_data_body" class="collapse in">
+                <div class="panel-body">
+                    
+                    <div class="row" style="margin: 0px 0px 10px 0px; font-size: 16px;">
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.code"|trans}}</label>
+                            {% if mode == "read_only" or TRUE %}
+                                <br/>
+                                <p class="labelGrey_16">{{ intervention.code }}</p>
+                            {% else %}
+                                <input name="code" value="{{ intervention.code }}" type="text" class="form-control asitur_input data_input" spellcheck="false" maxlength="15">
+                            {% endif %}
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.reference"|trans}}</label>
+                            {% if mode == "read_only" or TRUE %}
+                                <br/><p class="labelGrey_16">{{ intervention.reference }}</p>
+                            {% else %}
+                                <input name="reference" value="{{ intervention.reference }}" type="text" class="form-control asitur_input data_input" spellcheck="false" maxlength="15">
+                            {% endif %}
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.insurance_entity"|trans}}</label>
+                            {% if mode == "read_only" or TRUE %}
+                                <br/><p class="labelGrey_16">{{ intervention.insuranceEntity.name }}</p>
+                            {% else %}
+                                <select name="insuranceEntity" class="select_inputs detailSelect data_input chosen" tabindex="-1">
+                                    <option value=""> ---- </option>
+                                    {% for insuranceEntity in insuranceEntityList %}
+                                        <option value="{{ insuranceEntity.id}}" {% if insuranceEntity.id == intervention.insuranceEntity.id %}selected{% endif %}> {{ insuranceEntity.name }} </option>
+                                    {% endfor %}
+                                </select>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.reference_cia"|trans}}</label>
+                            {% if mode == "read_only"  or TRUE %}
+                                <br/><p class="labelGrey_16">(?)</p>
+                                {#<br/><p class="labelGrey_16">{{ intervention.reference }}</p>#}
+                            {% else %}
+                                <br/><p class="labelGrey_16">(?)</p>
+                                {#<input name="reference" value="{{ intervention.reference }}" type="text" class="form-control asitur_input data_input" spellcheck="false" maxlength="15">#}
+                            {% endif %}
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.date"|trans}}</label>
+                            {% if mode == "read_only"  or TRUE %}
+                                <br/><p class="labelGrey_16">{{ intervention.receptionDate|date(collaborator.getFullDateFormat()) }}</p>
+                            {% else %}
+                                <br/><p class="labelGrey_16">{{ intervention.receptionDate|date(collaborator.getFullDateFormat()) }}</p>
+                                {#<input name="reference" value="{{ intervention.reference }}" type="text" class="form-control asitur_input data_input" spellcheck="false" maxlength="15">#}
+                            {% endif %}
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.status"|trans}}</label>
+                            {% if mode == "read_only"  or TRUE %}
+                                <br/><p class="labelGrey_16">{{ intervention.interventionStatus.description }}</p>
+                            {% else %}
+                                <br/><p class="labelGrey_16">{{ intervention.interventionStatus.description }}</p>
+                                {#<input name="reference" value="{{ intervention.reference }}" type="text" class="form-control asitur_input data_input" spellcheck="false" maxlength="15">#}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin: 0px 0px 10px 0px; font-size: 16px;">
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.origin"|trans}}</label>
+                            {% if mode == "read_only"  or TRUE %}
+                                <br/><p class="labelGrey_16">{{ intervention.vhTown.name}}<br>{{ intervention.vhProvince.name}}</p>
+                            {% else %}
+                                <br/><p class="labelGrey_16">{{ intervention.vhTown.name}}<br>{{ intervention.vhProvince.name}}</p>
+                                {#<input name="reference" value="{{ intervention.reference }}" type="text" class="form-control asitur_input data_input" spellcheck="false" maxlength="15">#}
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.destination"|trans}}</label>
+                            {% if mode == "read_only"  or TRUE %}
+                                <br/><p class="labelGrey_16">{% if intervention.destinationTown %}{{ intervention.destinationTown.name}}{% endif %}<br>{% if intervention.destinationProvince %}{{ intervention.destinationProvince.name}}{% endif %}</p>
+                            {% else %}
+                                <br/><p class="labelGrey_16">{% if intervention.destinationTown %}{{ intervention.destinationTown.name}}{% endif %}<br>{% if intervention.destinationProvince %}{{ intervention.destinationProvince.name}}{% endif %}</p>
+                                {#<input name="reference" value="{{ intervention.reference }}" type="text" class="form-control asitur_input data_input" spellcheck="false" maxlength="15">#}
+                            {% endif %}
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.whats_happend"|trans}}</label>
+                            {% if mode == "read_only"  or TRUE %}
+                                <br/><p class="labelGrey_16">{{ intervention.vhComments}}</p>
+                            {% else %}
+                                <textarea name="vhComments" type="text" class="form-control asitur_input data_input" spellcheck="false" maxlength="255">{{ intervention.vhComments }}</textarea>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.where_is"|trans}}</label>
+                            {% if mode == "read_only"  or TRUE %}
+                                <br/><p class="labelGrey_16">{{ intervention.vhUbication}}<br>{{ intervention.vhSituation}}</p>
+                            {% else %}
+                                <input name="vhUbication" value="{{ intervention.vhUbication }}" type="text" class="form-control asitur_input data_input" spellcheck="false" maxlength="50"><br>
+                                <input name="vhSituation" value="{{ intervention.vhSituation }}" type="text" class="form-control asitur_input data_input" spellcheck="false" maxlength="50">
+                            {% endif %}
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.sinister"|trans}}</label>
+                            {% if mode == "read_only"  or TRUE %}
+                                <br/><p class="labelGrey_16">{{ intervention.sinisterType.description}}</p>
+                            {% else %}
+
+                                <select name="sinisterType" class="select_inputs detailSelect data_input chosen" tabindex="-1">
+                                    {% for sinisterType in sinisterTypeList %}
+                                        <option value="{{ sinisterType.id}}" {% if sinisterType.id == intervention.sinisterType.id %}selected{% endif %}> {{ sinisterType.description }} </option>
+                                    {% endfor %}
+                                </select>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.failure_type"|trans}}</label>
+                            {% if mode == "read_only"  or TRUE %}
+                                <br/><p class="labelGrey_16">{{ intervention.failureType.description}}</p>
+                            {% else %}
+
+                                <select id='failureType' name="failureType" class="select_inputs detailSelect data_input chosen" tabindex="-1">
+                                    {% for failureType in failureTypeList %}
+                                        <option value="{{ failureType.id}}" {% if failureType.id == intervention.failureType.id %}selected{% endif %}> {{ failureType.description }} </option>
+                                    {% endfor %}
+                                </select>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin: 0px 0px 10px 0px; font-size: 16px;">
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.failure_cause_type"|trans}}</label>
+                            {% if mode == "read_only" or TRUE %}
+                                <br/><p class="labelGrey_16">{{ intervention.failureCauseType.description}}</p>
+                            {% else %}
+
+                                <select id="failureCauseType" name="failureCauseType" class="select_inputs detailSelect data_input chosen" tabindex="-1">
+                                    {% for failureCauseType in failureCauseTypeList %}
+                                        {% if failureCauseType.getFailureTypeId().getId() == intervention.failureType.id %}
+                                            <option value="{{ failureCauseType.id}}" {% if failureCauseType.id == intervention.failureCauseType.id %}selected{% endif %}> {{ failureCauseType.description }} </option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.ris_cause"|trans}}</label>
+                            {% if mode == "read_only" or TRUE %}
+                                <br/><p class="labelGrey_16">{% if intervention.risCause %}{{ intervention.risCause.description}}{% endif %}</p>
+                            {% else %}
+
+                                <select id="RISCause" name="RISCause" class="select_inputs detailSelect data_input chosen" tabindex="-1">
+                                    {% for RISCause in RISCauseList %}
+                                        {% if RISCause.getFailureCauseTypeId().getId() == intervention.failureCauseType.id %}
+                                            <option value="{{ RISCause.id}}" {% if intervention.risCause and RISCause.id == intervention.RISCause.id %}selected{% endif %}> {{ RISCause.description }} </option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.caller_name"|trans}}</label>
+                            <br/><p class="labelGrey_16">{{ intervention.callerName}}</p>
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.signer_dni"|trans}}</label>
+                            <br/><p class="labelGrey_16">{{ intervention.signerDni}}</p>
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.caller_phone"|trans}}</label>
+                            <br/><p class="labelGrey_16">{{ intervention.callerPhone}}</p>
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.service"|trans}}</label>
+                            <img style='position: relative; top: -1px; left: 5px;' 
+                                    src="{{asset("media/info@2x.png")}}"
+                                    width="17px" class=" add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="{{"detail_intervention.service_tooltip"|trans}}">                                   
+                            <br/><p class="labelGrey_16">{{ intervention.getCollaboratorService().description() }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin: 0px 0px 10px 0px; font-size: 16px;">
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.plate"|trans}}</label>
+                            <br/><p class="labelGrey_16">{{ intervention.vhPlate}}</p>
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.brand"|trans}}</label>
+                            <br/><p class="labelGrey_16">{{ intervention.vhBrand.name}}</p>
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.model"|trans}}</label>
+                            <br/><p class="labelGrey_16">{{ intervention.vhModel.name}}</p>
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.description"|trans}}</label>
+                            <br/><p class="labelGrey_16">{{ intervention.vhComments}}</p>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin: 0px 0px 10px 0px; font-size: 16px;">
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.is_ris"|trans}}</label>
+                            <br/>
+                            <input id='isRIS' class="check" type="checkbox" {% if intervention.isRIS %} checked {% endif %}>
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.riscause_operator"|trans}}</label>
+                            <br/><p class="labelGrey_16">
+                                {% if intervention.getRisCauseOperator() %}
+                                    {{ intervention.getRisCauseOperator().description}}
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-2">
+                            <label class="asitur_label regular_label">{{"detail_intervention.is_failure"|trans}}</label>
+                            <br/>
+                            <input id='hasDestinationFailure' class="check" type="checkbox" {% if intervention.hasDestinationFailure %} checked {% endif %}>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!--Panel Presupuesto Asitur-->
+        <div class="panel">
+            <!--Panel heading-->
+            <div class="panel-heading custom_collapse_panel_heading" data-target="#budget_asitur_body" data-toggle="collapse">
+                <div class="panel-control">
+                    <button class="btn btn-default" ><i class="fa fa-chevron-down"></i></button>
+                </div>
+                <h3 class="panel-title" style="font-weight: 600;">{{'detail_intervention.budget_asitur'|trans}}</h3>
+            </div>
+            <!--Panel body-->
+            <div id="budget_asitur_body" class="collapse in">
+                <div class="panel-body">
+                    
+
+                    <style>
+
+                    .asiturTable{
+                        width: 100%;
+                    }
+                    .asiturTable th {
+                        border: 0 !important;
+                        color: var(--main-grey);
+                        padding: 13px 18px !important;
+                        vertical-align: middle !important;
+                        text-transform: uppercase;
+                    }
+
+                    .asiturTable td {
+                        color: var(--main-grey);
+                        padding: 13px 18px !important;
+                        vertical-align: middle !important;
+                        border-top: 1px solid lightgrey;
+                        border-bottom: 1px solid lightgrey;
+                    }
+
+                    </style>
+
+                    <table class='asiturTable'>
+                        <thead>
+                            <tr>
+                                <th>{{"intervention.budget.service"|trans}}</th>
+                                <th>{{"intervention.budget.activity"|trans}}</th>
+                                <th>{{"intervention.budget.night"|trans}}</th>
+                                <th>{{"intervention.budget.holliday"|trans}}</th>
+                                <th>{{"intervention.budget.cant"|trans}}</th>
+                                <th>{{"intervention.budget.amount"|trans}}</th>
+                                <th>{{"intervention.budget.tax"|trans}}</th>
+                                <th>{{"intervention.budget.total"|trans}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for budget in asiturBudget %}
+                                <tr>
+                                    <td>{{ budget.collaboratorService.description }}</td>
+                                    <td>{{ budget.activity }}</td>
+                                    <td>{% if budget.night %}{{'general.yes'|trans}}{% else %}{{'general.no'|trans}}{% endif %}</td>
+                                    <td>{% if budget.holliday %}{{'general.yes'|trans}}{% else %}{{'general.no'|trans}}{% endif %}</td>
+                                    <td>{{ budget.units }}</td>
+                                    <td>{{ budget.amount }}</td>
+                                    <td>{{ budget.tax }}</td>
+                                    <td>{{ budget.total }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <!--Panel Presupuesto Asitur-->
+        <div class="panel">
+            <!--Panel heading-->
+            <div class="panel-heading custom_collapse_panel_heading" data-target="#budget_crane_body" data-toggle="collapse">
+                <div class="panel-control">
+                    <button class="btn btn-default" ><i class="fa fa-chevron-down"></i></button>
+                </div>
+                <h3 class="panel-title" style="font-weight: 600;">{{'detail_intervention.budget_crane'|trans}}</h3>
+            </div>
+            <!--Panel body-->
+            <div id="budget_crane_body" class="collapse in">
+                <div class="panel-body">
+                    <table class='asiturTable'>
+                        <thead>
+                            <tr>
+                                <th>{{"intervention.budget.service"|trans}}</th>
+                                <th>{{"intervention.budget.activity"|trans}}</th>
+                                <th>{{"intervention.budget.night"|trans}}</th>
+                                <th>{{"intervention.budget.holliday"|trans}}</th>
+                                <th>{{"intervention.budget.cant"|trans}}</th>
+                                <th>{{"intervention.budget.amount"|trans}}</th>
+                                <th>{{"intervention.budget.tax"|trans}}</th>
+                                <th>{{"intervention.budget.total"|trans}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for budget in collaboratorBudget %}
+                                <tr>
+                                    <td>{{ budget.collaboratorService.description }}</td>
+                                    <td>{{ budget.activity }}</td>
+                                    <td>{% if budget.night %}{{'general.yes'|trans}}{% else %}{{'general.no'|trans}}{% endif %}</td>
+                                    <td>{% if budget.holliday %}{{'general.yes'|trans}}{% else %}{{'general.no'|trans}}{% endif %}</td>
+                                    <td>{{ budget.units }}</td>
+                                    <td>{{ budget.amount }}</td>
+                                    <td>{{ budget.tax }}</td>
+                                    <td>{{ budget.total }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <!--===================================================-->
+    <!--End page content-->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    $(document).ready(function(){
+        $(".chosen").chosen({ width:'180px !important' });
+
+        {#* Botón Editar #}
+        $(".edit-button").click(function() {
+            swal.fire({
+                title: 'Por definir',
+                html: "",
+                icon: 'info',
+                showConfirmButton: true
+            });
+            $("#edit_form").submit();
+        });
+
+        {#* Exportación de una sucursal #}
+        $(".export-button").click(function() {
+            swal.fire({
+                title: 'Por definir',
+                html: "",
+                icon: 'info',
+                showConfirmButton: true
+            });
+        });
+        {#* ########################### #}
+
+        {#* Botón guardar #}
+        $("#save-button").click(function() {
+            swal.fire({
+                title: 'Por definir',
+                html: "",
+                icon: 'info',
+                showConfirmButton: true
+            });
+        });
+
+        var elem = document.querySelector('#isRIS');
+        var init = new Switchery(elem, {disabled: true, 
+                                    disabledOpacity: 1,
+                                    color: "var(--main-blue)",
+                                    secondaryColor: '#cdd3db'
+                                });
+
+        var elem = document.querySelector('#hasDestinationFailure');
+        var init = new Switchery(elem, {disabled: true, 
+                                    disabledOpacity: 1,
+                                    color: "var(--main-blue)",
+                                    secondaryColor: '#cdd3db'
+                                });
+
+        // actualización de los chosen
+        /*
+        var failureCauseTypeList = [];
+        var newOption = $('<option>');
+        newOption.val('');
+        newOption.data('failuretypeid','');
+        newOption.html("{{'detail_intervention.null'|trans}}");
+        failureCauseTypeList.push(newOption);
+        
+        {% for failureCauseType in failureCauseTypeList %}
+            var newOption = $('<option>');
+            newOption.val('{{ failureCauseType.id}}');
+            newOption.data('failuretypeid','{{ failureCauseType.getFailureTypeId().getId()}}');
+            newOption.html('{{ failureCauseType.description}}');
+            failureCauseTypeList.push(newOption);
+        {% endfor %}
+
+        $('#failureType').change(function(){
+            // 1 vaciamos el selector
+            $('#failureCauseType').empty();
+            
+            // 2 - rellenamos
+            for(var i = 1 ; i < failureCauseTypeList.length; i++){
+                if ($(this).val() == failureCauseTypeList[i].data('failuretypeid')){
+                    $('#failureCauseType').append(failureCauseTypeList[i].clone());
+                }
+            }
+
+            if ($('#failureCauseType').html() == ''){
+                $('#failureCauseType').append(failureCauseTypeList[0].clone());
+            }
+
+            // 3 - Actualizamos el chosen
+            $('#failureCauseType').trigger("chosen:updated");
+        });
+        */
+        
+        $('.delivery-note-button').click(function(){
+            $.ajax({
+                url:'{{ path('download_delivery_note') }}',
+                data: {
+                    'interventionList': [{{intervention.id}}],
+                    'smartPreview': true
+                },
+                type:"POST",
+                success: function(data){
+                    if (!data.status){
+                        swal.fire({
+                            title: '{{ ("general.export.error")|trans }}',
+                            html: data.message,
+                            icon: 'error',
+                            showConfirmButton: true
+                        });    
+                    }else{
+                        if(data.data.isZip == 'false'){
+                            var fileName = data.data.fileName;
+                            var filePath = data.data.filePath;
+                            var formTmp = document.createElement('form');
+                            
+                            if (data.data.type == 'visualize')
+                                $(formTmp).attr('action',"{{ path('visualize_file') }}");
+                            else if (data.data.type == 'download')
+                                $(formTmp).attr('action',"{{ path('download_file') }}");
+                                                                    
+                            $(formTmp).attr('name','formTmp');
+                            $(formTmp).attr('target','_blank');
+                            $(formTmp).attr('enctype','multipart/form-data');
+                            $(formTmp).attr('method','post');
+                            $(formTmp).append("<input type='hidden' name='fileName' value='" + fileName + "'/>");
+                            $(formTmp).append("<input type='hidden' name='filePath' value='" + filePath + "'/>");
+                            document.body.appendChild(formTmp);
+                            document.formTmp.submit();
+                            document.body.removeChild(formTmp);
+                            swal.fire({
+                                title: '{{ ("general.export.success")|trans }}',
+                                html: '',
+                                icon: 'success',
+                                showConfirmButton: true
+                            });         
+                        }
+                        else{
+                            var zip = new JSZip();
+                            var baseUrlDownload = "{{ path('download_file_get',{ 'fileName': 'XXXXX' ,'filePath': 'YYYYY' }) }}";
+
+                            function urlToPromise(url) {
+                                return new Promise(function(resolve, reject) {
+                                    JSZipUtils.getBinaryContent(url, function (err, data) {
+                                        if(err) {
+                                            reject(err);
+                                            swal.fire({
+                                                title: '{{ ("general.export.error")|trans }}',
+                                                html: '',
+                                                icon: 'error',
+                                                showConfirmButton: true
+                                            });                                                       
+                                        } else {
+                                            resolve(data);
+                                        }
+                                    });
+                                });
+                            }
+                            
+                            for(var i = 0; i < data.data.files.length; i++){
+                                var finalUrl = baseUrlDownload.replace("XXXXX", data.data.files[i].fileName);
+                                finalUrl = finalUrl.replace("YYYYY", data.data.files[i].filePath);
+                                //console.log(finalUrl);
+                                zip.file(data.data.files[i].fileName, urlToPromise(finalUrl), {binary:true});
+                            }
+
+                            // when everything has been downloaded, we can trigger the dl
+                            zip.generateAsync({type:"blob"}, function updateCallback(metadata) {
+                                //$(".sweet-alert").find('p').html(metadata.percent.toFixed(2) + " %");
+                                if(metadata.percent.toFixed(2) == 100){
+                                    
+                                    swal.fire({
+                                        title: '{{ ("general.export.success")|trans }}',
+                                        html: '',
+                                        icon: 'success',
+                                        showConfirmButton: true
+                                    });          
+                                }
+                            })
+                            .then(function callback(blob) {
+                                saveAs(blob, "Albaranes.zip"); // see FileSaver.js
+                            });
+                        }
+                    }
+                },
+                error:function(err){
+                    swal.fire({
+                        title: '{{ ("general.export.error")|trans }}',
+                        html: '',
+                        icon: 'error',
+                        showConfirmButton: true
+                    });
+                }
+            });
+        });        
+
+    });//ready
+
+
+    </script>
+
+{% endblock %}

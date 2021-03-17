@@ -1,0 +1,417 @@
+login.form.title: Faça login em sua conta
+login.form.already.connected: Você está conectado como
+login.form.email: O email
+login.form.password: Senha
+login.form.remember_me: Lembre-se de dados
+login.form.submit: Entrar
+login.form.password_recovery: Esqueceu sua senha?
+change_password.form.title: Digite sua nova senha
+change_password.form.new_password: Nova senha
+change_password.form.new_password_check: Digite novamente a senha
+change_password.form.not_same: As senhas não correspondem
+general.accept: Aceitar
+change_password.form.passwords_not_matching: As senhas não correspondem
+forgot_password.title: Esqueceu sua senha?
+forgot_password.subtitle: Não se preocupe, digite seu e-mail e você receberá um e-mail com as etapas para recuperá-lo.
+forgot_password.email.placeholder: Escreva seu email
+general.send: Mandar
+general.exit: Saia
+general.save: Salve 
+general.confirm: Confirme
+general.cancel: Cancelar
+general.yes: Sim
+general.no: Não
+general.saveChanges: Você quer salvar as alterações?
+general.saved: Alterações salvas
+general.cancelled: Cancelado
+general.use_conditions_and_confidentiality: Termos de uso e confidencialidade
+general.cookies_policy: Política de cookies
+general.toDefine: Por definir
+general.needSelectRow: É necessário selecionar alguma linha
+forgot_password.check_inbox: Verifique sua caixa de entrada, um e-mail foi enviado
+forgot_password.write_email: Digite um e-mail
+forgot_password.email_not_registered: O email inserido não está registrado
+sidebar.home: Começar
+sidebar.file_card: Arquivo
+sidebar.reporting: Comunicando
+sidebar.completion_and_invoicing: Conclusão e cobrança
+sidebar.logs: Histórico
+sidebar.translations: Traduções
+sidebar.parameters: Parâmetros
+dataTable.translations.label: Rótulo
+dataTable.translations.need_check: Verifica?
+dataTable.logs.user: Do utilizador
+dataTable.logs.type: Tipo
+dataTable.logs.creation_date: Data de criação
+dataTable.logs.comment: Comentário
+dataTable.email.log.intervention_id: ID de intervenção
+dataTable.email.log.subject: Caso
+dataTable.email.log.creation_date: Data de criação
+dataTable.email.log.email_to: Para
+dataTable.email.log.email_cc: DC
+dataTable.email.log.email_bcc: BCC
+dataTable.email.log.is_delivered: Enviei
+dataTable.email.log.template: Modelo
+dataTable.email.log.template_content: Conteúdo do modelo
+dataTable.email.log.locale: Língua
+dataTable.email.log.backup: Cópia de segurança
+dataTable.sms.logs.intervention_id: ID de intervenção
+dataTable.sms.logs.creation_date: Data de criação
+dataTable.sms.logs.sms_content: Conteúdo
+dataTable.sms.logs.sms_name: Nome
+dataTable.sms.logs.sms_type: Tipo
+dataTable.sms.logs.sms_phone: Telefone
+dataTable.sms.logs.is_delivered: Enviei
+dataTable.sms.logs.debug: depurar
+backend.translations.guide.update: Chaves não encontradas são adicionadas aos arquivos YAML e o banco de dados é atualizado com esses arquivos
+backend.translations.guide.fix: As traduções incompletas são concluídas com a API do Google e as traduções são verificadas e formatadas
+backend.translations.guide.export: As traduções são exportadas do banco de dados para arquivos YAML
+dataTable.general.lengthMenu.all: Todo o mundo
+dataTable.general.language.sProcessing: Em processamento ...
+dataTable.general.language.sLengthMenu: Exibir registros _MENU_
+dataTable.general.language.sZeroRecords: Nenhum resultado encontrado
+dataTable.general.language.sEmptyTable: Nenhum dado disponível nesta tabela
+dataTable.general.language.sInfo: Mostrando registros de _START_ a _END_ de um total de _TOTAL_ registros
+dataTable.general.language.sInfoEmpty: Mostrando registros de 0 a 0 de um total de 0 registros
+dataTable.general.language.sInfoFiltered: (filtrando um total de _MAX_ registros)
+dataTable.general.language.sSearch: Pesquisa
+dataTable.general.language.sLoadingRecords: Carregando
+dataTable.general.language.oPaginate.sFirst: Primeiro
+dataTable.general.language.oPaginate.sLast: Mais recentes
+dataTable.general.language.oPaginate.sNext: Segue
+dataTable.general.language.oPaginate.sPrevious: Anterior
+dataTable.general.language.oAria.sSortAscending: Habilite para classificar a coluna em ordem crescente
+dataTable.general.language.oAria.sSortDescending: Ative para classificar a coluna em ordem decrescente
+dataTable.tab.logs: Histórico
+dataTable.tab.emails: Emails
+dataTable.tab.sms: SMS
+general.loading: Carregando
+dataTable.parameters.name: Nome
+dataTable.parameters.type: Tipo
+dataTable.parameters.value: Valor
+dataTable.parameters.description: Descrição
+sidebar.collaborators: Colaboradores
+general.important: IMPORTANTE!
+backend.translations.warning: No caso de modificar alguma tradução na tabela, gere os arquivos atualizados usando o comando
+backend.parameters.warning: No caso de modificar qualquer parâmetro a partir daqui, ele também deve ser adicionado no comando
+dataTable.collaborators.username: Nome de usuário
+dataTable.collaborators.email: O email
+dataTable.collaborators.name: Nome
+dataTable.collaborators.actions: Ações
+dataTable.collaborators.login: Iniciar sessão
+data_management.tab.branch_offices: Filiais
+data_management.tab.cranes: Guindastes
+data_management.tab.operators: Operadores
+dataTable.branchOffices.town: LOCALIZAÇÃO
+dataTable.branchOffices.province: PROVÍNCIA
+dataTable.branchOffices.zone: ZONA
+dataTable.branchOffices.telephone: TELEFONES
+dataTable.branchOffices.sinisterEmail: SINISTRO EMAIL
+dataTable.branchOffices.invoicingEmail: EMAIL BILLING
+dataTable.branchOffices.contactPerson: PESSOA DE CONTATO
+dataTable.asitur.language.sLengthMenu: Itens por página
+dataTable.asitur.sendNotification: ENVIAR AVISO
+dataTable.asitur.export: EXPORTAR
+dataTable.asitur.filter: FILTRO
+dataTable.asitur.search: PROCURAR POR
+dataTable.intervention.reference: Processos
+dataTable.intervention.placeholder.reference: Indica Arquivo
+dataTable.intervention.dateCreation: Solicitar data e hora
+dataTable.intervention.placeholder.dateCreation: Indique a Data
+dataTable.intervention.datePickup: localização data e hora
+dataTable.intervention.address: Endereço de localização
+dataTable.intervention.placeholder.address: Insira o endereço
+dataTable.intervention.fails: Culpa
+dataTable.intervention.isRis: Tipo de assistência
+dataTable.intervention.request: Solicitação
+dataTable.intervention.placeholder.request: Indique o pedido
+general.ris: RIS
+general.no_ris: sem RIS
+general.search: Pesquisa
+backend.translations.label.steps: Passos para atualizar as traduções
+backend.translations.guide.complete: Altere a coluna ES das novas traduções no Banco de Dados (ou na tabela de gerenciamento da plataforma).
+backend.translations.delete_cache: Para mostrar as mudanças na produção será necessário limpar o cache
+general.export.branch_offices: Filiais
+data_management.input.placeholder.management_type: Indica Gestão
+general.sync: Sincronizar
+sidebar.profile: Perfil
+sidebar.settings: Configuração
+sidebar.logout: Fechar Sessão
+sidebar.responsive_zone: Opções do usuário
+dataTable.tab.log: Registro
+dataTable.collaborators.collaborator: Colaborador
+dataTable.asitur.new: NOVO
+dataTable.asitur.edit: EDITAR
+dataTable.asitur.remove: RETIRAR
+dataTable.asitur.digital_asign: TAREFA
+dataTable.asitur.rates: COTAÇÕES
+dataTable.asitur.time_control: CONTROLE DO TEMPO
+general.filter: Filtro
+data_management.input.label.town: Localização
+data_management.input.label.province: Província
+data_management.input.label.telephone: Telefone
+data_management.input.label.sinister_email: Email sinistro
+data_management.input.label.invoicing_email: Faturamento por email
+data_management.input.label.contact_person: Pessoa de contato
+data_management.input.placeholder.town: Indique a localidade
+data_management.input.placeholder.province: Indica Província
+data_management.input.placeholder.telephone: Indica Telefone
+data_management.input.placeholder.sinister_email: Indique Email
+data_management.input.placeholder.invoicing_email: Indique Email
+data_management.input.placeholder.contact_person: Indique o contato
+general.export.success: Exportação concluída
+general.export.error: Erro de exportação de arquivo
+general.download.error: Erro ao baixar o arquivo
+dataTable.cranes.code: IDENTIFICADOR
+dataTable.cranes.plate: INSCRIÇÃO
+dataTable.cranes.brand: MARCA
+dataTable.cranes.model: MODELO
+dataTable.cranes.crane_type: TIPO
+dataTable.cranes.services: SERVIÇOS ASSOCIADOS
+dataTable.cranes.zones: ÁREAS DE SERVIÇO
+dataTable.cranes.management_type: TIPO DE ATRIBUIÇÃO
+dataTable.cranes.status: DESLIGADO / LIGADO
+dataTable.cranes.label: LABELED
+data_management.input.label.code: Identificador
+data_management.input.label.plate: Inscrição
+data_management.input.label.brand: Marca
+data_management.input.label.model: Modelo
+data_management.input.label.crane_type: Tipo
+data_management.input.label.services: Serviços associados
+data_management.input.label.label: Etiquetada
+data_management.input.label.zones: Áreas de serviço
+data_management.input.label.management_type: Tipo de atribuição
+data_management.input.label.status: Estado
+data_management.input.placeholder.code: Indica identificador
+data_management.input.placeholder.plate: Indica Registro
+data_management.input.placeholder.brand: Indica Marca
+data_management.input.placeholder.model: Indica modelo
+data_management.input.placeholder.crane_type: Indica Tipo
+data_management.input.placeholder.services: Indica Serviços
+data_management.input.placeholder.label: Indica Rotulagem
+data_management.input.placeholder.zones: Indica Zona
+dataTable.operators.identifier: IDENTIFICADOR
+dataTable.operators.mobile_phone: MÓVEL
+dataTable.operators.availability_status: DISPONIBILIDADE
+dataTable.operators.assigned_crane: GUINDASTE ATRIBUÍDA
+data_management.input.label.identifier: Identificador
+data_management.input.label.mobile_phone: Móvel
+data_management.input.label.availability_status: Disponibilidade
+data_management.input.label.assigned_crane: Guindaste atribuído
+data_management.input.placeholder.identifier: Indica identificador
+data_management.input.placeholder.mobile_phone: Indica Móvel
+data_management.input.placeholder.assigned_crane: Indica Guindaste
+data_management.crane_status.select.option.active: Ativo
+data_management.crane_status.select.option.damaged: Estragado
+data_management.crane_status.select.option.retired: Retirada
+general.input.placeholder.email: exemplo@email.com
+general.input.placeholder.password: senha
+backend.collaborators.header: Usuários Colaboradores
+backend.log.header: Registro
+backend.email_log.header: Log de email
+backend.sms_log.header: Log de SMS
+backend.translations.header: Traduções
+backend.parameters.header: Parâmetros
+general.profile.header: Perfil
+general.settings.header: Configuração
+general.add: Adicionar
+modal.title.new_collaboratorUser: Novo usuário colaborador
+modal.input.collaboratorUser.username: Nome de usuário
+modal.input.collaboratorUser.collaborator: Entidade colaboradora
+modal.input.collaboratorUser.email: Correio eletrônico
+modal.input.collaboratorUser.password: Senha
+modal.input.collaboratorUser.name: Nome
+modal.input.collaboratorUser.cif: CIF
+general.modal.success: A operação foi bem sucedida
+general.modal.error: Ocorreu um erro
+general.form.allfields.mandatory: Todos os campos são obrigatórios
+general.form.error: Ocorreu um erro
+form.collaboratorUser.username.alreadyExists: Esse nome de usuário já existe
+form.collaboratorUser.email.alreadyExists: Esse email já existe
+form.collaboratorUser.cif.alreadyExists: Este CIF já existe
+data_management.operator.availability_status.available: Acessível
+data_management.operator.availability_status.not_available: Não disponível
+general.go_back_to_list: De volta à lista
+settings.dateAndTime: Data e hora
+settings.notify: Notificações e Avisos
+settings.lenguage: Língua
+settings.formatDate: Formato de data
+settings.chooseFormatDate: Escolha o formato de data a aplicar
+detail_branch_office.branch_office_data: Dados da filial
+detail_branch_office.branch_office_cranes: Guindastes
+detail_branch_office.branch_office_operators: Operadores
+detail_branch_office.branch_office_zones: Áreas em que atua
+detail_branch_office.branch_office_documents: Anexo de documentos
+detail_branch_office.input.label.address: Direção
+detail_branch_office.input.label.phone: Telefone
+detail_branch_office.input.label.sinister_email: Email sinistro
+detail_branch_office.input.label.invoicing_email: Faturamento por email
+detail_branch_office.input.label.contact_person: Pessoa de contato
+settings.predeterminado: predeterminado
+settings.formatHour: Formato de hora
+settings.chooseFormatHour: Escolha o formato de hora a aplicar
+settings.receiveNotification: Receber notificações e avisos?
+settings.emailNotification: Indique o e-mail em que deseja receber notificações
+settings.other: De outros
+settings.emailInput: Indique e-mail
+settings.chooseLanguage: Escolha o idioma da plataforma
+settings.spanish: Espanhol
+settings.english: Inglês
+settings.french: Francês
+settings.italian: Italiano
+settings.portuguese: Português
+profile.name: Nome
+profile.nameInput: Insira o nome
+intervention.pendingToClose: Pendente de fechar
+intervention.pentingToFinish: Pendente de conclusão
+attachment.list.error: Erro ao obter anexos
+form.crane.plate.alreadyExists: Esta placa de carro já existe
+form.crane.reference.alreadyExists: Este identificador já existe
+modal.general.operation.synchronizationError: A sincronização falhou
+modal.attachment.upload.failed: Erro ao importar arquivos
+modal.cranes.not_selected: Nenhum guindaste selecionado
+general.mail.regards: Departamento de Rede de Provedores
+general.mail.regards2: Assistência Asitur
+detail_intervention.intervention_data: Intervenção
+detail_intervention.code: Processos
+detail_intervention.reference: Política
+detail_intervention.insurance_entity: Companhia
+detail_intervention.reference_cia: Referência da empresa.
+detail_intervention.date: Encontro
+detail_intervention.status: Estado
+detail_intervention.origin: Origem
+detail_intervention.destination: Destino
+detail_intervention.whats_happend: Que ocorre
+detail_intervention.where_is: Onde está
+detail_intervention.sinister: Sinistro
+detail_intervention.failure_type: Tipo de falha
+detail_intervention.failure_cause_type: Subcausa
+detail_intervention.ris_cause: Causa RIS
+detail_intervention.caller_name: Nome do segurado
+detail_intervention.signer_dni: DNI
+detail_intervention.caller_phone: Telefone
+detail_intervention.service: Serviço
+detail_intervention.service_tooltip: Se você deseja alterar o serviço, você deve entrar em contato com o Administrador Asitur
+detail_intervention.plate: Inscrição
+detail_intervention.brand: Marca
+detail_intervention.model: Modelo
+detail_intervention.description: Observações
+detail_intervention.is_ris: Reparo no local
+detail_intervention.riscause_operator: Razão RIS
+detail_intervention.is_failure: Serviço falhado
+detail_intervention.budget_asitur: Orçamento Asitur
+detail_intervention.budget_crane: Orçamento do provedor
+detail_intervention.null: -
+reporting.intervention: Intervenções
+reporting.invoices: Fatura
+datatable.btn.deliveryNote: Nota de entrega
+datatable.btn.photos: Fotos
+dataTable.intervention.town: Localização
+dataTable.intervention.placeholder.town: Insira a localização
+datatable.reporting.risType: Tipo RIS
+datatable.reporting.status: Estado
+datatable.reporting.reference: Sem Arquivo
+datatable.reporting.dateFrom: Data de
+datatable.reporting.dateTo: Data para
+datatable.reporting.town: Localização
+datatable.reporting.km: KM Tours
+datatable.reporting.ris: RIS
+modal.title.new_crane: Registro de guindaste
+data_management.input.label.reference: Identificador
+modal.input.crane.branchOffice: Filial
+modal.input.crane.label: Etiquetada
+modal.input.crane.model: Modelo
+modal.input.crane.type: Tipo guindaste
+modal.input.crane.availabilityStatus: Disponibilidade
+modal.input.crane.creationDate: Data de alta
+crane.management_type.manual: Manual
+crane.management_type.automatic: Automático
+data_management.input.placeholder.reference: Indica identificador
+dataTable.cranes.reference: IDENTIFICADOR
+modal.crane.remove: Tem certeza de que deseja cancelar os guindastes selecionados?
+modal.crane.remove.confirm: Cancelar subscrição
+modal.general.operation.success: A operação foi bem sucedida
+modal.general.operation.error: Falha ao realizar a operação
+modal.crane.change_management_type: Tem certeza de que deseja alterar o tipo de atribuição dos guindastes selecionados?
+detail.attachments: Anexo de documentos
+detail_crane.crane_data: Dados do guindaste
+detail_crane.input.label.plate: Inscrição
+detail_crane.input.label.reference: Identificador
+detail_crane.input.label.brand: Marca
+detail_crane.input.label.model: Modelo
+detail_crane.input.label.managementType: Tipo de atribuição
+detail_crane.input.label.status: Estado
+detail_crane.input.label.label: Etiquetada
+detail_crane.input.label.availabilityStatus: Disponibilidade
+detail_crane.input.label.craneType: Tipo
+detail_crane.input.label.preferentialServices: Serviços preferenciais
+detail_crane.input.label.availableServices: Serviços disponíveis
+detail_crane.attended_branch_offices: Ramos servidos
+detail_crane.attended_branch_offices.subtext: Filiais registradas às quais este guindaste pode ser associado
+modal.crane.remove.individual: O guindaste atual está sendo desativado, deseja continuar?
+detail_crane.save.success: A modificação foi bem sucedida
+modal.crane.attachment.remove: O arquivo selecionado será excluído, deseja continuar?
+modal.general.remove: Remover
+detail_crane.input.placeholder.services: Adicionar serviço
+dashboard.labelRis: RIS
+dashboard.labelCostAvg: Custo médio
+dashboard.labelRefuse: Rejeitado
+dashboard.labelSatisfied: Satisfação
+dashboard.labelNC: NCs
+general.no_filter: Sem filtro
+modal.input.crane.deletionDate: Data de licença
+form.operator.username.alreadyExists: Nome de usuário existente
+form.operator.dni.alreadyExists: Este DNI já está registrado
+form.operator.reference.alreadyExists: Este identificador já está em uso
+modal.operators.not_selected: Operadores não foram selecionados
+general.execute: Corre
+general.saving: Salvando
+general.updating: Atualizando
+sidebar.debug: Depurar
+login.form.set_password: Insira uma senha
+dataTable.dashboard.operator: Operador
+dataTable.dashboard.province_branchoffice: Branch Province
+dataTable.dashboard.town_branchoffice: Localização da filial
+dataTable.dashboard.ris_percentage: RIS (concluído)
+detail_operator.operator_data: Dados do operador
+detail_operator.input.label.reference: Identificador
+detail_operator.input.label.mobile_phone: Móvel
+detail_operator.assigned_crane: Guindaste atribuído
+detail_operator.assigned_crane.subtext: Guindastes registrados aos quais este operador pode ser associado
+modal.operator.label.branch_office: Filial
+detail_operator.select.branch_office.placeholder: Selecione o ramo
+detail_operator.select.crane_type.placeholder: Selecione o tipo de guindaste
+detail_operator.operator_availability: Disponibilidade
+detail_operator.operator_password: Mudança de senha
+detail_operator.change_password: Digite a nova senha
+detail_operator.change_password_check: Digite novamente a senha
+detail_operator.select.crane_type.error: Erro ao obter tipos de guindaste
+modal.operator.remove.individual: A operadora atual será cancelada, deseja continuar?
+modal.general.remove.confirm: Cancelar subscrição
+modal.attachment.remove: O arquivo selecionado será excluído, deseja continuar?
+modal.title.new_operator: Registro de Operador
+modal.operator.label.username: Nome de usuário
+modal.operator.label.mobile_phone: Móvel
+modal.operator.label.password: Senha
+modal.operator.label.password_again: Senha novamente
+modal.operator.label.name: Nome
+modal.operator.label.last_name: Sobrenomes
+modal.operator.label.reference: Identificador
+modal.operator.label.dni: DNI
+modal.operator.label.crane: Guindaste atribuído
+data_management.operator.assigned_crane.none: Nenhum
+modal.operator.label.creation_date: Data de alta
+modal.operator.label.status: Estado
+general.error.loading.data: Erro ao carregar dados
+general.password.both_same: As senhas devem corresponder
+modal.operator.remove: Tem certeza que deseja cancelar os operadores selecionados?
+dashboard.no_filter_collaborator: Colaborador
+dashboard.no_filter_branchoffice: Filial
+dashboard.no_filter_crane: Guindaste
+dataTable.dashboard.reference: Referência
+dataTable.dashboard.request_date: Comunicação de data / hora
+dataTable.dashboard.province: Província
+dataTable.dashboard.service: Serviço
+dataTable.dashboard.status: Estado
+dataTable.dashboard.branchoffice: Filial
+dataTable.dashboard.cause: Razão

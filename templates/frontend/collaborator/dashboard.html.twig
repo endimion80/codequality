@@ -1,0 +1,540 @@
+{% extends 'includes/sidebar.html.twig' %}
+
+{% block title %}Asitur{% endblock %}
+
+{% block stylesheets %}
+    {{parent()}}
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-asitur_datatable.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend/style-highcharts.css') }}">
+    <style>
+
+        .bigButtonSquareSelected{
+            font-weight: bold !important;
+            background-color: rgba(0, 148, 217, 0.06) !important;
+        }
+        .bigButtonSquareClick{
+            cursor: pointer; 
+        }
+
+        .bigButtonSquare{
+            width: 100%;
+            height: 117px;
+            padding: 27px 5px 20px 15px;
+            object-fit: contain;
+            border-radius: 3px;
+            box-shadow: -10px 10px 20px 0 rgba(0, 0, 0, 0.08);
+            background-color: white;
+        }
+
+        .iconContainer{
+            width: 28%;
+            float: left;
+            display: inline-block;
+        }
+
+        .dataContainer{
+            width: 70%;
+            display: inline-block;
+        }
+
+        .iconContainer img {
+            width: 40px;
+            margin-top: 7px;
+
+        }
+
+        .dataNumberContainer{
+            height: 32px;
+            margin: 0 0 14px 0px;
+            font-size: 36px;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 0.67;
+            letter-spacing: normal;
+            color: var(--main-blue);
+            text-align: center;
+        }
+
+        .dataLabelContainer{
+            height: 24px;
+            margin: 15px 0 0 4px;
+            font-size: 18px;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.2;
+            letter-spacing: normal;
+            text-align: center;
+            color: var(--main-blue);
+            text-align: center;
+        }
+
+        .label_success{
+            text-align: center;
+            width: 90px;
+            height: 29px;
+            padding: 3px 16px 4px;
+            border-radius: 3px;
+            background-color: #cdf0b2;
+            font-size: 16px;
+            color: #3d7411;
+        }
+
+        .label_warning{
+            text-align: center;
+            width: 90px;
+            height: 29px;
+            padding: 3px 16px 4px;
+            border-radius: 3px;
+            background-color: #ffcbcb;
+            font-size: 16px;
+            color: #863d28;
+        }
+
+        .card {
+            width: 100%;
+            height: 356px;
+            padding: 29px 34px 33px 59px;
+            box-shadow: -10px 10px 20px 0 rgba(30, 30, 30, 0.05);
+            background-color: var(--solid-white-ffffff);
+        }
+
+        .filter_inputs_div {
+            margin-right: 10px;
+            margin-bottom: 10px;
+            margin-left: 10px;
+        }
+
+        {# Cursor Pointer #}
+        .details {cursor: pointer;}
+        .details:hover {background-color: #eef4f7;}
+        td.listener { cursor: pointer; }
+
+        .dataOf {background-color: #eef4f7;}
+
+        .selectedLine {
+            font-weight: bold;
+            background-color: #eef4f7;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+    <!--Page Title-->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <div id="page-title" style="display: none;">
+    </div>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--End page title-->
+
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+    
+        <div class="row">
+            {# KPI RIS #}
+            <div class="col-sm-6 col-md-4 col-lg-2">
+                <div id = 'btnRis' data-type='ris' class='bigButtonSquare bigButtonSquareClick'
+                    data-url = '{{ path('dashboard_tab_ris') }}' >
+                    <div class='iconContainer'>
+                        <img src='{{asset("media/btnIconBigSuccess.png")}}'/>
+                    </div>
+                    <div class='dataContainer'>
+                        <div class='dataNumberContainer'></div>
+                        <div class='dataLabelContainer'>
+                            {{"dashboard.labelRis"|trans}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# KPI Coste Medio #}
+            <div class="col-sm-6 col-md-4 col-lg-2">
+                <div id = 'btnCostAvg'  data-type='costAvg' class='bigButtonSquare'>
+                    <div class='iconContainer'>
+                        <img src='{{asset("media/btnIconBigClock.png")}}'/>
+                    </div>
+                    <div class='dataContainer'>
+                        <div class='dataNumberContainer'></div>
+                        <div class='dataLabelContainer'>
+                            {{"dashboard.labelCostAvg"|trans}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            {# KPI Rechazados #}
+            <div class="col-sm-6 col-md-4 col-lg-2">
+                <div id = 'btnRefuse' data-type='refuse' class='bigButtonSquare bigButtonSquareClick'
+                    data-url = '{{ path('dashboard_tab_refuse') }}' >
+                    <div class='iconContainer'>
+                        <img src='{{asset("media/btnIconBigWarning.png")}}'/>
+                    </div>
+                    <div class='dataContainer'>
+                        <div class='dataNumberContainer'></div>
+                        <div class='dataLabelContainer'>
+                            {{"dashboard.labelRefuse"|trans}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# KPI Satisfacción #}
+            <div class="col-sm-6 col-md-4 col-lg-2">
+                <div id = 'btnSatisfied' data-type='satisfied' class='bigButtonSquare'>
+                    <div class='iconContainer'>
+                        <img src='{{asset("media/btnIconBigSuccess.png")}}'/>
+                    </div>
+                    <div class='dataContainer'>
+                        <div class='dataNumberContainer'></div>
+                        <div class='dataLabelContainer'>
+                            {{"dashboard.labelSatisfied"|trans}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# KPI No Conformidades #}
+            <div class="col-sm-6 col-md-4 col-lg-2">
+                <div id = 'btnNC'  data-type='nc' class='bigButtonSquare'>
+                    <div class='iconContainer'>
+                        <img src='{{asset("media/btnIconBigSuccess.png")}}'/>
+                    </div>
+                    <div class='dataContainer'>
+                        <div class='dataNumberContainer'></div>
+                        <div class='dataLabelContainer'>
+                            {{"dashboard.labelNC"|trans}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# KPI Tiempo de llegada #}
+            <div class="col-sm-6 col-md-4 col-lg-2">
+                <div id = 'btnArrivalTime'  data-type='arrivalTime' class='bigButtonSquare'>
+                    <div class='iconContainer'>
+                        <img src='{{asset("media/btnIconBigClock.png")}}'/>
+                    </div>
+                    <div class='dataContainer'>
+                        <div class='dataNumberContainer'></div>
+                        <div class='dataLabelContainer'>
+                            {{"dashboard.labelArrivalTime"|trans}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id='filterRow' style='margin-top:40px; visibility: hidden;'>
+
+            <div class="row" style="">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    {# Exportar #}
+                    <button type="button" class="btn top_left-buttons export-button"> <img src="{{asset("media/datatables/export.png")}}" width="17px" height="18px"> &nbsp; {{('dataTable.asitur.export')|trans}}</button>
+                </div>
+                <div class="col-sm-8 col-md-8 col-lg-8">
+                    <form id='filterForm' action='#'>
+                        <div style="display: flex; flex-wrap: wrap; justify-content: flex-start;">
+                            {# Filtro Colaborador #}
+                            {% if isMaster == true %}
+                                <div class="filter_inputs_div">
+                                    <select id="filterCollaborator" name="collaborator" class="filter_inputs form-control select_inputs chosen updateDataInfo">
+                                        <option value =''>{{"dashboard.no_filter_collaborator"|trans}}</option>
+                                        {% for collaborator in collaboratorList %}
+                                            <option value ='{{ collaborator.id }}'>{{collaborator.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% else %}
+                                <div class="filter_inputs_div" style="display: none;">
+                                    <input id="filterCollaborator" type="hidden" name="collaborator" value="{{collaborator.id}}" class="filter_inputs updateDataInfo">
+                                </div>
+                            {% endif %}
+
+                            {# Filtro Sucursal #}
+                            <div class="filter_inputs_div">
+                                <select id="filterBranchOffice" name="branchOffice" class="filter_inputs form-control select_inputs chosen updateDataInfo">
+                                    <option value =''>{{"dashboard.no_filter_branchoffice"|trans}}</option>
+                                </select>
+                            </div>
+
+                            {# Filtro Grúa #}
+                            <div class="filter_inputs_div filter_inputs_div_crane">
+                                <select id="filterCrane" name="crane" class="filter_inputs form-control select_inputs chosen updateDataInfo">
+                                    <option value =''>{{"dashboard.no_filter_crane"|trans}}</option>
+                                </select>
+                            </div>
+
+                            {# Filtro Operario #}
+                            <div class="filter_inputs_div">
+                                <select id="filterOperator" name="operator" class="filter_inputs form-control select_inputs chosen updateDataInfo">
+                                    <option value =''>{{"dashboard.no_filter_operator"|trans}}</option>
+                                </select>
+                            </div>
+                            
+                            {# Filtro Fecha #}
+                            <div class="filter_inputs_div">
+                                <input name ='dateRange' class="filter_inputs datepicker updateDataInfo" value='01/01/{{ "now"|date("Y") }} - 31/12/{{ "now"|date("Y") }}' 
+                                    style='width: 100%;'/>
+                            </div>
+
+                            {# Filtro Estado #}
+                            <div class="filter_inputs_div filter_inputs_div_status">
+                                <select id="filterStatus" name="status" class="filter_inputs form-control select_inputs chosen updateDataInfo">
+                                    <option value =''>{{"dashboard.no_filter_status"|trans}}</option>
+                                    {% for interventionStatus in interventionStatusList %}
+                                        <option value ='{{ interventionStatus.id }}'>{{ interventionStatus.description }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <hr id="datatable_hr" class="datatable_hr" style='visibility: hidden;'/>
+        
+        <div id='mainDataContainer'>
+
+        </div>
+
+    </div>
+    <!--===================================================-->
+    <!--End page content-->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready(function(){
+            
+            var risThreshold = 40;  // Umbral RIS
+            var satisfactionThreshold = 96.5; // Umbral Satisfacción
+            var arrivalTimeThreshold = 45; // Umbral Tiempo llegada
+
+            $("#home_li").addClass("active");
+            
+            moment.locale('es');
+            $('.datepicker').daterangepicker();
+
+            $('.chosen').chosen();
+
+            $('.updateDataInfo').change(function(){
+                updateDataInfo();
+            });
+            
+            $('.bigButtonSquareClick').click(function(){
+                $('.bigButtonSquare').removeClass('bigButtonSquareSelected');
+                $(this).addClass('bigButtonSquareSelected');
+                updateDataInfo();
+            });
+
+            {#* Filtramos por la entidad colaboradora (colaborator) del usuario en caso de ser un NO superusuario #}
+            if( $("#filterCollaborator").is("input") == true ) {
+                if( $("#filterCollaborator").prop("type") == "hidden" ) {
+                    $.ajax({
+                        url:'{{ path('dashboard_get_branch_offices') }}',
+                        data: {collaboratorId: "{{collaborator.id}}" },
+                        type:"POST",
+                        dataType: "json",
+                        cache:false,
+                        success: function(data){
+                            $('#filterBranchOffice').html("<option value =''>{{'dashboard.no_filter_branchoffice'|trans}}</option>");
+                            for(var i = 0 ; i < data.length; i++){
+                                var newOption = $('<option>');
+                                newOption.val(data[i].id);
+                                newOption.html(data[i].name + ' (' + data[i].province + ')');
+                                $('#filterBranchOffice').append(newOption.clone());
+                            }
+                            $('#filterBranchOffice').trigger("chosen:updated");
+
+                            $('#filterCrane').html("<option value =''>{{'dashboard.no_filter_crane'|trans}}</option>");
+                            $('#filterCrane').trigger("chosen:updated");
+                        },
+                        error:function(err){
+                            console.log('error');
+                            console.log(err);
+                        }
+                    });
+                }
+            }
+
+            updateCounters();
+            //$('.bigButtonSquareClick').first().trigger('click');
+            {#? $('.bigButtonSquareClick').eq(1).trigger('click'); #}
+
+            $('#filterCollaborator').change(function(){
+                updateCounters();
+                $.ajax({
+                    url:'{{ path('dashboard_get_branch_offices') }}',
+                    data: {collaboratorId: $(this).val()},
+                    type:"POST",
+                    dataType: "json",
+                    cache:false,
+                    success: function(data){
+                        $('#filterBranchOffice').html("<option value =''>{{'dashboard.no_filter_branchoffice'|trans}}</option>");
+                        for(var i = 0 ; i < data.length; i++){
+                            var newOption = $('<option>');
+                            newOption.val(data[i].id);
+                            newOption.html(data[i].name + ' (' + data[i].province + ')');
+                            $('#filterBranchOffice').append(newOption.clone());
+                        }
+                        $('#filterBranchOffice').trigger("chosen:updated");
+
+                        $('#filterCrane').html("<option value =''>{{'dashboard.no_filter_crane'|trans}}</option>");
+                        $('#filterCrane').trigger("chosen:updated");
+                    },
+                    error:function(err){
+                        console.log('error');
+                        console.log(err);
+                    }
+                });
+            });
+
+            $('#filterBranchOffice').change(function(){
+                $.ajax({
+                    url:'{{ path('get_dashboard_cranes') }}',
+                    data: {branchOfficeId: $(this).val()},
+                    type:"POST",
+                    dataType: "json",
+                    cache:false,
+                    success: function(data){
+                        $('#filterCrane').html("<option value =''>{{'dashboard.no_filter_crane'|trans}}</option>");
+                        for(var i = 0 ; i < data.length; i++){
+                            var newOption = $('<option>');
+                            if (data[i].reference === null) 
+                                var label = data[i].plate; 
+                            else 
+                                var label = data[i].reference + ' (' + data[i].plate + ')'; 
+                            newOption.val(data[i].id);
+                            newOption.html(label);
+                            $('#filterCrane').append(newOption.clone());
+                        }
+                        $('#filterCrane').trigger("chosen:updated");                        
+                    },
+                    error:function(err){
+                        console.log('error');
+                        console.log(err);
+                    }
+                });
+
+                $.ajax({
+                    url:'{{ path('get_dashboard_operators') }}',
+                    data: {branchOfficeId: $(this).val()},
+                    type:"POST",
+                    dataType: "json",
+                    cache:false,
+                    success: function(data){
+                        $('#filterOperator').html("<option value =''>{{'dashboard.no_filter_operator'|trans}}</option>");
+                        for(var i = 0 ; i < data.length; i++){
+                            var newOption = $('<option>');
+                            newOption.val(data[i].id);
+                            newOption.html(data[i].reference);
+                            $('#filterOperator').append(newOption.clone());
+                        }
+                        $('#filterOperator').trigger("chosen:updated");                        
+                    },
+                    error:function(err){
+                        console.log('error');
+                        console.log(err);
+                    }
+                });
+            });
+
+            function updateDataInfo(){
+
+                $("#filterRow").css({"visibility": "visible"});
+                $("#datatable_hr").css({"visibility": "visible"});
+
+                $('#mainDataContainer').html("{{'dataTable.general.language.sLoadingRecords'|trans}}");
+                updateCounters();
+
+                var urlContent = $('.bigButtonSquareSelected').data('url');
+                
+                // Cargamos los datatables y gráficas
+                if (urlContent != ''){
+                    $.ajax({
+                        url: urlContent,
+                        data: { "filterForm": $('#filterForm').serialize(), // por si los usamos
+                        },
+                        type:"POST",
+                        dataType: "html",
+                        cache:false,
+                        success: function(data){
+                            $('#mainDataContainer').html(data);
+                        },
+                        error:function(err){
+                            console.log('error');
+                            console.log(err);
+                        }
+                    });
+                }
+                else{
+                    // Sin contenido que cargar
+                    $('#mainDataContainer').empty();
+                }
+            }
+
+            function updateCounters(){
+                $.ajax({
+                    url:'{{ path('dashboard_counters') }}',
+                    data: $('#filterForm').serialize(),
+                    type:"POST",
+                    dataType: "json",
+                    cache:false,
+                    success: function(data){
+
+                        {#? Debe ser mayor a "risThreshold" (actualmente con valor 40)  #}
+                        if( Number(data.ris.split("%",1)) <= risThreshold ) {
+                            $('#btnRis .iconContainer img').attr("src", "{{asset('media/btnIconBigWarning.png')}}");
+                        } else {
+                            $('#btnRis .iconContainer img').attr("src", "{{asset('media/btnIconBigSuccess.png')}}");
+                        }
+
+                        {#? Porcentaje de satisfacción de los asegurados. Debe ser mayor a 96,5% #}
+                        if( Number(data.satisfied.split("%",1)) <= satisfactionThreshold ) {
+                            $('#btnSatisfied .iconContainer img').attr("src", "{{asset('media/btnIconBigWarning.png')}}");
+                        } else {
+                            $('#btnSatisfied .iconContainer img').attr("src", "{{asset('media/btnIconBigSuccess.png')}}");
+                        }
+
+                        {#? Tiempo de llegada promedio. Debe ser menor a 45 minutos #}
+                        if( Number(data.arrivalTime.split("%",1)) >= arrivalTimeThreshold ) {
+                            $('#btnArrivalTime .iconContainer img').attr("src", "{{asset('media/btnIconBigWarning.png')}}");
+                        } else {
+                            $('#btnArrivalTime .iconContainer img').attr("src", "{{asset('media/btnIconBigSuccess.png')}}");
+                        }
+
+                        $('#btnRis .dataNumberContainer').html(data.ris);
+                        $('#btnCostAvg .dataNumberContainer').html(data.costAvg);
+                        $('#btnRefuse .dataNumberContainer').html(data.refuse);
+                        $('#btnSatisfied .dataNumberContainer').html(data.satisfied);
+                        $('#btnNC .dataNumberContainer').html(data.nc);
+                        $('#btnArrivalTime .dataNumberContainer').html(data.arrivalTime);
+                    },
+                    error:function(err){
+                        console.log('error');
+                        console.log(err);
+                    }
+                });
+            }
+
+            $(".export-button").click(function() {
+                swal.fire({
+                    title: 'Por definir',
+                    html: "",
+                    icon: 'info',
+                    showConfirmButton: true
+                });
+            });
+        });
+   
+    </script>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+:root {
+    --main-blue: #0094d9;
+    --main-black: #212124;
+
+    --main-grey: #6b7c93;
+}
+
+:focus {
+    outline: none;
+}
+
+.nifty-ready #container {
+    -webkit-transition: opacity 0.1s linear 0.1s;
+    transition: opacity 0.1s linear 0.1s;
+}
+
+body.nifty-ready {
+    font-size: 14px;
+}
+
+.asitur_input {
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    border-bottom: 1px solid #e9e9e9;
+}
+
+#already_connected {
+    color: slategrey;
+    
+}

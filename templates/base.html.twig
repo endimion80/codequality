@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="google" content="notranslate" />
+        <title>{% block title %}Asitur{% endblock %}</title>
+        <link rel="icon" type="image/png" href="{{ asset('media/asitur_favicon.ico') }}" sizes="16x16">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% block stylesheets %}
+                        
+            <!--Open Sans Font -->
+ 	        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin" rel="stylesheet">
+
+            <!--Bootstrap Stylesheet -->
+            <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+
+            <!--Nifty Stylesheet -->
+            <link href="{{ asset('css/nifty.min.css') }}" rel="stylesheet">
+
+            <!--Font Awesome -->
+            <link href="{{ asset('plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+
+            <!--Animate.css -->
+            <link href="{{ asset('plugins/animate-css/animate.min.css') }}" rel="stylesheet">
+
+            <!--Morris.js -->
+            <link href="{{ asset('plugins/morris-js/morris.min.css') }}" rel="stylesheet">
+
+            <!--Switchery -->
+            <link href="{{ asset('plugins/switchery/switchery.min.css') }}" rel="stylesheet">
+
+            <!--Bootstrap Select -->
+            <link href="{{ asset('plugins/bootstrap-select/bootstrap-select.min.css') }}" rel="stylesheet">
+
+            <!--Chosen -->
+	        <link href="{{ asset('plugins/chosen/chosen.min.css') }}" rel="stylesheet">
+
+            <!--Bootstrap Table -->
+            <link href="{{ asset('plugins/datatables/media/css/dataTables.bootstrap.css') }}" rel="stylesheet">
+            <link href="{{ asset('plugins/datatables/extensions/Responsive/css/dataTables.responsive.css') }}" rel="stylesheet">
+
+            <!--Sweetalert2 -->
+            <link rel="stylesheet" href="{{ asset('css/sweetalert2/sweetalert2.min.css') }}">
+            
+            <!--X-editable -->
+            <link href="{{ asset('plugins/x-editable/css/bootstrap-editable.css') }}" rel="stylesheet">
+
+            <!--Custom checkbox -->
+            <link href="{{ asset('plugins/imgcheckbox/animation.imgcheckbox.min.css') }}" rel="stylesheet">
+
+            <!--Bootstrap Datepicker -->
+	        <link href="{{ asset('plugins/bootstrap-datepicker/bootstrap-datepicker.css') }}" rel="stylesheet">
+
+            <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+            
+            <style>
+                @font-face {
+                    font-family: "Flama";
+                    src: url("fonts/FlamaRegular.otf");                  
+                }
+                body{
+                    {# font-family: "Flama"; #}
+                }
+            </style>
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+        {% block javascripts %}
+
+            <!--jQuery -->
+            <script src="{{ asset('js/jquery-2.1.1.min.js') }}"></script>
+
+            <!--BootstrapJS -->
+            <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+
+            <!--Sweetalert2 -->
+            <script src="{{ asset('js/sweetalert2/sweetalert2.min.js') }}"></script>
+
+            <!--Fast Click -->
+            <script src="{{ asset('plugins/fast-click/fastclick.min.js') }}"></script>
+
+            <!--Nifty Admin -->
+            <script src="{{ asset('js/nifty.min.js') }}"></script>
+
+            <!--Morris.js -->
+            <script src="{{ asset('plugins/morris-js/morris.min.js') }}"></script>
+            <script src="{{ asset('plugins/morris-js/raphael-js/raphael.min.js') }}"></script>
+
+            <!--Sparkline -->
+            <script src="{{ asset('plugins/sparkline/jquery.sparkline.min.js') }}"></script>
+
+            <!--Skycons -->
+            <script src="{{ asset('plugins/skycons/skycons.min.js') }}"></script>
+
+            <!--Switchery -->
+            <script src="{{ asset('plugins/switchery/switchery.min.js') }}"></script>
+
+            <!--Bootstrap Select -->
+            <script src="{{ asset('plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
+
+            <!--Chosen -->
+	        <script src="{{ asset('plugins/chosen/chosen.jquery.min.js') }}"></script>
+
+            <!--Bootstrap Table -->
+            <script src="{{ asset('plugins/datatables/media/js/jquery.dataTables.js') }}"></script>
+            <script src="{{ asset('plugins/datatables/media/js/dataTables.bootstrap.js') }}"></script>
+            <script src="{{ asset('plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js') }}"></script>
+
+            <!--X-editable -->
+            <script src="{{ asset('plugins/x-editable/js/bootstrap-editable.min.js') }}"></script>
+
+            <!--Custom checkbox -->
+            <script src="{{ asset('plugins/imgcheckbox/jquery.imgcheckbox.min.js') }}"></script>
+
+            <!--Bootstrap Datepicker -->
+	        <script src="{{ asset('plugins/bootstrap-datepicker/bootstrap-datepicker.js') }}"></script>
+            <script src="{{ asset('plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.js') }}" charset="UTF-8"></script>
+
+            <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment-with-locales.min.js"></script>
+            <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+           
+            <!--Dropzone -->
+            <script src="{{ asset('js/dropzone-5.7.0/dist/dropzone.js') }}"></script>
+
+            <!--Dropzone -->
+            {# <script src="{{ asset('plugins/highcharts/exporting.js') }}"></script> #}
+            <script src="{{ asset('plugins/highcharts/highcharts.js') }}"></script>
+            <script src="{{ asset('plugins/highcharts/series-label.js') }}"></script>            
+        {% endblock %}
+    </body>
+</html>
